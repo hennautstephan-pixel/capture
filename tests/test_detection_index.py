@@ -1,4 +1,5 @@
 from src.capture_recovery.indexes import DetectionIndex
+from src.capture_recovery.models import DataType
 from src.capture_recovery.models import Detection
 
 
@@ -6,10 +7,37 @@ def build_index():
 
     detections = [
 
-        Detection("ascii", 10, 5, "Hello", 1.0),
-        Detection("float", 30, 4, 1.25, 0.7),
-        Detection("ascii", 40, 5, "World", 1.0),
-        Detection("int32", 60, 4, 123, 0.8),
+        Detection(
+            offset=10,
+            length=5,
+            datatype=DataType.ASCII,
+            value="Hello",
+            confidence=1.0,
+        ),
+
+        Detection(
+            offset=30,
+            length=4,
+            datatype=DataType.FLOAT32,
+            value=1.25,
+            confidence=0.7,
+        ),
+
+        Detection(
+            offset=40,
+            length=5,
+            datatype=DataType.ASCII,
+            value="World",
+            confidence=1.0,
+        ),
+
+        Detection(
+            offset=60,
+            length=4,
+            datatype=DataType.INT32,
+            value=123,
+            confidence=0.8,
+        ),
 
     ]
 
@@ -20,15 +48,17 @@ def test_by_type():
 
     index = build_index()
 
-    assert len(index.by_type("ascii")) == 2
+    assert len(index.by_type(DataType.ASCII)) == 2
 
 
 def test_at():
 
     index = build_index()
 
-    assert len(index.at(30)) == 1
-    assert index.at(30)[0].datatype == "float"
+    result = index.at(30)
+
+    assert len(result) == 1
+    assert result[0].datatype == DataType.FLOAT32
 
 
 def test_before():
@@ -42,8 +72,10 @@ def test_after():
 
     index = build_index()
 
-    assert len(index.after(40)) == 1
-    assert index.after(40)[0].datatype == "int32"
+    result = index.after(40)
+
+    assert len(result) == 1
+    assert result[0].datatype == DataType.INT32
 
 
 def test_range():
@@ -62,4 +94,4 @@ def test_overlapping():
     result = index.overlapping(32, 34)
 
     assert len(result) == 1
-    assert result[0].datatype == "float"
+    assert result[0].datatype == DataType.FLOAT32

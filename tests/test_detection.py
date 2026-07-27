@@ -1,18 +1,78 @@
-from src.capture_recovery.models import Detection
+from capture_recovery.models import DataType
+from capture_recovery.models import Detection
 
 
-def test_detection_creation():
+def test_end():
 
-    detection = Detection(
-        datatype="float",
-        offset=0,
-        length=4,
-        value=1.0,
-        confidence=0.75,
+    d = Detection(
+        offset=100,
+        length=20,
+        datatype=DataType.ASCII,
+        value="abc",
     )
 
-    assert detection.datatype == "float"
-    assert detection.offset == 0
-    assert detection.length == 4
-    assert detection.value == 1.0
-    assert detection.confidence == 0.75
+    assert d.end == 120
+
+
+def test_contains():
+
+    d = Detection(
+        offset=10,
+        length=10,
+        datatype=DataType.INT32,
+        value=123,
+    )
+
+    assert d.contains(10)
+    assert d.contains(19)
+
+    assert not d.contains(20)
+
+
+def test_overlap():
+
+    a = Detection(
+        offset=0,
+        length=20,
+        datatype=DataType.BYTES,
+        value=None,
+    )
+
+    b = Detection(
+        offset=10,
+        length=20,
+        datatype=DataType.BYTES,
+        value=None,
+    )
+
+    assert a.overlaps(b)
+
+
+def test_copy():
+
+    d = Detection(
+        offset=0,
+        length=4,
+        datatype=DataType.FLOAT32,
+        value=1.5,
+    )
+
+    c = d.copy(confidence=0.5)
+
+    assert c.confidence == 0.5
+
+    assert c.offset == d.offset
+
+    assert c.datatype == d.datatype
+
+
+def test_len():
+
+    d = Detection(
+        offset=0,
+        length=42,
+        datatype=DataType.BYTES,
+        value=None,
+    )
+
+    assert len(d) == 42
