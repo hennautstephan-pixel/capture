@@ -4,7 +4,7 @@ Immutable models used by the diff engine.
 
 from __future__ import annotations
 
-from dataclasses import asdict
+from dataclasses import Field, asdict
 from dataclasses import dataclass
 from dataclasses import field
 from datetime import UTC
@@ -12,13 +12,16 @@ from datetime import datetime
 from enum import Enum
 from typing import Any
 from typing import Mapping
+from capture_recovery.structures.field import Field
 
 
 Metadata = Mapping[str, Any]
 
 
 class ChangeType(Enum):
-    """Type of binary change."""
+    """
+    Type of binary change.
+    """
 
     INSERT = "insert"
     DELETE = "delete"
@@ -34,7 +37,9 @@ class ChangeType(Enum):
 
 @dataclass(frozen=True, slots=True)
 class BinaryChange:
-    """Represents one binary modification."""
+    """
+    Represents one binary modification.
+    """
 
     offset: int
 
@@ -55,25 +60,34 @@ class BinaryChange:
 
     @property
     def before_length(self) -> int:
+        """
+        Length of the original bytes.
+        """
         return len(self.before)
 
     @property
     def after_length(self) -> int:
+        """
+        Length of the new bytes.
+        """
         return len(self.after)
 
     @property
     def delta(self) -> int:
+        """
+        Size difference after modification.
+        """
         return self.after_length - self.before_length
-
-
-# ============================================================================
+    # ============================================================================
 # Region
 # ============================================================================
 
 
 @dataclass(frozen=True, slots=True)
 class RegionChange:
-    """Represents modifications inside one memory region."""
+    """
+    Represents modifications inside one memory region.
+    """
 
     offset: int
 
@@ -92,13 +106,44 @@ class RegionChange:
 
 
 # ============================================================================
+# Field
+# ============================================================================
+
+
+@dataclass(frozen=True, slots=True)
+class FieldChange:
+    """
+    Represents modifications affecting one reconstructed field.
+    """
+
+    offset: int
+
+    field_before: Field | None = None
+
+    field_after: Field | None = None
+
+    changed_properties: tuple[str, ...] = ()
+
+    confidence: float = 1.0
+
+    metadata: Metadata = field(
+        default_factory=dict,
+        compare=False,
+        hash=False,
+        repr=False,
+    )
+
+
+# ============================================================================
 # Structure
 # ============================================================================
 
 
 @dataclass(frozen=True, slots=True)
 class StructureChange:
-    """Represents modifications affecting one logical structure."""
+    """
+    Represents modifications affecting one logical structure.
+    """
 
     offset: int
 
@@ -117,15 +162,16 @@ class StructureChange:
         repr=False,
     )
 
-
-# ============================================================================
+    # ============================================================================
 # Semantic
 # ============================================================================
 
 
 @dataclass(frozen=True, slots=True)
 class SemanticChange:
-    """Represents one semantic modification."""
+    """
+    Represents one semantic modification.
+    """
 
     offset: int
 
@@ -156,7 +202,9 @@ class SemanticChange:
 
 @dataclass(frozen=True, slots=True)
 class DiffStatistics:
-    """Summary of detected changes."""
+    """
+    Summary of detected changes.
+    """
 
     bytes_added: int = 0
 
@@ -168,27 +216,36 @@ class DiffStatistics:
 
     region_changes: int = 0
 
+    field_changes: int = 0
+
     structure_changes: int = 0
 
     semantic_changes: int = 0
 
     @property
     def total_changes(self) -> int:
+        """
+        Total number of recorded changes.
+        """
         return (
             self.binary_changes
             + self.region_changes
+            + self.field_changes
             + self.structure_changes
             + self.semantic_changes
         )
 
-    # ============================================================================
+
+# ============================================================================
 # Metadata
 # ============================================================================
 
 
 @dataclass(frozen=True, slots=True)
 class DiffMetadata:
-    """Metadata associated with a diff report."""
+    """
+    Metadata associated with a diff report.
+    """
 
     project_before: str
 
@@ -210,15 +267,16 @@ class DiffMetadata:
     def project_name_after(self) -> str:
         return self.project_after
 
-
-# ============================================================================
+    # ============================================================================
 # Report
 # ============================================================================
 
 
 @dataclass(frozen=True, slots=True)
 class DiffReport:
-    """Complete diff report."""
+    """
+    Complete diff report.
+    """
 
     metadata: DiffMetadata
 
@@ -228,24 +286,33 @@ class DiffReport:
 
     region_changes: tuple[RegionChange, ...] = ()
 
+    field_changes: tuple[FieldChange, ...] = ()
+
     structure_changes: tuple[StructureChange, ...] = ()
 
     semantic_changes: tuple[SemanticChange, ...] = ()
 
     def is_empty(self) -> bool:
-        """Return True when no changes are present."""
+        """
+        Return True when no changes are present.
+        """
         return self.statistics.total_changes == 0
 
     @property
     def total_changes(self) -> int:
-        """Shortcut to the statistics."""
+        """
+        Shortcut to the statistics.
+        """
         return self.statistics.total_changes
 
     def summary(self) -> str:
-        """Return a short human-readable summary."""
+        """
+        Return a short human-readable summary.
+        """
         return (
             f"{self.statistics.binary_changes} binary changes, "
             f"{self.statistics.region_changes} region changes, "
+            f"{self.statistics.field_changes} field changes, "
             f"{self.statistics.structure_changes} structure changes, "
             f"{self.statistics.semantic_changes} semantic changes"
         )
@@ -259,21 +326,30 @@ class DiffReport:
     def __iter__(self):
         yield from self.binary_changes
         yield from self.region_changes
+        yield from self.field_changes
         yield from self.structure_changes
         yield from self.semantic_changes
 
-    def binary_at(self, offset: int) -> BinaryChange | None:
-        """Return the binary change at a given offset."""
+    def binary_at(
+        self,
+        offset: int,
+    ) -> BinaryChange | None:
+        """
+        Return the binary change at a given offset.
+        """
         for change in self.binary_changes:
             if change.offset == offset:
                 return change
+
         return None
 
     def semantic_of_type(
         self,
         object_type: str,
     ) -> tuple[SemanticChange, ...]:
-        """Return semantic changes matching an object type."""
+        """
+        Return semantic changes matching an object type.
+        """
         return tuple(
             change
             for change in self.semantic_changes
@@ -284,31 +360,44 @@ class DiffReport:
         self,
         minimum: float,
     ) -> "DiffReport":
-        """Return a report filtered by minimum confidence."""
+        """
+        Return a report filtered by minimum confidence.
+        """
 
         return DiffReport(
             metadata=self.metadata,
             statistics=self.statistics,
             binary_changes=tuple(
-                c for c in self.binary_changes
+                c
+                for c in self.binary_changes
                 if c.confidence >= minimum
             ),
             region_changes=tuple(
-                c for c in self.region_changes
+                c
+                for c in self.region_changes
+                if c.confidence >= minimum
+            ),
+            field_changes=tuple(
+                c
+                for c in self.field_changes
                 if c.confidence >= minimum
             ),
             structure_changes=tuple(
-                c for c in self.structure_changes
+                c
+                for c in self.structure_changes
                 if c.confidence >= minimum
             ),
             semantic_changes=tuple(
-                c for c in self.semantic_changes
+                c
+                for c in self.semantic_changes
                 if c.confidence >= minimum
             ),
         )
 
     def to_dict(self) -> dict[str, Any]:
-        """Convert the report into a JSON-serializable dictionary."""
+        """
+        Convert the report into a JSON-serializable dictionary.
+        """
 
         return {
             "metadata": {
@@ -332,6 +421,10 @@ class DiffReport:
             "region_changes": [
                 asdict(change)
                 for change in self.region_changes
+            ],
+            "field_changes": [
+                asdict(change)
+                for change in self.field_changes
             ],
             "structure_changes": [
                 asdict(change)
