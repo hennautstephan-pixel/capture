@@ -1,50 +1,42 @@
 """
-Global knowledge registry.
+Decoder registry used by KnowledgeEngine.
 """
 
 from __future__ import annotations
 
-from .decoder_registry import DecoderRegistry
-from .signature_registry import SignatureRegistry
+from .decoder import Decoder
 
 
-class KnowledgeRegistry:
+class DecoderRegistry:
     """
-    Central registry for decoders and signatures.
+    Registry containing decoders used for inference.
+
+    Decoders are tested sequentially against structures.
     """
 
     def __init__(self) -> None:
-        self.decoders = DecoderRegistry()
-        self.signatures = SignatureRegistry()
+        self._decoders: list[Decoder] = []
 
-    def register_decoder(
+    def register(
         self,
-        name: str,
-        decoder,
+        decoder: Decoder,
     ) -> None:
-        self.decoders.register(
-            name,
-            decoder,
-        )
+        """
+        Register a decoder.
+        """
 
-    def register_signature(
-        self,
-        name: str,
-        signature,
-    ) -> None:
-        self.signatures.register(
-            name,
-            signature,
-        )
+        self._decoders.append(decoder)
 
-    def decoder_for(
-        self,
-        name: str,
-    ):
-        return self.decoders.decoder_for(name)
+    @property
+    def decoders(self) -> tuple[Decoder, ...]:
+        """
+        Return all registered decoders.
+        """
 
-    def signature_for(
-        self,
-        name: str,
-    ):
-        return self.signatures.signature_for(name)
+        return tuple(self._decoders)
+
+    def __len__(self) -> int:
+        return len(self._decoders)
+
+    def __iter__(self):
+        return iter(self._decoders)

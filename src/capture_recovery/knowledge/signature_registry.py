@@ -6,7 +6,7 @@ from __future__ import annotations
 
 from collections.abc import Mapping
 
-from capture_recovery.knowledge.signature import Signature
+from .signature import Signature
 
 
 class SignatureRegistry:
@@ -28,7 +28,7 @@ class SignatureRegistry:
         signature: Signature,
     ) -> None:
         """
-        Register an object signature.
+        Register a signature.
         """
 
         self._signatures[name] = signature
@@ -38,7 +38,7 @@ class SignatureRegistry:
         name: str,
     ) -> Signature:
         """
-        Return the signature associated with an object name.
+        Return a signature by name.
         """
 
         try:
@@ -58,7 +58,13 @@ class SignatureRegistry:
         return len(self._signatures)
 
     def __iter__(self):
-        return iter(self._signatures)
+        """
+        Iterate over signatures.
+
+        Required by SignatureEngine.
+        """
+
+        return iter(self._signatures.values())
 
     @property
     def names(self) -> tuple[str, ...]:
