@@ -1,0 +1,9 @@
+Signature(
+    tokens=[
+        "ZERO",
+        "UINT32",
+        "POINTER",
+        "FLOAT",
+        "ASCII4",
+    ]
+)
