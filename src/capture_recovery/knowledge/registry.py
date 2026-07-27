@@ -1,25 +1,50 @@
+"""
+Global knowledge registry.
+"""
+
 from __future__ import annotations
 
-from .decoder import Decoder
+from .decoder_registry import DecoderRegistry
+from .signature_registry import SignatureRegistry
 
 
-class DecoderRegistry:
+class KnowledgeRegistry:
+    """
+    Central registry for decoders and signatures.
+    """
 
     def __init__(self) -> None:
-        self._decoders: list[Decoder] = []
+        self.decoders = DecoderRegistry()
+        self.signatures = SignatureRegistry()
 
-    def register(
+    def register_decoder(
         self,
-        decoder: Decoder,
+        name: str,
+        decoder,
     ) -> None:
-        self._decoders.append(decoder)
+        self.decoders.register(
+            name,
+            decoder,
+        )
 
-    @property
-    def decoders(self) -> tuple[Decoder, ...]:
-        return tuple(self._decoders)
+    def register_signature(
+        self,
+        name: str,
+        signature,
+    ) -> None:
+        self.signatures.register(
+            name,
+            signature,
+        )
 
-    def __len__(self) -> int:
-        return len(self._decoders)
+    def decoder_for(
+        self,
+        name: str,
+    ):
+        return self.decoders.decoder_for(name)
 
-    def __iter__(self):
-        return iter(self._decoders)
+    def signature_for(
+        self,
+        name: str,
+    ):
+        return self.signatures.signature_for(name)

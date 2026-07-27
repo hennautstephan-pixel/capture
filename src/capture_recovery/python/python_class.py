@@ -7,6 +7,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 
 from .python_field import PythonField
+from .python_method import PythonMethod
 
 
 @dataclass(slots=True, frozen=True)
@@ -16,66 +17,80 @@ class PythonClass:
     """
 
     name: str
-    docstring: str = ""
     decorators: tuple[str, ...] = field(default_factory=tuple)
     bases: tuple[str, ...] = field(default_factory=tuple)
     fields: tuple[PythonField, ...] = field(default_factory=tuple)
-
-    def add_field(
-        self,
-        field_: PythonField,
-    ) -> "PythonClass":
-        """
-        Return a copy with an additional field.
-        """
-        return PythonClass(
-            name=self.name,
-            docstring=self.docstring,
-            decorators=self.decorators,
-            bases=self.bases,
-            fields=(*self.fields, field_),
-        )
+    methods: tuple[PythonMethod, ...] = field(default_factory=tuple)
+    docstring: str = ""
 
     def add_decorator(
         self,
         decorator: str,
     ) -> "PythonClass":
-        """
-        Return a copy with an additional decorator.
-        """
         return PythonClass(
             name=self.name,
-            docstring=self.docstring,
             decorators=(*self.decorators, decorator),
             bases=self.bases,
             fields=self.fields,
+            methods=self.methods,
+            docstring=self.docstring,
         )
 
     def add_base(
         self,
         base: str,
     ) -> "PythonClass":
-        """
-        Return a copy with an additional base class.
-        """
         return PythonClass(
             name=self.name,
-            docstring=self.docstring,
             decorators=self.decorators,
             bases=(*self.bases, base),
             fields=self.fields,
+            methods=self.methods,
+            docstring=self.docstring,
+        )
+
+    def add_field(
+        self,
+        field_: PythonField,
+    ) -> "PythonClass":
+        return PythonClass(
+            name=self.name,
+            decorators=self.decorators,
+            bases=self.bases,
+            fields=(*self.fields, field_),
+            methods=self.methods,
+            docstring=self.docstring,
+        )
+
+    def add_method(
+        self,
+        method: PythonMethod,
+    ) -> "PythonClass":
+        return PythonClass(
+            name=self.name,
+            decorators=self.decorators,
+            bases=self.bases,
+            fields=self.fields,
+            methods=(*self.methods, method),
+            docstring=self.docstring,
         )
 
     @property
+    def has_docstring(self) -> bool:
+        return bool(self.docstring)
+
+    @property
+    def decorator_count(self) -> int:
+        return len(self.decorators)
+
+    @property
+    def base_count(self) -> int:
+        return len(self.bases)
+
+    @property
     def field_count(self) -> int:
-        """
-        Return the number of fields.
-        """
         return len(self.fields)
 
     @property
-    def has_docstring(self) -> bool:
-        """
-        Return True if the class has a docstring.
-        """
-        return bool(self.docstring)
+    def method_count(self) -> int:
+        return len(self.methods)
