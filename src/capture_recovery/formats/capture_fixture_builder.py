@@ -1,18 +1,14 @@
 """
 Capture fixture builder.
 
-Builds CaptureFixture objects from recovered
-semantic fixtures using fixture library and geometry.
+Builds Capture fixtures from recovered
+semantic fixture objects.
 """
 
 from __future__ import annotations
 
 from capture_recovery.knowledge.semantic_object import (
     SemanticObject,
-)
-
-from capture_recovery.library.fixture_resolver import (
-    FixtureResolver,
 )
 
 from .capture_project import (
@@ -23,16 +19,31 @@ from .fixture_geometry_builder import (
     FixtureGeometryBuilder,
 )
 
+from .position_builder import (
+    PositionBuilder,
+)
+
+from .focus_builder import (
+    FocusBuilder,
+)
+
+from .mount_builder import (
+    MountBuilder,
+)
+
 
 class CaptureFixtureBuilder:
     """
-    Build enriched Capture fixtures.
+    Build Capture fixtures.
     """
 
     def __init__(
         self,
-        resolver: FixtureResolver,
+        resolver=None,
         geometry_builder: FixtureGeometryBuilder | None = None,
+        position_builder: PositionBuilder | None = None,
+        focus_builder: FocusBuilder | None = None,
+        mount_builder: MountBuilder | None = None,
     ) -> None:
 
         self.resolver = resolver
@@ -42,85 +53,215 @@ class CaptureFixtureBuilder:
             or FixtureGeometryBuilder()
         )
 
+        self.position_builder = (
+            position_builder
+            or PositionBuilder()
+        )
+
+        self.focus_builder = (
+            focus_builder
+            or FocusBuilder()
+        )
+
+        self.mount_builder = (
+            mount_builder
+            or MountBuilder()
+        )
+
+    def _resolve_library_data(
+        self,
+        fixture: SemanticObject,
+    ) -> dict:
+
+        if self.resolver is None:
+            return {}
+
+        resolved = self.resolver.resolve(
+            fixture,
+        )
+
+        if resolved is None:
+            return {}
+
+        if isinstance(
+            resolved,
+            dict,
+        ):
+            return resolved.copy()
+
+        data = {}
+
+        for attribute in (
+            "channels",
+            "geometry",
+            "placement",
+            "manufacturer",
+            "model",
+            "mode",
+        ):
+
+            if hasattr(
+                resolved,
+                attribute,
+            ):
+
+                value = getattr(
+                    resolved,
+                    attribute,
+                )
+
+                if value is not None:
+                    data[attribute] = value
+
+        return data
+
     def build(
         self,
         fixture: SemanticObject,
     ) -> CaptureFixture:
         """
-        Convert a semantic fixture into
-        a CaptureFixture.
+        Convert semantic fixture into
+        Capture fixture.
         """
 
-        definition = self.resolver.resolve(
-            fixture,
+        source_properties = (
+            fixture.properties.copy()
         )
 
-        properties = fixture.properties.copy()
+        library_data = (
+            self._resolve_library_data(
+                fixture,
+            )
+        )
 
-        # Fixture library enrichment
-        if definition is not None:
+        properties = {
+            **library_data,
+            **source_properties,
+        }
 
-            properties.update(
+        geometry = (
+            self.geometry_builder.build(
+                fixture,
+            )
+        )
+
+        geometry_data = {}
+
+        if isinstance(
+            properties.get(
+                "geometry",
+            ),
+            dict,
+        ):
+
+            geometry_data.update(
+                properties["geometry"],
+            )
+
+        if hasattr(
+            geometry,
+            "beam_angle",
+        ):
+
+            geometry_data.update(
                 {
-                    "channels": definition.channels,
-                    "modes": definition.modes,
-                    "library": definition.name,
+                    "beam_angle": geometry.beam_angle,
+                    "field_angle": geometry.field_angle,
+                    "zoom": geometry.zoom,
                 }
             )
 
-            # Optical / physical fixture data
-            # (beam angle, zoom, dimensions...)
-            if definition.geometry:
-
-                properties[
-                    "geometry"
-                ] = definition.geometry
-
-        # Scene placement geometry
-        placement = self.geometry_builder.build(
-            fixture,
+        position = (
+            self.position_builder.build(
+                fixture,
+            )
         )
 
-        properties[
-            "placement"
-        ] = placement.to_dict()
+        focus_point = (
+            self.focus_builder.build(
+                fixture,
+            )
+        )
+
+        mount = (
+            self.mount_builder.build(
+                fixture,
+            )
+        )
+
+        placement = {
+            "position": source_properties.get(
+                "position",
+            ),
+
+            "rotation": source_properties.get(
+                "rotation",
+            ),
+
+            "height": properties.get(
+                "height",
+                0.0,
+            ),
+
+            "focus_point": properties.get(
+                "focus_point",
+            ),
+
+            "mount": properties.get(
+                "mount",
+            ),
+        }
+
+        final_properties = {
+            **properties,
+
+            "geometry": geometry_data,
+
+            "placement": placement,
+        }
 
         return CaptureFixture(
             name=str(
                 fixture.identifier,
             ),
-            universe=fixture.get(
+
+            universe=properties.get(
                 "universe",
                 0,
             ),
-            address=fixture.get(
+
+            address=properties.get(
                 "address",
                 0,
             ),
-            manufacturer=fixture.get(
+
+            manufacturer=properties.get(
                 "manufacturer",
             ),
-            model=fixture.get(
+
+            model=properties.get(
                 "model",
             ),
-            mode=fixture.get(
+
+            mode=properties.get(
                 "mode",
             ),
-            properties=properties,
+
+            position=position,
+
+            focus_point=focus_point,
+
+            mount=mount,
+
+            properties=final_properties,
         )
 
     def can_build(
         self,
         fixture: SemanticObject,
     ) -> bool:
-        """
-        Return True if the object is a fixture.
-        """
 
-        return fixture.object_type == "Fixture"
-
-    def __repr__(self) -> str:
         return (
-            f"{self.__class__.__name__}"
-            f"(resolver={self.resolver!r})"
+            fixture.object_type
+            == "Fixture"
         )

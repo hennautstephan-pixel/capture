@@ -1,19 +1,61 @@
 [build-system]
-requires = ["setuptools>=69"]
+requires = [
+    "setuptools>=68",
+    "wheel"
+]
 build-backend = "setuptools.build_meta"
+
 
 [project]
 name = "capture-recovery"
 version = "0.1.0"
-description = "Reverse engineering framework for Capture 2024 project files"
-requires-python = ">=3.11"
+description = "Recovery tool for corrupted Capture lighting projects"
+readme = "README.md"
+requires-python = ">=3.14"
+
+authors = [
+    {
+        name = "Stéphan Hennaut"
+    }
+]
+
+
+dependencies = [
+]
+
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=9.0",
+    "pytest-cov>=7.0",
+]
+
+
+[project.scripts]
+capture-recovery = "capture_recovery.cli:main"
+
+
+[tool.setuptools]
+package-dir = {
+    "" = "src"
+}
+
+
+[tool.setuptools.packages.find]
+where = [
+    "src"
+]
+
 
 [tool.pytest.ini_options]
-testpaths = ["tests"]
+testpaths = [
+    "tests"
+]
 
-[tool.coverage.run]
-source = ["src"]
+pythonpath = [
+    "src"
+]
 
-[tool.coverage.report]
-show_missing = true
-skip_covered = false
+addopts = [
+    "--strict-markers",
+]

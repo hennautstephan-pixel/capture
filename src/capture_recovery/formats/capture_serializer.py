@@ -19,6 +19,10 @@ from .capture_project import (
     CaptureProject,
 )
 
+from .cue_builder import (
+    CueBuilder,
+)
+
 from .universe_builder import (
     UniverseBuilder,
 )
@@ -33,6 +37,7 @@ class CaptureSerializer:
         self,
         fixture_builder: CaptureFixtureBuilder | None = None,
         universe_builder: UniverseBuilder | None = None,
+        cue_builder: CueBuilder | None = None,
     ) -> None:
 
         self.fixture_builder = fixture_builder
@@ -40,6 +45,11 @@ class CaptureSerializer:
         self.universe_builder = (
             universe_builder
             or UniverseBuilder()
+        )
+
+        self.cue_builder = (
+            cue_builder
+            or CueBuilder()
         )
 
     def serialize(
@@ -78,9 +88,6 @@ class CaptureSerializer:
     ) -> None:
         """
         Serialize fixtures.
-
-        Uses CaptureFixtureBuilder when available,
-        otherwise creates a basic CaptureFixture.
         """
 
         for fixture in project.fixtures:
@@ -146,21 +153,14 @@ class CaptureSerializer:
         capture: CaptureProject,
     ) -> None:
         """
-        Serialize cues.
+        Serialize cues using CueBuilder.
         """
 
         for cue in project.cues:
 
             capture.add_cue(
-                CaptureCue(
-                    name=str(
-                        cue.identifier,
-                    ),
-                    number=cue.get(
-                        "cue_number",
-                        0,
-                    ),
-                    properties=cue.properties.copy(),
+                self.cue_builder.build(
+                    cue,
                 )
             )
 
@@ -168,5 +168,6 @@ class CaptureSerializer:
         return (
             f"{self.__class__.__name__}"
             f"(fixture_builder={self.fixture_builder!r}, "
-            f"universe_builder={self.universe_builder!r})"
+            f"universe_builder={self.universe_builder!r}, "
+            f"cue_builder={self.cue_builder!r})"
         )

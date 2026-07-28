@@ -2,7 +2,11 @@
 Capture project formats.
 
 Contains Capture models,
-builders, geometry and JSON serialization tools.
+builders, geometry, patch, groups,
+positions, focus, structures,
+mounting, bindings, spatial resolution,
+transformations, hierarchy, scenes
+and serialization tools.
 """
 
 from .capture_project import (
@@ -11,6 +15,56 @@ from .capture_project import (
     CaptureUniverse,
     CaptureCue,
 )
+
+from .capture_patch import (
+    CapturePatch,
+    PatchEntry,
+)
+
+from .capture_group import (
+    CaptureGroup,
+)
+
+from .fixture_position import (
+    FixturePosition,
+)
+
+from .focus_point import (
+    FocusPoint,
+)
+
+from .fixture_mount import (
+    FixtureMount,
+)
+
+from .scene_structure import (
+    SceneStructure,
+)
+
+from .structure_binding import (
+    StructureBinding,
+)
+
+from .world_position import (
+    WorldPosition,
+)
+
+from .rotation_math import (
+    RotationMath,
+)
+
+from .spatial_transform import (
+    SpatialTransform,
+)
+
+from .scene_node import (
+    SceneNode,
+)
+
+from .capture_scene import (
+    CaptureScene,
+)
+
 
 from .capture_serializer import (
     CaptureSerializer,
@@ -40,17 +94,132 @@ from .universe_builder import (
     UniverseBuilder,
 )
 
+from .cue_builder import (
+    CueBuilder,
+)
+
+from .capture_project_builder import (
+    CaptureProjectBuilder,
+)
+
+from .patch_builder import (
+    PatchBuilder,
+)
+
+from .group_builder import (
+    GroupBuilder,
+)
+
+from .position_builder import (
+    PositionBuilder,
+)
+
+from .focus_builder import (
+    FocusBuilder,
+)
+
+from .structure_builder import (
+    StructureBuilder,
+)
+
+from .mount_builder import (
+    MountBuilder,
+)
+
+from .binding_builder import (
+    BindingBuilder,
+)
+
+from .spatial_resolver import (
+    SpatialResolver,
+)
+
+from .transform_node_builder import (
+    TransformNodeBuilder,
+)
+
+from .hierarchy_resolver import (
+    HierarchyResolver,
+)
+
+from .scene_builder import (
+    SceneBuilder,
+)
+
 
 __all__ = [
+
     "CaptureProject",
+
     "CaptureFixture",
+
     "CaptureUniverse",
+
     "CaptureCue",
+
+    "CapturePatch",
+
+    "PatchEntry",
+
+    "CaptureGroup",
+
+    "FixturePosition",
+
+    "FocusPoint",
+
+    "FixtureMount",
+
+    "SceneStructure",
+
+    "StructureBinding",
+
+    "WorldPosition",
+
+    "RotationMath",
+
+    "SpatialTransform",
+
+    "SceneNode",
+
+    "CaptureScene",
+
     "CaptureSerializer",
+
     "CaptureJsonSerializer",
+
     "CaptureJsonLoader",
+
     "CaptureFixtureBuilder",
+
     "FixtureGeometry",
+
     "FixtureGeometryBuilder",
+
     "UniverseBuilder",
+
+    "CueBuilder",
+
+    "CaptureProjectBuilder",
+
+    "PatchBuilder",
+
+    "GroupBuilder",
+
+    "PositionBuilder",
+
+    "FocusBuilder",
+
+    "StructureBuilder",
+
+    "MountBuilder",
+
+    "BindingBuilder",
+
+    "SpatialResolver",
+
+    "TransformNodeBuilder",
+
+    "HierarchyResolver",
+
+    "SceneBuilder",
 ]

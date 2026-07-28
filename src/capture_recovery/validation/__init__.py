@@ -1,7 +1,14 @@
-from .project_validator import ProjectValidator
-from .validation_result import ValidationResult
+"""
+Validation package.
+
+Contains validators for reconstructed projects.
+"""
+
+from .reconstruction_validator import (
+    ReconstructionValidator,
+)
+
 
 __all__ = [
-    "ProjectValidator",
-    "ValidationResult",
+    "ReconstructionValidator",
 ]

@@ -1,27 +1,55 @@
 """
-Capture project format model.
-
-Represents a project ready for serialization
-to a Capture compatible format.
+Capture project output models.
 """
 
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Any
+
+from .capture_group import (
+    CaptureGroup,
+)
+
+from .capture_patch import (
+    CapturePatch,
+)
+
+from .fixture_position import (
+    FixturePosition,
+)
+
+from .focus_point import (
+    FocusPoint,
+)
+
+from .fixture_mount import (
+    FixtureMount,
+)
+
+from .scene_structure import (
+    SceneStructure,
+)
+
+from .structure_binding import (
+    StructureBinding,
+)
+
+from .capture_scene import (
+    CaptureScene,
+)
 
 
 @dataclass(slots=True)
 class CaptureFixture:
     """
-    Capture fixture representation.
+    Capture fixture model.
     """
 
     name: str
 
-    universe: int
+    universe: int = 0
 
-    address: int
+    address: int = 0
 
     manufacturer: str | None = None
 
@@ -29,7 +57,19 @@ class CaptureFixture:
 
     mode: str | None = None
 
-    properties: dict[str, Any] = field(
+    position: FixturePosition = field(
+        default_factory=FixturePosition,
+    )
+
+    focus_point: FocusPoint = field(
+        default_factory=FocusPoint,
+    )
+
+    mount: FixtureMount = field(
+        default_factory=FixtureMount,
+    )
+
+    properties: dict = field(
         default_factory=dict,
     )
 
@@ -37,16 +77,16 @@ class CaptureFixture:
 @dataclass(slots=True)
 class CaptureUniverse:
     """
-    Capture DMX universe representation.
+    Capture universe model.
     """
 
     name: str
 
-    universe: int
+    universe: int = 0
 
     protocol: str | None = None
 
-    properties: dict[str, Any] = field(
+    properties: dict = field(
         default_factory=dict,
     )
 
@@ -54,14 +94,14 @@ class CaptureUniverse:
 @dataclass(slots=True)
 class CaptureCue:
     """
-    Capture cue representation.
+    Capture cue model.
     """
 
     name: str
 
-    number: int
+    number: int = 0
 
-    properties: dict[str, Any] = field(
+    properties: dict = field(
         default_factory=dict,
     )
 
@@ -69,10 +109,10 @@ class CaptureCue:
 @dataclass(slots=True)
 class CaptureProject:
     """
-    Serializable Capture project model.
+    Complete Capture project model.
     """
 
-    name: str = "Recovered Capture Project"
+    name: str
 
     fixtures: list[CaptureFixture] = field(
         default_factory=list,
@@ -86,7 +126,27 @@ class CaptureProject:
         default_factory=list,
     )
 
-    metadata: dict[str, Any] = field(
+    patch: CapturePatch = field(
+        default_factory=CapturePatch,
+    )
+
+    groups: list[CaptureGroup] = field(
+        default_factory=list,
+    )
+
+    structures: list[SceneStructure] = field(
+        default_factory=list,
+    )
+
+    bindings: list[StructureBinding] = field(
+        default_factory=list,
+    )
+
+    scene: CaptureScene = field(
+        default_factory=CaptureScene,
+    )
+
+    metadata: dict = field(
         default_factory=dict,
     )
 
@@ -94,6 +154,7 @@ class CaptureProject:
         self,
         fixture: CaptureFixture,
     ) -> None:
+
         self.fixtures.append(
             fixture,
         )
@@ -102,6 +163,7 @@ class CaptureProject:
         self,
         universe: CaptureUniverse,
     ) -> None:
+
         self.universes.append(
             universe,
         )
@@ -110,16 +172,63 @@ class CaptureProject:
         self,
         cue: CaptureCue,
     ) -> None:
+
         self.cues.append(
             cue,
         )
 
-    def count(self) -> int:
+    def add_group(
+        self,
+        group: CaptureGroup,
+    ) -> None:
+
+        self.groups.append(
+            group,
+        )
+
+    def add_structure(
+        self,
+        structure: SceneStructure,
+    ) -> None:
+
+        self.structures.append(
+            structure,
+        )
+
+    def add_binding(
+        self,
+        binding: StructureBinding,
+    ) -> None:
+
+        self.bindings.append(
+            binding,
+        )
+
+    def set_scene(
+        self,
+        scene: CaptureScene,
+    ) -> None:
+        """
+        Attach scene graph.
+        """
+
+        self.scene = scene
+
+    def __len__(
+        self,
+    ) -> int:
+        """
+        Return project object count.
+
+        Kept for backward compatibility
+        with existing serializers/tests.
+        """
+
         return (
             len(self.fixtures)
             + len(self.universes)
             + len(self.cues)
+            + len(self.groups)
+            + len(self.structures)
+            + len(self.bindings)
         )
-
-    def __len__(self) -> int:
-        return self.count()
