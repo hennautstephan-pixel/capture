@@ -1,0 +1,3 @@
+[console_scripts]
+capture-recovery = capture_recovery.cli:main
+capture-recovery-gui = capture_recovery.gui_app:main

@@ -1,3 +1,10 @@
+"""
+Main graphical interface for Capture Recovery.
+"""
+
+from __future__ import annotations
+
+
 from pathlib import Path
 
 
@@ -9,26 +16,62 @@ from PySide6.QtWidgets import (
     QLabel,
     QVBoxLayout,
     QWidget,
+    QTreeWidget,
+    QTreeWidgetItem,
+    QSplitter,
+    QTabWidget,
 )
 
 
-from PySide6.QtCore import (
-    QThread,
+from capture_recovery.pipeline import (
+    CaptureProjectPipeline,
 )
 
 
-from .recovery_worker import (
-    RecoveryWorker,
+from capture_recovery.formats import (
+    CaptureBinaryStructureAnalyzer,
+    CaptureBinaryObjectAnalyzer,
+)
+
+
+from capture_recovery.gui.binary_analysis_panel import (
+    BinaryAnalysisPanel,
+)
+
+
+from capture_recovery.gui.object_analysis_panel import (
+    ObjectAnalysisPanel,
 )
 
 
 
 class MainWindow(QMainWindow):
+    """
+    Main application window.
+    """
 
 
-    def __init__(self):
+    def __init__(
+        self,
+    ):
 
         super().__init__()
+
+
+        self.pipeline = CaptureProjectPipeline()
+
+
+        self.binary_analyzer = (
+            CaptureBinaryStructureAnalyzer()
+        )
+
+
+        self.object_analyzer = (
+            CaptureBinaryObjectAnalyzer()
+        )
+
+
+        self.current_project = None
 
 
         self.setWindowTitle(
@@ -37,8 +80,8 @@ class MainWindow(QMainWindow):
 
 
         self.resize(
-            900,
-            600,
+            1200,
+            800,
         )
 
 
@@ -47,50 +90,123 @@ class MainWindow(QMainWindow):
         )
 
 
+        self.open_button = QPushButton(
+            "Ouvrir et analyser"
+        )
+
+
+        self.open_button.clicked.connect(
+            self.open_file
+        )
+
+
+        self.tree = QTreeWidget()
+
+
+        self.tree.setHeaderLabels(
+            [
+                "Projet",
+                "Valeur",
+            ]
+        )
+
+
         self.log = QTextEdit()
+
 
         self.log.setReadOnly(
             True
         )
 
 
-        self.button = QPushButton(
-            "Ouvrir et récupérer"
+        self.binary_panel = (
+            BinaryAnalysisPanel()
         )
 
 
-        self.button.clicked.connect(
-            self.open_file
+        self.object_panel = (
+            ObjectAnalysisPanel()
         )
 
 
-        layout = QVBoxLayout()
+        self.tabs = QTabWidget()
 
 
-        layout.addWidget(
+        project_widget = QWidget()
+
+
+        project_layout = QVBoxLayout()
+
+
+        project_layout.addWidget(
             self.file_label
         )
 
 
-        layout.addWidget(
-            self.button
+        project_layout.addWidget(
+            self.open_button
         )
 
 
-        layout.addWidget(
+        project_layout.addWidget(
+            self.tree
+        )
+
+
+        project_widget.setLayout(
+            project_layout
+        )
+
+
+        self.tabs.addTab(
+            project_widget,
+            "Projet",
+        )
+
+
+        self.tabs.addTab(
+            self.binary_panel,
+            "Analyse binaire",
+        )
+
+
+        self.tabs.addTab(
+            self.object_panel,
+            "Objets",
+        )
+
+
+        right = QWidget()
+
+
+        right_layout = QVBoxLayout()
+
+
+        right_layout.addWidget(
             self.log
         )
 
 
-        widget = QWidget()
+        right.setLayout(
+            right_layout
+        )
 
-        widget.setLayout(
-            layout
+
+        splitter = QSplitter()
+
+
+        splitter.addWidget(
+            self.tabs
+        )
+
+
+        splitter.addWidget(
+            right
         )
 
 
         self.setCentralWidget(
-            widget
+            splitter
         )
 
 
@@ -99,70 +215,263 @@ class MainWindow(QMainWindow):
         self,
     ):
 
-        file, _ = QFileDialog.getOpenFileName(
+        filename, _ = QFileDialog.getOpenFileName(
+
             self,
+
             "Choisir un projet Capture",
+
             "",
-            "Capture (*.cap *.c2)",
+
+            "Capture Projects (*.c2p *.c2 *.cap)",
+
         )
 
 
-        if not file:
+        if not filename:
+
             return
 
 
+        path = Path(
+            filename
+        )
+
+
         self.file_label.setText(
-            file
+            str(path)
         )
 
 
-        self.thread = QThread()
+        self.tree.clear()
 
 
-        self.worker = RecoveryWorker(
-            Path(file)
+        self.binary_panel.clear()
+
+
+        self.object_panel.clear()
+
+
+        self.log.clear()
+
+
+        self.log.append(
+            "Analyse du projet..."
         )
 
 
-        self.worker.moveToThread(
-            self.thread
-        )
+        try:
+
+            result = self.pipeline.process(
+                path
+            )
 
 
-        self.thread.started.connect(
-            self.worker.run
-        )
+            self.current_project = result
 
 
-        self.worker.progress.connect(
-            self.log.append
-        )
+            self.display_project(
+                result
+            )
 
 
-        self.worker.finished.connect(
-            self.finished
-        )
+            binary_result = (
+                self.binary_analyzer.analyze(
+                    path
+                )
+            )
 
 
-        self.worker.error.connect(
-            self.log.append
-        )
+            self.binary_panel.display_analysis(
+                binary_result
+            )
 
 
-        self.thread.start()
+            object_result = (
+                self.object_analyzer.analyze(
+                    path
+                )
+            )
+
+
+            self.object_panel.display_objects(
+                object_result
+            )
+
+
+            self.log.append(
+                "Analyse terminée."
+            )
+
+
+        except Exception as error:
+
+
+            self.log.append(
+                f"Erreur : {error}"
+            )
 
 
 
-    def finished(
+    def display_project(
         self,
         result,
     ):
 
-        self.log.append(
-            "Projet récupéré"
+
+        self.tree.clear()
+
+
+        project = result.get(
+            "project",
+            {},
         )
 
 
-        self.log.append(
-            str(result)
+        root = QTreeWidgetItem(
+            [
+                "Projet",
+                project.get(
+                    "name",
+                    "",
+                ),
+            ]
         )
+
+
+        self.tree.addTopLevelItem(
+            root
+        )
+
+
+        self.add_value(
+            root,
+            "Fichier",
+            project.get(
+                "file",
+                "",
+            ),
+        )
+
+
+        self.add_list(
+            root,
+            "Fixtures",
+            project.get(
+                "fixtures",
+                [],
+            ),
+        )
+
+
+        self.add_list(
+            root,
+            "Scenes",
+            project.get(
+                "scenes",
+                [],
+            ),
+        )
+
+
+        self.add_list(
+            root,
+            "Groups",
+            project.get(
+                "groups",
+                [],
+            ),
+        )
+
+
+        self.add_list(
+            root,
+            "Patch",
+            project.get(
+                "patch",
+                [],
+            ),
+        )
+
+
+        root.setExpanded(
+            True
+        )
+
+
+
+    def add_value(
+        self,
+        parent,
+        key,
+        value,
+    ):
+
+
+        item = QTreeWidgetItem(
+            [
+                str(key),
+                str(value),
+            ]
+        )
+
+
+        parent.addChild(
+            item
+        )
+
+
+
+    def add_list(
+        self,
+        parent,
+        title,
+        values,
+    ):
+
+
+        category = QTreeWidgetItem(
+            [
+                title,
+                str(len(values)),
+            ]
+        )
+
+
+        parent.addChild(
+            category
+        )
+
+
+        for value in values[:100]:
+
+
+            if isinstance(
+                value,
+                dict,
+            ):
+
+
+                name = value.get(
+                    "name",
+                    str(value),
+                )
+
+
+            else:
+
+                name = str(value)
+
+
+
+            item = QTreeWidgetItem(
+                [
+                    name,
+                    "",
+                ]
+            )
+
+
+            category.addChild(
+                item
+            )

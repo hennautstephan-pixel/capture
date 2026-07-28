@@ -32,6 +32,10 @@ from .project_recovery_pipeline import (
     ProjectRecoveryPipeline,
 )
 
+from .capture_project_pipeline import (
+    CaptureProjectPipeline,
+)
+
 
 __all__ = [
 
@@ -46,5 +50,7 @@ __all__ = [
     "FullRecoveryPipeline",
 
     "ProjectRecoveryPipeline",
+
+    "CaptureProjectPipeline",
 
 ]

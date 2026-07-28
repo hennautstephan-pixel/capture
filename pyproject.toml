@@ -14,31 +14,29 @@ readme = "README.md"
 requires-python = ">=3.14"
 
 authors = [
-    {
-        name = "Stéphan Hennaut"
-    }
+    { name = "Stéphan Hennaut" }
 ]
 
 
 dependencies = [
+    "PySide6>=6.8"
 ]
 
 
 [project.optional-dependencies]
 dev = [
     "pytest>=9.0",
-    "pytest-cov>=7.0",
+    "pytest-cov>=7.0"
 ]
 
 
 [project.scripts]
 capture-recovery = "capture_recovery.cli:main"
+capture-recovery-gui = "capture_recovery.gui_app:main"
 
 
 [tool.setuptools]
-package-dir = {
-    "" = "src"
-}
+package-dir = { "" = "src" }
 
 
 [tool.setuptools.packages.find]
@@ -57,5 +55,5 @@ pythonpath = [
 ]
 
 addopts = [
-    "--strict-markers",
+    "--strict-markers"
 ]

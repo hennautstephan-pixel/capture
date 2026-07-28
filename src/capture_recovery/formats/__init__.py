@@ -146,6 +146,33 @@ from .scene_builder import (
     SceneBuilder,
 )
 
+from .capture_project_reader import (
+    CaptureProjectReader,
+)
+
+from .capture_container_analyzer import (
+    CaptureContainerAnalyzer,
+)
+
+from .capture_binary_structure_analyzer import (
+    CaptureBinaryStructureAnalyzer,
+)
+
+from .capture_object_detector import (
+    CaptureObjectDetector,
+)
+
+from .capture_binary_object_analyzer import (
+    CaptureBinaryObjectAnalyzer,
+)
+
+from .capture_signature_detector import (
+    CaptureSignatureDetector,
+)
+
+from .capture_signature_analyzer import (
+    CaptureSignatureAnalyzer,
+)
 
 __all__ = [
 
@@ -222,4 +249,18 @@ __all__ = [
     "HierarchyResolver",
 
     "SceneBuilder",
+
+    "CaptureProjectReader",
+
+    "CaptureContainerAnalyzer",
+
+    "CaptureBinaryStructureAnalyzer",
+
+    "CaptureObjectDetector",
+
+    "CaptureBinaryObjectAnalyzer",
+
+    "CaptureSignatureDetector",
+
+    "CaptureSignatureAnalyzer",
 ]
