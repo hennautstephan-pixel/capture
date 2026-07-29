@@ -2,7 +2,7 @@
 Binary recovery pipeline.
 
 Connects Capture binary files
-with binary analysis.
+with binary analysis and reverse engineering.
 """
 
 from __future__ import annotations
@@ -10,6 +10,10 @@ from __future__ import annotations
 
 from capture_recovery.io import (
     CaptureBinaryReader,
+)
+
+from capture_recovery.reverse.reverse_engine import (
+    ReverseEngine,
 )
 
 
@@ -23,14 +27,34 @@ class BinaryRecoveryPipeline:
     """
     Recover information from
     binary Capture files.
+
+    Pipeline:
+
+        .c2p
+          |
+          v
+        BinaryReader
+          |
+          v
+        BinaryAnalyzer
+          |
+          v
+        ReverseEngine
+          |
+          v
+        Analysis result
+
     """
+
 
 
     def __init__(
         self,
         reader=None,
         analyzer=None,
+        reverse_engine=None,
     ) -> None:
+
 
         self.reader = (
 
@@ -46,6 +70,15 @@ class BinaryRecoveryPipeline:
             analyzer
 
             or BinaryAnalyzer()
+
+        )
+
+
+        self.reverse_engine = (
+
+            reverse_engine
+
+            or ReverseEngine()
 
         )
 
@@ -71,6 +104,10 @@ class BinaryRecoveryPipeline:
     ) -> dict:
         """
         Analyze binary data.
+
+        Runs:
+        - classic binary analysis
+        - reverse binary analysis
         """
 
         summary = self.analyzer.summary(
@@ -78,18 +115,50 @@ class BinaryRecoveryPipeline:
         )
 
 
+        try:
+
+            reverse_result = (
+                self.reverse_engine.analyze(
+                    data,
+                )
+            )
+
+
+        except Exception as exc:
+
+            # Reverse analysis must not
+            # stop the recovery pipeline
+
+            reverse_result = {
+
+                "error": str(exc)
+
+            }
+
+
+
         return {
 
             "size": summary["size"],
 
+
             # compatibility with previous API
+
             "signature": data[:16],
+
 
             "count": summary["count"],
 
+
             "detections": summary["detections"],
 
+
             "detection_index": summary,
+
+
+            # new reverse analysis
+
+            "reverse": reverse_result,
 
         }
 
@@ -102,6 +171,7 @@ class BinaryRecoveryPipeline:
         """
         Execute binary recovery.
         """
+
 
         data = self.read(
             path,
