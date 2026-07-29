@@ -8,6 +8,8 @@ from __future__ import annotations
 
 import zlib
 
+from capture_recovery.binary.signatures import SignatureRegistry
+
 from .entropy import EntropyAnalyzer
 from .segment import Segment
 
@@ -19,6 +21,7 @@ class SegmentDetector:
     Current version detects:
         - all-zero buffers
         - printable ASCII buffers
+        - known binary signatures
         - probable zlib streams
         - high-entropy binary regions
     """
@@ -29,6 +32,8 @@ class SegmentDetector:
         b"\x78\x9C",
         b"\x78\xDA",
     )
+
+    _SIGNATURES = SignatureRegistry()
 
     @classmethod
     def detect(cls, data: bytes | bytearray | memoryview) -> list[Segment]:
@@ -73,6 +78,26 @@ class SegmentDetector:
             )
 
         # ------------------------------------------------------------------
+        # Known binary signatures
+        # ------------------------------------------------------------------
+
+        signature = cls._SIGNATURES.match(raw)
+
+        if signature is not None:
+            result.append(
+                Segment(
+                    offset=signature.offset,
+                    length=len(data),
+                    kind=signature.name.lower(),
+                    confidence=1.0,
+                    metadata={
+                        "signature": signature.name,
+                        "description": signature.description,
+                    },
+                )
+            )
+
+        # ------------------------------------------------------------------
         # zlib
         # ------------------------------------------------------------------
 
@@ -108,6 +133,10 @@ class SegmentDetector:
                     },
                 )
             )
+
+        # ------------------------------------------------------------------
+        # Fallback
+        # ------------------------------------------------------------------
 
         if not result:
             result.append(

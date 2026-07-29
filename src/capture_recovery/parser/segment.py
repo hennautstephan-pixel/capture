@@ -1,20 +1,13 @@
-"""
-capture_recovery.parser.segment
-
-Representation of a binary segment.
-"""
-
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from typing import Any
+
+from capture_recovery.binary.string_scanner import ExtractedString
 
 
 @dataclass(slots=True)
 class Segment:
-    """
-    Represents a contiguous region of binary data.
-    """
-
     offset: int
     length: int
 
@@ -22,15 +15,26 @@ class Segment:
 
     confidence: float = 0.0
 
-    label: str | None = None
+    entropy: float | None = None
 
-    metadata: dict[str, object] = field(default_factory=dict)
+    signature: str |None = None
+
+    strings: list[ExtractedString] = field(default_factory=list)
+
+    metadata: dict[str, Any] = field(default_factory=dict)
 
     children: list["Segment"] = field(default_factory=list)
 
     @property
     def end(self) -> int:
         return self.offset + self.length
+
+    @property
+    def size(self) -> int:
+        return self.length
+
+    def __len__(self) -> int:
+        return self.length
 
     def contains(self, offset: int) -> bool:
         return self.offset <= offset < self.end
@@ -44,14 +48,22 @@ class Segment:
     def add_child(self, child: "Segment") -> None:
         self.children.append(child)
 
-    def __len__(self) -> int:
-        return self.length
-
-    def __repr__(self) -> str:
-        return (
-            f"Segment("
-            f"offset={self.offset}, "
-            f"length={self.length}, "
-            f"kind={self.kind!r}, "
-            f"confidence={self.confidence:.2f})"
-        )
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "offset": self.offset,
+            "length": self.length,
+            "kind": self.kind,
+            "confidence": self.confidence,
+            "entropy": self.entropy,
+            "signature": self.signature,
+            "strings": [
+                {
+                    "offset": s.offset,
+                    "encoding": s.encoding,
+                    "text": s.text,
+                }
+                for s in self.strings
+            ],
+            "metadata": dict(self.metadata),
+            "children": [c.to_dict() for c in self.children],
+        }
