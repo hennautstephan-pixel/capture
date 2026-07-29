@@ -12,10 +12,17 @@ from .api import (
     get_engine,
 )
 
+
 from .reverse_engine import (
     ReverseEngine,
     ReverseResult,
 )
+
+
+from .detection_options import (
+    DetectionOptions,
+)
+
 
 
 from .numeric_detector import (
@@ -37,6 +44,7 @@ from .alignment_detector import (
 from .entropy_detector import (
     EntropyDetector,
 )
+
 
 
 from .numeric_value import (
@@ -67,9 +75,12 @@ __all__ = [
     "analyze",
     "get_engine",
 
+
     # Engine
     "ReverseEngine",
     "ReverseResult",
+    "DetectionOptions",
+
 
     # Detectors
     "NumericDetector",
@@ -78,10 +89,12 @@ __all__ = [
     "AlignmentDetector",
     "EntropyDetector",
 
+
     # Values
     "NumericValue",
     "StringValue",
     "GuidValue",
     "AlignmentValue",
     "EntropyValue",
+
 ]

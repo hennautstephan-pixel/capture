@@ -1,8 +1,18 @@
 """
 Full recovery pipeline.
 
-Coordinates binary analysis,
-semantic recovery and project reconstruction.
+Coordinates:
+
+Capture binary analysis
+        |
+        v
+Reverse analysis
+        |
+        v
+Semantic recovery
+        |
+        v
+Project reconstruction
 """
 
 from __future__ import annotations
@@ -12,15 +22,23 @@ from capture_recovery.pipeline.binary_recovery_pipeline import (
     BinaryRecoveryPipeline,
 )
 
+
 from capture_recovery.pipeline.semantic_recovery_pipeline import (
     SemanticRecoveryPipeline,
 )
+
+
+from capture_recovery.reconstruction.project_reconstructor import (
+    ProjectReconstructor,
+)
+
 
 
 class FullRecoveryPipeline:
     """
     Complete Capture recovery workflow.
     """
+
 
 
     def __init__(
@@ -30,6 +48,7 @@ class FullRecoveryPipeline:
         reconstructor=None,
     ) -> None:
 
+
         self.binary_pipeline = (
 
             binary_pipeline
@@ -37,6 +56,7 @@ class FullRecoveryPipeline:
             or BinaryRecoveryPipeline()
 
         )
+
 
 
         self.semantic_pipeline = (
@@ -48,7 +68,14 @@ class FullRecoveryPipeline:
         )
 
 
-        self.reconstructor = reconstructor
+
+        self.reconstructor = (
+
+            reconstructor
+
+            or ProjectReconstructor()
+
+        )
 
 
 
@@ -57,7 +84,7 @@ class FullRecoveryPipeline:
         path,
     ) -> dict:
         """
-        Run binary analysis.
+        Execute binary analysis.
         """
 
         return self.binary_pipeline.run(
@@ -74,37 +101,64 @@ class FullRecoveryPipeline:
         Execute complete recovery.
         """
 
+
+
         binary_result = self.analyze(
             path,
         )
 
 
-        analysis = binary_result["analysis"]
+        analysis = binary_result.get(
+            "analysis",
+            {},
+        )
+
 
 
         semantic_result = (
+
             self.semantic_pipeline.run(
                 analysis,
             )
+
         )
+
 
 
         project = None
 
 
+
         if self.reconstructor:
 
-            project = self.reconstructor.reconstruct(
-                semantic_result["objects"],
+
+            project = (
+
+                self.reconstructor.reconstruct(
+                    semantic_result.get(
+                        "objects",
+                        [],
+                    ),
+                )
+
             )
+
 
 
         return {
 
-            "binary": binary_result,
+            "binary":
 
-            "semantic": semantic_result,
+                binary_result,
 
-            "project": project,
+
+            "semantic":
+
+                semantic_result,
+
+
+            "project":
+
+                project,
 
         }

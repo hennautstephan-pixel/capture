@@ -6,7 +6,9 @@ Detect GUID values inside binary buffers.
 
 from __future__ import annotations
 
+
 from collections.abc import Iterable
+
 
 from .detection_options import DetectionOptions
 from .detector_type import DetectorType
@@ -26,6 +28,7 @@ class GuidDetector:
     """
 
 
+
     def __init__(
         self,
         guid_types: Iterable[GuidType] = GUID_TYPES,
@@ -36,11 +39,9 @@ class GuidDetector:
         )
 
 
+
     @property
     def name(self) -> str:
-        """
-        Detector public name.
-        """
 
         return "guid"
 
@@ -55,47 +56,91 @@ class GuidDetector:
         Detect GUID values.
         """
 
+        if options is None:
 
-        if options is not None:
-
-            enabled_types = getattr(
-                options,
-                "enabled_types",
-                None,
-            )
-
-            if (
-                enabled_types
-                and DetectorType.GUID
-                not in enabled_types
-            ):
-                return []
+            options = DetectionOptions()
 
 
 
-        buffer = bytes(data)
+        enabled_types = getattr(
+            options,
+            "enabled_types",
+            None,
+        )
+
+
+        if (
+            enabled_types
+            and DetectorType.GUID
+            not in enabled_types
+        ):
+
+            return []
+
+
+
+        buffer = bytes(
+            data
+        )
+
+
+
+        if options.max_scan_size is not None:
+
+            buffer = buffer[
+                :options.max_scan_size
+            ]
+
+
+
+        max_results = getattr(
+            options,
+            "max_results",
+            None,
+        )
+
+
 
         results: list[GuidValue] = []
 
-        seen: set[tuple[int, str]] = set()
+        seen: set[
+            tuple[int, str]
+        ] = set()
 
 
 
         for guid_type in self._guid_types:
 
 
-            iterator_options = (
-                options
-                if options is not None
-                else DetectionOptions()
-            )
-
-
             for offset in OffsetIterator.iterate(
                 length=len(buffer),
                 value_size=guid_type.size,
-                options=iterator_options,
+                options=options,
             ):
+
+
+                if (
+                    max_results is not None
+                    and len(results) >= max_results
+                ):
+
+                    return results
+
+
+
+                raw = buffer[
+                    offset:
+                    offset + guid_type.size
+                ]
+
+
+
+                if not self._is_valid_candidate(
+                    raw
+                ):
+
+                    continue
+
 
 
                 value = GuidDecoder.decode(
@@ -105,7 +150,9 @@ class GuidDetector:
                 )
 
 
+
                 if value is None:
+
                     continue
 
 
@@ -116,18 +163,131 @@ class GuidDetector:
                 )
 
 
+
                 if key in seen:
+
                     continue
 
 
-                seen.add(key)
+
+                seen.add(
+                    key
+                )
+
 
                 results.append(
                     value
                 )
 
 
+
         return results
+
+
+
+    @staticmethod
+    def _is_valid_candidate(
+        raw: bytes,
+    ) -> bool:
+        """
+        Reject obvious text interpreted as GUID.
+
+        Do not reject valid binary GUIDs.
+        """
+
+        if len(raw) != 16:
+
+            return False
+
+
+
+        #
+        # UTF-16 LE detection
+        #
+        # Example:
+        # 53 00 6F 00 66 00 74 00
+        #
+
+        utf16_le_pairs = sum(
+
+            1
+
+            for index in range(
+                1,
+                16,
+                2,
+            )
+
+            if raw[index] == 0
+
+        )
+
+
+        if utf16_le_pairs >= 5:
+
+            return False
+
+
+
+        #
+        # UTF-16 BE detection
+        #
+
+        utf16_be_pairs = sum(
+
+            1
+
+            for index in range(
+                0,
+                15,
+                2,
+            )
+
+            if raw[index] == 0
+
+        )
+
+
+        if utf16_be_pairs >= 5:
+
+            return False
+
+
+
+        #
+        # Empty padding
+        #
+
+        if raw.count(
+            0
+        ) >= 12:
+
+            return False
+
+
+
+        #
+        # Almost entirely printable ASCII
+        #
+
+        printable = sum(
+
+            1
+
+            for byte in raw
+
+            if 32 <= byte < 127
+
+        )
+
+
+        if printable >= 12:
+
+            return False
+
+
+
+        return True
 
 
 
@@ -135,8 +295,5 @@ class GuidDetector:
     def guid_types(
         self,
     ) -> tuple[GuidType, ...]:
-        """
-        Supported GUID formats.
-        """
 
         return self._guid_types

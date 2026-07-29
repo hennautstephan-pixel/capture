@@ -1,32 +1,45 @@
 """
 Semantic recovery pipeline.
 
-Transforms binary detections into
+Transforms reverse findings into
 semantic recovery objects.
 """
 
 from __future__ import annotations
 
 
+from capture_recovery.semantic.reverse_adapter import (
+    ReverseSemanticAdapter,
+)
+
+
+
 class SemanticRecoveryPipeline:
     """
-    Convert detection results into
-    semantic objects.
+    Convert reverse analysis into
+    semantic recovery data.
     """
+
 
 
     def __init__(
         self,
         builders=None,
+        adapter=None,
     ) -> None:
 
+
         self.builders = (
-
             builders
-
             or []
-
         )
+
+
+        self.adapter = (
+            adapter
+            or ReverseSemanticAdapter()
+        )
+
 
 
     def build(
@@ -34,8 +47,7 @@ class SemanticRecoveryPipeline:
         detections,
     ) -> list:
         """
-        Build semantic objects
-        from detections.
+        Run additional builders.
         """
 
         objects = []
@@ -43,9 +55,11 @@ class SemanticRecoveryPipeline:
 
         for builder in self.builders:
 
+
             result = builder.build(
                 detections,
             )
+
 
             objects.extend(
                 result
@@ -70,15 +84,73 @@ class SemanticRecoveryPipeline:
         )
 
 
-        objects = self.build(
-            detections,
+        objects = []
+
+        evidence = {}
+
+
+
+        #
+        # Reverse analysis
+        #
+
+        reverse_result = analysis.get(
+            "reverse",
         )
+
+
+        if reverse_result is not None:
+
+
+            semantic = self.adapter.analyze(
+                reverse_result,
+            )
+
+
+            objects.extend(
+                semantic.get(
+                    "objects",
+                    [],
+                )
+            )
+
+
+            evidence = semantic.get(
+                "evidence",
+                {},
+            )
+
+
+
+        #
+        # Legacy builders
+        #
+
+        objects.extend(
+
+            self.build(
+                detections,
+            )
+
+        )
+
 
 
         return {
 
-            "detections": detections,
+            "detections":
+                detections,
 
-            "objects": objects,
+
+            "reverse":
+                reverse_result,
+
+
+            "objects":
+                objects,
+
+
+            "evidence":
+                evidence,
 
         }

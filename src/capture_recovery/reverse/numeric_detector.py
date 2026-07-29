@@ -77,15 +77,16 @@ class _DualMethod:
         )
 
 
+
 class NumericDetector:
     """
     Detect numeric values in binary buffers.
     """
 
-
     def __init__(
         self,
-        numeric_types: Iterable[NumericType] = _DEFAULT_NUMERIC_TYPES,
+        numeric_types: Iterable[NumericType] =
+        _DEFAULT_NUMERIC_TYPES,
     ) -> None:
 
         self._numeric_types = tuple(
@@ -95,11 +96,13 @@ class NumericDetector:
 
     @property
     def name(self) -> str:
+
         return "numeric"
 
 
     @property
     def numeric_types(self):
+
         return self._numeric_types
 
 
@@ -115,9 +118,6 @@ class NumericDetector:
         finite_only=True,
         endianness=None,
     ):
-        """
-        Public entry point.
-        """
 
         return self._detect(
             data,
@@ -189,15 +189,20 @@ class NumericDetector:
                 minimum is not None
                 and value.value < minimum
             ):
+
                 continue
+
 
             if (
                 maximum is not None
                 and value.value > maximum
             ):
+
                 continue
 
+
             result.append(value)
+
 
         return result
 
@@ -217,6 +222,7 @@ class NumericDetector:
 
 
         if options is None:
+
             options = DetectionOptions()
 
 
@@ -232,7 +238,16 @@ class NumericDetector:
             enabled
             and DetectorType.NUMERIC not in enabled
         ):
+
             return []
+
+
+
+        max_results = getattr(
+            options,
+            "max_results",
+            None,
+        )
 
 
 
@@ -259,6 +274,17 @@ class NumericDetector:
 
         buffer = bytes(data)
 
+
+        if (
+            options.max_scan_size is not None
+        ):
+
+            buffer = buffer[
+                :options.max_scan_size
+            ]
+
+
+
         results = []
 
         seen = set()
@@ -269,16 +295,28 @@ class NumericDetector:
 
 
             if (
+                max_results is not None
+                and len(results) >= max_results
+            ):
+
+                return results
+
+
+
+            if (
                 numeric_type.floating
                 and not floats
             ):
+
                 continue
+
 
 
             if (
                 not numeric_type.floating
                 and not integers
             ):
+
                 continue
 
 
@@ -294,12 +332,32 @@ class NumericDetector:
             for offset in offsets:
 
 
+                if (
+                    max_results is not None
+                    and len(results) >= max_results
+                ):
+
+                    return results
+
+
+
                 if offset % numeric_type.size != 0:
+
                     continue
 
 
 
                 for current_endianness in endian_list:
+
+
+
+                    if (
+                        max_results is not None
+                        and len(results) >= max_results
+                    ):
+
+                        return results
+
 
 
                     value = NumericDecoder.decode(
@@ -310,7 +368,9 @@ class NumericDetector:
                     )
 
 
+
                     if value is None:
+
                         continue
 
 
@@ -325,6 +385,7 @@ class NumericDetector:
                             value.value
                         )
                     ):
+
                         continue
 
 
@@ -336,13 +397,18 @@ class NumericDetector:
                     )
 
 
+
                     if key in seen:
+
                         continue
+
 
 
                     seen.add(key)
 
-                    results.append(value)
+                    results.append(
+                        value
+                    )
 
 
 

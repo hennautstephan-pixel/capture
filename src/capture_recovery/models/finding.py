@@ -1,31 +1,131 @@
 """
 Finding model.
+
+Unified model for binary analysis,
+reverse analysis and recovery.
 """
+
+from __future__ import annotations
 
 from dataclasses import dataclass
 
-from .enums import FindingType
-from .enums import Severity
+from .enums import (
+    FindingType,
+    Severity,
+)
+
 
 
 @dataclass(slots=True)
 class Finding:
     """
-    Single piece of information discovered during analysis.
+    Generic analysis finding.
+
+    Compatible with:
+    - binary analyzers
+    - UTF16 analyzer
+    - reverse recovery
+    - JSON export
     """
 
-    offset: int
 
-    length: int
+    #
+    # Legacy analysis fields
+    #
 
-    category: FindingType
+    offset: int | None = None
 
-    value: str
+    length: int | None = None
 
-    description: str
+    category: FindingType | str | None = None
 
-    severity: Severity = Severity.INFO
+    description: str | None = None
 
-    analyzer: str = ""
+    value: str | None = None
 
-    confidence: float = 1.0
+    severity: Severity | str | None = None
+
+
+
+    #
+    # Reverse recovery fields
+    #
+
+    type: str | None = None
+
+    source: str | None = None
+
+    confidence: float = 0.0
+
+
+
+    def to_dict(self) -> dict:
+        """
+        JSON compatible representation.
+        """
+
+
+        category = self.category
+
+
+        if hasattr(
+            category,
+            "value",
+        ):
+
+            category = category.value
+
+
+
+        severity = self.severity
+
+
+        if hasattr(
+            severity,
+            "value",
+        ):
+
+            severity = severity.value
+
+
+
+        return {
+
+            "type":
+                self.type
+                or category
+                or "unknown",
+
+
+            "category":
+                category,
+
+
+            "description":
+                self.description,
+
+
+            "offset":
+                self.offset,
+
+
+            "length":
+                self.length,
+
+
+            "value":
+                self.value,
+
+
+            "severity":
+                severity,
+
+
+            "source":
+                self.source,
+
+
+            "confidence":
+                self.confidence,
+
+        }

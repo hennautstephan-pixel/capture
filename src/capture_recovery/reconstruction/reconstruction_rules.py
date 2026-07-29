@@ -1,54 +1,106 @@
 """
 Reconstruction rules.
 
-Defines how semantic objects are
-converted into Capture project data.
+Determine which semantic objects
+can become Capture project elements.
 """
 
 from __future__ import annotations
 
 
+
 class ReconstructionRules:
     """
-    Default reconstruction rules.
+    Rules used during project reconstruction.
     """
 
-    FIXTURE_TYPES = (
+
+
+    FIXTURE_TYPES = {
+
+        "fixture",
+
         "Fixture",
-        "Projector",
-        "Light",
-    )
 
-    STRUCTURE_TYPES = (
-        "Structure",
-        "Truss",
-        "Rig",
-    )
+        "fixture_candidate",
 
-    GROUP_TYPES = (
-        "Group",
-    )
+        "FixtureCandidate",
+
+        "fixture_object",
+
+        "light",
+
+    }
+
+
 
     def is_fixture(
         self,
         obj,
     ) -> bool:
-        return obj.object_type in (
+        """
+        Check if object can become
+        a Capture fixture.
+
+        Supports:
+        - SemanticObject instances
+        - dictionaries
+        """
+
+
+
+        object_type = self._get_value(
+            obj,
+            "object_type",
+        )
+
+
+
+        if object_type is None:
+
+            object_type = self._get_value(
+                obj,
+                "type",
+            )
+
+
+
+        return (
+
+            object_type
+
+            in
+
             self.FIXTURE_TYPES
+
         )
 
-    def is_structure(
-        self,
-        obj,
-    ) -> bool:
-        return obj.object_type in (
-            self.STRUCTURE_TYPES
-        )
 
-    def is_group(
+
+    def _get_value(
         self,
         obj,
-    ) -> bool:
-        return obj.object_type in (
-            self.GROUP_TYPES
+        key,
+    ):
+        """
+        Read value from dict or object.
+        """
+
+
+
+        if isinstance(
+            obj,
+            dict,
+        ):
+
+            return obj.get(
+                key,
+            )
+
+
+
+        return getattr(
+            obj,
+            key,
+            None,
         )

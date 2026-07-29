@@ -122,6 +122,44 @@ class ReverseEngine:
         """
 
 
+        if options is None:
+
+            # Protection uniquement pour les gros fichiers
+            if len(data) > 1024 * 1024:
+
+                options = DetectionOptions(
+                    max_results=500,
+                    max_scan_size=1024 * 1024,
+                )
+
+            else:
+
+                options = DetectionOptions()
+
+
+
+        # Respecter un registre personnalisé vide
+        detectors = tuple(
+            self.registry.all()
+        )
+
+        if not detectors:
+
+            return ReverseResult()
+
+
+
+        scan_data = data
+
+
+        if options.max_scan_size is not None:
+
+            scan_data = data[
+                :options.max_scan_size
+            ]
+
+
+
         numeric = ()
 
         strings = ()
@@ -134,55 +172,97 @@ class ReverseEngine:
 
 
 
-        for detector in self.registry.all():
+        for detector in detectors:
+
+
+            print(
+                f"[Reverse] START "
+                f"{detector.__class__.__name__}",
+                flush=True,
+            )
 
 
             results = detector.detect(
-                data,
+                scan_data,
                 options,
             )
+
+
+            print(
+                f"[Reverse] END "
+                f"{detector.__class__.__name__} : "
+                f"{len(results)}",
+                flush=True,
+            )
+
+
+
+            if (
+                options.max_results is not None
+                and len(results) > options.max_results
+            ):
+
+                results = results[
+                    :options.max_results
+                ]
+
 
 
             if isinstance(
                 detector,
                 NumericDetector,
             ):
+
                 numeric = tuple(results)
+
 
 
             elif isinstance(
                 detector,
                 StringDetector,
             ):
+
                 strings = tuple(results)
+
 
 
             elif isinstance(
                 detector,
                 GuidDetector,
             ):
+
                 guids = tuple(results)
+
 
 
             elif isinstance(
                 detector,
                 AlignmentDetector,
             ):
+
                 alignments = tuple(results)
+
 
 
             elif isinstance(
                 detector,
                 EntropyDetector,
             ):
+
                 entropy = tuple(results)
 
 
 
         return ReverseResult(
+
             numeric=numeric,
+
             strings=strings,
+
             guids=guids,
+
             alignments=alignments,
+
             entropy=entropy,
+
         )

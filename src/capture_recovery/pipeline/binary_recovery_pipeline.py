@@ -2,7 +2,7 @@
 Binary recovery pipeline.
 
 Connects Capture binary files
-with binary analysis and reverse engineering.
+with binary and reverse analysis.
 """
 
 from __future__ import annotations
@@ -12,7 +12,8 @@ from capture_recovery.io import (
     CaptureBinaryReader,
 )
 
-from capture_recovery.reverse.reverse_engine import (
+
+from capture_recovery.reverse import (
     ReverseEngine,
 )
 
@@ -27,23 +28,6 @@ class BinaryRecoveryPipeline:
     """
     Recover information from
     binary Capture files.
-
-    Pipeline:
-
-        .c2p
-          |
-          v
-        BinaryReader
-          |
-          v
-        BinaryAnalyzer
-          |
-          v
-        ReverseEngine
-          |
-          v
-        Analysis result
-
     """
 
 
@@ -104,10 +88,6 @@ class BinaryRecoveryPipeline:
     ) -> dict:
         """
         Analyze binary data.
-
-        Runs:
-        - classic binary analysis
-        - reverse binary analysis
         """
 
         summary = self.analyzer.summary(
@@ -115,52 +95,48 @@ class BinaryRecoveryPipeline:
         )
 
 
-        try:
+        analysis = {
 
-            reverse_result = (
-                self.reverse_engine.analyze(
-                    data,
-                )
-            )
+            "size":
+                summary["size"],
 
 
-        except Exception as exc:
-
-            # Reverse analysis must not
-            # stop the recovery pipeline
-
-            reverse_result = {
-
-                "error": str(exc)
-
-            }
+            "signature":
+                data[:16],
 
 
-
-        return {
-
-            "size": summary["size"],
+            "count":
+                summary["count"],
 
 
-            # compatibility with previous API
-
-            "signature": data[:16],
-
-
-            "count": summary["count"],
+            "detections":
+                summary["detections"],
 
 
-            "detections": summary["detections"],
-
-
-            "detection_index": summary,
-
-
-            # new reverse analysis
-
-            "reverse": reverse_result,
+            "detection_index":
+                summary,
 
         }
+
+
+
+        #
+        # Reverse analysis
+        #
+        # Kept here for backward compatibility
+        # and single execution point.
+        #
+
+        analysis["reverse"] = (
+
+            self.reverse_engine.analyze(
+                data,
+            )
+
+        )
+
+
+        return analysis
 
 
 
@@ -185,8 +161,11 @@ class BinaryRecoveryPipeline:
 
         return {
 
-            "data": data,
+            "data":
+                data,
 
-            "analysis": analysis,
+
+            "analysis":
+                analysis,
 
         }

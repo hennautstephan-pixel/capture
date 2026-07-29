@@ -15,20 +15,92 @@ class Report:
     filename: str
     filesize: int
 
-    detections: list[Detection] = field(default_factory=list)
-    findings: list[Finding] = field(default_factory=list)
-    blocks: list[Block] = field(default_factory=list)
+    detections: list[Detection] = field(
+        default_factory=list
+    )
 
-    statistics: Statistics = field(default_factory=Statistics)
+    findings: list[Finding] = field(
+        default_factory=list
+    )
 
-    def add_detection(self, detection: Detection) -> None:
-        self.detections.append(detection)
+    blocks: list[Block] = field(
+        default_factory=list
+    )
 
-    def add_finding(self, finding: Finding) -> None:
-        self.findings.append(finding)
+    statistics: Statistics = field(
+        default_factory=Statistics
+    )
 
-    def add_block(self, block: Block) -> None:
-        self.blocks.append(block)
+    # Résultats du moteur reverse
+    reverse: dict = field(
+        default_factory=dict
+    )
+
+
+    def add_detection(
+        self,
+        detection: Detection,
+    ) -> None:
+
+        self.detections.append(
+            detection
+        )
+
+
+    def add_finding(
+        self,
+        finding: Finding,
+    ) -> None:
+
+        self.findings.append(
+            finding
+        )
+
+
+    def add_block(
+        self,
+        block: Block,
+    ) -> None:
+
+        self.blocks.append(
+            block
+        )
+
+
+    def add_reverse_analysis(
+        self,
+        result,
+    ) -> None:
+        """
+        Ajoute les résultats du ReverseEngine.
+        """
+
+        self.reverse = {
+
+            "total": result.total,
+
+            "numeric": len(
+                result.numeric
+            ),
+
+            "strings": len(
+                result.strings
+            ),
+
+            "guids": len(
+                result.guids
+            ),
+
+            "alignments": len(
+                result.alignments
+            ),
+
+            "entropy": len(
+                result.entropy
+            ),
+
+        }
+
 
     def update_statistics(self) -> None:
         """Recalcule automatiquement les statistiques."""
@@ -54,30 +126,50 @@ class Report:
                 case _:
                     if detection.datatype.startswith("zip"):
                         stats.signatures += 1
+
                     elif detection.datatype.startswith("png"):
                         stats.signatures += 1
+
                     elif detection.datatype.startswith("jpeg"):
                         stats.signatures += 1
+
                     elif detection.datatype.startswith("gif"):
                         stats.signatures += 1
+
                     elif detection.datatype.startswith("xml"):
                         stats.signatures += 1
 
-        stats.blocks = len(self.blocks)
+
+        stats.blocks = len(
+            self.blocks
+        )
 
         self.statistics = stats
 
+
     @property
     def detection_count(self) -> int:
-        return len(self.detections)
+
+        return len(
+            self.detections
+        )
+
 
     @property
     def block_count(self) -> int:
-        return len(self.blocks)
+
+        return len(
+            self.blocks
+        )
+
 
     @property
     def finding_count(self) -> int:
-        return len(self.findings)
+
+        return len(
+            self.findings
+        )
+
 
     def summary(self) -> str:
         """Résumé lisible du rapport."""
