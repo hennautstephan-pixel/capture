@@ -211,6 +211,32 @@ class NumericDetector(BaseDetector):
 
 
 
+
+    def _endianness_list(
+        self,
+        *,
+        endianness: str | None,
+        scan_all_endianness: bool,
+    ) -> tuple[str, ...]:
+        """
+        Return the list of endianness values to scan.
+        """
+        if scan_all_endianness:
+            return (
+                "little",
+                "big",
+            )
+
+        if endianness is not None:
+            return (
+                endianness,
+            )
+
+        return (
+            "little",
+        )
+
+
     def _detect(
         self,
         data,
@@ -237,24 +263,10 @@ class NumericDetector(BaseDetector):
 
 
 
-        if scan_all_endianness:
-
-            endian_list = (
-                "little",
-                "big",
-            )
-
-        elif endianness is not None:
-
-            endian_list = (
-                endianness,
-            )
-
-        else:
-
-            endian_list = (
-                "little",
-            )
+        endian_list = self._endianness_list(
+            endianness=endianness,
+            scan_all_endianness=scan_all_endianness,
+        )
 
 
 
