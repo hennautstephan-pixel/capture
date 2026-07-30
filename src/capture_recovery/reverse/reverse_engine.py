@@ -149,17 +149,6 @@ class ReverseEngine:
 
 
 
-        scan_data = data
-
-
-        if options.max_scan_size is not None:
-
-            scan_data = data[
-                :options.max_scan_size
-            ]
-
-
-
         numeric = ()
 
         strings = ()
@@ -183,7 +172,7 @@ class ReverseEngine:
 
 
             results = detector.detect(
-                scan_data,
+                data,
                 options,
             )
 
@@ -194,17 +183,6 @@ class ReverseEngine:
                 f"{len(results)}",
                 flush=True,
             )
-
-
-
-            if (
-                options.max_results is not None
-                and len(results) > options.max_results
-            ):
-
-                results = results[
-                    :options.max_results
-                ]
 
 
 
