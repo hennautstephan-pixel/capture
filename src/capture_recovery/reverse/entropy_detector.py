@@ -9,17 +9,18 @@ from __future__ import annotations
 import math
 from collections import Counter
 
+from .base_detector import BaseDetector
 from .detection_options import DetectionOptions
 from .detector_type import DetectorType
 from .entropy_value import EntropyValue
 
 
-
-class EntropyDetector:
+class EntropyDetector(BaseDetector):
     """
     Detect entropy levels in binary buffers.
     """
 
+    detector_type = DetectorType.ENTROPY
 
     def __init__(
         self,
@@ -27,25 +28,18 @@ class EntropyDetector:
     ) -> None:
 
         if block_size <= 0:
-
             raise ValueError(
                 "block_size must be > 0"
             )
 
-
         self._block_size = block_size
-
-
 
     @property
     def name(self) -> str:
         """
         Detector public name.
         """
-
         return "entropy"
-
-
 
     def detect(
         self,
@@ -57,29 +51,21 @@ class EntropyDetector:
         Detect high entropy blocks.
         """
 
+        if options is None:
+            options = DetectionOptions()
 
-        if options is not None:
+        if not self._is_enabled(
+            options,
+            self.detector_type,
+        ):
+            return []
 
-            enabled_types = getattr(
-                options,
-                "enabled_types",
-                None,
-            )
-
-            if (
-                enabled_types
-                and DetectorType.ENTROPY
-                not in enabled_types
-            ):
-                return []
-
-
-
-        buffer = bytes(data)
+        buffer = self._buffer(
+            data,
+            options,
+        )
 
         results: list[EntropyValue] = []
-
-
 
         for offset in range(
             0,
@@ -87,26 +73,22 @@ class EntropyDetector:
             self._block_size,
         ):
 
-            block = buffer[
-                offset:
-                offset + self._block_size
-            ]
-
+            block = bytes(
+                buffer[
+                    offset:
+                    offset + self._block_size
+                ]
+            )
 
             if not block:
                 continue
-
-
 
             entropy = self.calculate_entropy(
                 block
             )
 
-
             if entropy < minimum_entropy:
                 continue
-
-
 
             results.append(
                 EntropyValue(
@@ -117,10 +99,12 @@ class EntropyDetector:
                 )
             )
 
-
-        return results
-
-
+        return list(
+            self._limit_results(
+                results,
+                options,
+            )
+        )
 
     @staticmethod
     def calculate_entropy(
@@ -130,11 +114,8 @@ class EntropyDetector:
         Calculate Shannon entropy.
         """
 
-
         if not data:
             return 0.0
-
-
 
         length = len(data)
 
@@ -142,9 +123,7 @@ class EntropyDetector:
             data
         )
 
-
         entropy = 0.0
-
 
         for count in counts.values():
 
@@ -152,19 +131,14 @@ class EntropyDetector:
                 count / length
             )
 
-
             entropy -= (
                 probability
-                *
-                math.log2(
+                * math.log2(
                     probability
                 )
             )
 
-
         return entropy
-
-
 
     @property
     def block_size(
@@ -173,5 +147,4 @@ class EntropyDetector:
         """
         Current block size.
         """
-
         return self._block_size
