@@ -254,6 +254,38 @@ class NumericDetector(BaseDetector):
         )
 
 
+    def _decode_candidate(
+        self,
+        *,
+        buffer: bytes,
+        offset: int,
+        numeric_type: NumericType,
+        endianness: str,
+        finite_only: bool,
+    ):
+        """
+        Decode a numeric candidate and apply validity checks.
+        """
+        value = NumericDecoder.decode(
+            buffer,
+            offset,
+            numeric_type,
+            endianness=endianness,
+        )
+
+        if value is None:
+            return None
+
+        if (
+            finite_only
+            and isinstance(value.value, float)
+            and not math.isfinite(value.value)
+        ):
+            return None
+
+        return value
+
+
     def _detect(
         self,
         data,
@@ -366,32 +398,15 @@ class NumericDetector(BaseDetector):
 
 
 
-                    value = NumericDecoder.decode(
-                        buffer,
-                        offset,
-                        numeric_type,
+                    value = self._decode_candidate(
+                        buffer=buffer,
+                        offset=offset,
+                        numeric_type=numeric_type,
                         endianness=current_endianness,
+                        finite_only=finite_only,
                     )
 
-
-
                     if value is None:
-
-                        continue
-
-
-
-                    if (
-                        finite_only
-                        and isinstance(
-                            value.value,
-                            float,
-                        )
-                        and not math.isfinite(
-                            value.value
-                        )
-                    ):
-
                         continue
 
 
