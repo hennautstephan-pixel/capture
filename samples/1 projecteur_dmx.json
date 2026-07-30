@@ -1,0 +1,49 @@
+{
+    "file": "samples\\1 projecteur_dmx.bin",
+    "size": 14315,
+    "fields": {
+        "position_main": [
+            5.24893,
+            2.526877,
+            1.0,
+            1.0
+        ],
+        "optical_parameters": [
+            15.31728,
+            8.318939,
+            0.15,
+            0.75
+        ],
+        "rotation_axis_1": [
+            0.723508,
+            -0.690315,
+            0.0,
+            0.0
+        ],
+        "rotation_axis_2": [
+            0.690315,
+            0.723508,
+            0.0,
+            -0.174668
+        ],
+        "position_secondary": [
+            2.74893,
+            2.526877,
+            1.0,
+            1.0
+        ],
+        "dmx_block": {
+            "hex": "51860ae4423f4134afefc13c0e0cdf11",
+            "uint32": [
+                3825894993,
+                876691266,
+                1019342767,
+                299830286
+            ]
+        }
+    },
+    "integrity": {
+        "score": 100,
+        "errors": []
+    }
+}

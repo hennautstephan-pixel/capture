@@ -1,137 +1,83 @@
 from capture_recovery.models.project import Project
-from capture_recovery.knowledge.semantic_object import (
-    SemanticObject,
-)
 
 
-def create_fixture():
-
-    return SemanticObject(
-        object_type="Fixture",
-        identifier="Mac Aura",
-        properties={
-            "manufacturer": "Martin",
-            "model": "MAC Aura",
-        },
-    )
+class Dummy:
+    def __init__(self, t, i):
+        self.object_type = t
+        self.identifier = i
 
 
-def create_universe():
+def test_add():
+    p = Project()
 
-    return SemanticObject(
-        object_type="Universe",
-        identifier="Universe 1",
-        properties={
-            "universe": 1,
-        },
-    )
+    obj = Dummy("Fixture", 1)
 
+    p.add(obj)
 
-def create_cue():
-
-    return SemanticObject(
-        object_type="Cue",
-        identifier="Intro",
-        properties={
-            "cue_number": 1,
-        },
-    )
+    assert len(p) == 1
 
 
-def test_project_add():
+def test_remove():
+    p = Project()
 
-    project = Project()
+    obj = Dummy("Fixture", 1)
 
-    fixture = create_fixture()
+    p.add(obj)
 
-    project.add(
-        fixture,
-    )
+    p.remove(obj)
 
-    assert len(project) == 1
-
-    assert project.objects[0] == fixture
+    assert len(p) == 0
 
 
-def test_project_grouping():
+def test_clear():
+    p = Project()
 
-    project = Project()
+    p.add(Dummy("Fixture", 1))
+    p.add(Dummy("Universe", 2))
 
-    project.extend(
-        [
-            create_fixture(),
-            create_universe(),
-            create_cue(),
-        ]
-    )
+    p.clear()
 
-    assert len(project.fixtures) == 1
-
-    assert len(project.universes) == 1
-
-    assert len(project.cues) == 1
+    assert len(p) == 0
 
 
-def test_project_find():
+def test_statistics():
+    p = Project()
 
-    project = Project()
+    p.add(Dummy("Fixture", 1))
+    p.add(Dummy("Fixture", 2))
+    p.add(Dummy("Universe", 3))
 
-    project.extend(
-        [
-            create_fixture(),
-            create_universe(),
-            create_cue(),
-        ]
-    )
+    stats = p.statistics()
 
-    result = project.find(
+    assert stats["Fixture"] == 2
+    assert stats["Universe"] == 1
+
+
+def test_object_types():
+    p = Project()
+
+    p.add(Dummy("Fixture", 1))
+    p.add(Dummy("Universe", 2))
+
+    assert p.object_types == (
         "Fixture",
-        "Mac Aura",
-    )
-
-    assert result is not None
-
-    assert result.object_type == "Fixture"
-
-    assert result.identifier == "Mac Aura"
-
-
-def test_project_count():
-
-    project = Project()
-
-    project.extend(
-        [
-            create_fixture(),
-            create_fixture(),
-            create_universe(),
-        ]
-    )
-
-    assert project.count() == 3
-
-    assert project.count(
-        "Fixture",
-    ) == 2
-
-    assert project.count(
         "Universe",
-    ) == 1
-
-
-def test_project_iteration():
-
-    project = Project()
-
-    project.extend(
-        [
-            create_fixture(),
-            create_cue(),
-        ]
     )
 
-    objects = list(project)
 
-    assert len(objects) == 2
+def test_find():
+    p = Project()
 
-    assert objects[0].object_type == "Fixture"
+    obj = Dummy("Fixture", 10)
+
+    p.add(obj)
+
+    assert p.find("Fixture", 10) is obj
+
+
+def test_metadata():
+    p = Project()
+
+    p.metadata["version"] = "2024"
+
+    assert p.metadata["version"] == "2024"

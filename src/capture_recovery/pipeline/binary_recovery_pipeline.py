@@ -7,21 +7,22 @@ with binary and reverse analysis.
 
 from __future__ import annotations
 
-
 from capture_recovery.io import (
     CaptureBinaryReader,
 )
-
 
 from capture_recovery.reverse import (
     ReverseEngine,
 )
 
-
 from .binary_analyzer import (
     BinaryAnalyzer,
 )
 
+from .results import (
+    BinaryAnalysisResult,
+)
+from .types import BinaryPipelineDict
 
 
 class BinaryRecoveryPipeline:
@@ -30,47 +31,31 @@ class BinaryRecoveryPipeline:
     binary Capture files.
     """
 
-
-
     def __init__(
         self,
-        reader=None,
-        analyzer=None,
-        reverse_engine=None,
+        reader: CaptureBinaryReader | None = None,
+        analyzer: BinaryAnalyzer | None = None,
+        reverse_engine: ReverseEngine | None = None,
     ) -> None:
 
-
-        self.reader = (
-
+        self.reader: CaptureBinaryReader = (
             reader
-
             or CaptureBinaryReader()
-
         )
 
-
-        self.analyzer = (
-
+        self.analyzer: BinaryAnalyzer = (
             analyzer
-
             or BinaryAnalyzer()
-
         )
 
-
-        self.reverse_engine = (
-
+        self.reverse_engine: ReverseEngine = (
             reverse_engine
-
             or ReverseEngine()
-
         )
-
-
 
     def read(
         self,
-        path,
+        path: str,
     ) -> bytes:
         """
         Read binary Capture file.
@@ -80,12 +65,10 @@ class BinaryRecoveryPipeline:
             path,
         )
 
-
-
     def analyze(
         self,
         data: bytes,
-    ) -> dict:
+    ) -> BinaryAnalysisResult:
         """
         Analyze binary data.
         """
@@ -94,78 +77,53 @@ class BinaryRecoveryPipeline:
             data,
         )
 
-
-        analysis = {
-
-            "size":
-                summary["size"],
-
-
-            "signature":
-                data[:16],
-
-
-            "count":
-                summary["count"],
-
-
-            "detections":
-                summary["detections"],
-
-
-            "detection_index":
-                summary,
-
-        }
-
-
-
-        #
-        # Reverse analysis
-        #
-        # Kept here for backward compatibility
-        # and single execution point.
-        #
-
-        analysis["reverse"] = (
-
-            self.reverse_engine.analyze(
-                data,
-            )
-
+        result = BinaryAnalysisResult(
+            data=data,
+            size=summary["size"],
+            signature=data[:16],
+            detections=list(summary["detections"]),
+            metadata={
+                "detection_index": summary,
+            },
         )
 
+        result.reverse = self.reverse_engine.analyze(
+            data,
+        )
 
-        return analysis
-
-
+        return result
 
     def run(
         self,
-        path,
-    ) -> dict:
+        path: str,
+     ) -> BinaryPipelineDict:
         """
         Execute binary recovery.
         """
-
 
         data = self.read(
             path,
         )
 
-
         analysis = self.analyze(
             data,
         )
 
+        #
+        # Temporary compatibility layer.
+        # Keeps the historical API while the
+        # remaining pipelines are migrated.
+        #
 
         return {
-
-            "data":
-                data,
-
-
-            "analysis":
-                analysis,
-
+            "data": data,
+            "analysis": {
+                "size": analysis.size,
+                "signature": analysis.signature,
+                "count": analysis.count,
+                "detections": analysis.detections,
+                "detection_index": analysis.metadata["detection_index"],
+                "reverse": analysis.reverse,
+            },
+            "result": analysis,
         }

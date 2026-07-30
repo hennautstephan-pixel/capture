@@ -79,6 +79,15 @@ class AnalysisReport:
 
 
     #
+    # Reconstructed Capture project
+    #
+
+    project: dict = field(
+        default_factory=dict
+    )
+
+
+    #
     # Legacy compatibility
     #
 
@@ -119,6 +128,11 @@ class AnalysisReport:
         semantic = result.get(
             "semantic",
             {},
+        )
+
+
+        project = result.get(
+            "project",
         )
 
 
@@ -221,6 +235,11 @@ class AnalysisReport:
             evidence=evidence,
 
 
+            project=cls._serialize_project(
+                project,
+            ),
+
+
 
             #
             # Legacy
@@ -229,17 +248,19 @@ class AnalysisReport:
             binary=BinarySummary(
 
                 size=binary_analysis.get(
-                "size",
-                     0,
+                    "size",
+                    0,
                 ),
 
-                detections=len(
-                     binary_findings
-              ),
 
-                 blocks=binary_analysis.get(
+                detections=len(
+                    binary_findings
+                ),
+
+
+                blocks=binary_analysis.get(
                     "count",
-                     0,
+                    0,
                 ),
 
             ),
@@ -271,6 +292,123 @@ class AnalysisReport:
 
 
     @staticmethod
+    def _serialize_project(
+        project,
+    ) -> dict:
+        """
+        Convert CaptureProject
+        into JSON compatible data.
+        """
+
+        if project is None:
+
+            return {}
+
+
+
+        return {
+
+            "name":
+                getattr(
+                    project,
+                    "name",
+                    "",
+                ),
+
+
+            "fixtures": [
+
+                {
+
+                    "name":
+                        fixture.name,
+
+
+                    "universe":
+                        fixture.universe,
+
+
+                    "address":
+                        fixture.address,
+
+
+                    "manufacturer":
+                        fixture.manufacturer,
+
+
+                    "model":
+                        fixture.model,
+
+
+                    "mode":
+                        fixture.mode,
+
+
+                    "properties":
+                        fixture.properties,
+
+                }
+
+                for fixture
+                in getattr(
+                    project,
+                    "fixtures",
+                    [],
+                )
+
+            ],
+
+
+
+            "scene": {
+
+                "nodes": [
+
+                    {
+
+                        "name":
+                            node.name,
+
+
+                        "parent":
+                            node.parent,
+
+
+                        "properties":
+                            node.properties,
+
+                    }
+
+                    for node
+
+                    in getattr(
+                        getattr(
+                            project,
+                            "scene",
+                            None,
+                        ),
+                        "nodes",
+                        {},
+                    ).values()
+
+                ]
+
+            },
+
+
+
+            "metadata":
+                getattr(
+                    project,
+                    "metadata",
+                    {},
+                ),
+
+        }
+
+
+
+    @staticmethod
     def _calculate_confidence(
         binary_findings,
         recovered_objects,
@@ -280,17 +418,14 @@ class AnalysisReport:
         score = 0
 
 
-
         if binary_findings:
 
             score += 20
 
 
-
         if recovered_objects:
 
             score += 40
-
 
 
         if evidence.get(
@@ -301,7 +436,6 @@ class AnalysisReport:
             score += 15
 
 
-
         if evidence.get(
             "guids",
             [],
@@ -310,14 +444,12 @@ class AnalysisReport:
             score += 15
 
 
-
         if evidence.get(
             "numeric",
             [],
         ):
 
             score += 10
-
 
 
         return min(
@@ -332,8 +464,6 @@ class AnalysisReport:
     ) -> dict:
         """
         Convert report to JSON.
-
-        Keeps legacy JSON structure.
         """
 
         data = asdict(
@@ -344,6 +474,7 @@ class AnalysisReport:
         data["reverse"] = {
 
             "findings":
+
                 self.reverse_findings,
 
         }
@@ -386,7 +517,6 @@ class AnalysisReport:
         ]
 
 
-
         if self.evidence:
 
 
@@ -415,6 +545,28 @@ class AnalysisReport:
                         "  Numeric: "
                         f"{len(self.evidence.get('numeric', []))}"
                     ),
+
+                ]
+
+            )
+
+
+
+        if self.project:
+
+            lines.extend(
+
+                [
+
+                    "",
+
+                    (
+
+                        "Recovered fixtures: "
+
+                        f"{len(self.project.get('fixtures', []))}"
+
+                    )
 
                 ]
 

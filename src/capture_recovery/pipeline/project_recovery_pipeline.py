@@ -7,7 +7,6 @@ CaptureProject from recovered objects.
 
 from __future__ import annotations
 
-
 from capture_recovery.reconstruction import (
     ProjectReconstructor,
 )
@@ -16,13 +15,15 @@ from capture_recovery.validation import (
     ReconstructionValidator,
 )
 
+from .results import (
+    ProjectRecoveryResult,
+)
 
 
 class ProjectRecoveryPipeline:
     """
     Complete project reconstruction workflow.
     """
-
 
     def __init__(
         self,
@@ -31,23 +32,14 @@ class ProjectRecoveryPipeline:
     ) -> None:
 
         self.reconstructor = (
-
             reconstructor
-
             or ProjectReconstructor()
-
         )
-
 
         self.validator = (
-
             validator
-
             or ReconstructionValidator()
-
         )
-
-
 
     def reconstruct(
         self,
@@ -61,12 +53,10 @@ class ProjectRecoveryPipeline:
             objects,
         )
 
-
-
     def validate(
         self,
         project,
-    ) -> dict:
+    ) -> ProjectRecoveryResult:
         """
         Validate reconstructed project.
 
@@ -74,49 +64,47 @@ class ProjectRecoveryPipeline:
         keeping full validation for real projects.
         """
 
+        result = ProjectRecoveryResult(
+            project=project,
+        )
+
         if project is None:
 
-            return {
+            result.add_error(
+                "Project is None",
+            )
 
-                "valid": False,
+            return result
 
-                "errors": [
-                    "Project is None"
-                ],
-
-            }
-
-
+        #
         # Allow injected fake projects in tests
         # without bypassing real validation.
+        #
+
         if not hasattr(
             project,
             "fixtures",
         ):
 
-            return {
+            result.valid = True
 
-                "valid": True,
-
-                "errors": [],
-
-            }
-
+            return result
 
         errors = self.validator.validate(
             project,
         )
 
+        if errors:
 
-        return {
+            for error in errors:
+                result.add_error(
+                    error,
+                )
 
-            "valid": len(errors) == 0,
+        else:
+            result.valid = True
 
-            "errors": errors,
-
-        }
-
-
+        return result
 
     def recover(
         self,
@@ -130,16 +118,19 @@ class ProjectRecoveryPipeline:
             objects,
         )
 
-
         validation = self.validate(
             project,
         )
 
+        #
+        # Temporary compatibility layer.
+        #
 
         return {
-
             "project": project,
-
-            "validation": validation,
-
+            "validation": {
+                "valid": validation.valid,
+                "errors": list(validation.errors),
+            },
+            "result": validation,
         }

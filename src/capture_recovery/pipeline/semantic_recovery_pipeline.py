@@ -7,11 +7,13 @@ semantic recovery objects.
 
 from __future__ import annotations
 
-
 from capture_recovery.semantic.reverse_adapter import (
     ReverseSemanticAdapter,
 )
 
+from .results import (
+    SemanticRecoveryResult,
+)
 
 
 class SemanticRecoveryPipeline:
@@ -20,31 +22,25 @@ class SemanticRecoveryPipeline:
     semantic recovery data.
     """
 
-
-
     def __init__(
         self,
-        builders=None,
-        adapter=None,
+        builders: list | None = None,
+        adapter: ReverseSemanticAdapter | None = None,
     ) -> None:
 
-
-        self.builders = (
+        self.builders: list = (
             builders
             or []
         )
 
-
-        self.adapter = (
+        self.adapter: ReverseSemanticAdapter = (
             adapter
             or ReverseSemanticAdapter()
         )
 
-
-
     def build(
         self,
-        detections,
+        detections: list,
     ) -> list:
         """
         Run additional builders.
@@ -52,27 +48,21 @@ class SemanticRecoveryPipeline:
 
         objects = []
 
-
         for builder in self.builders:
-
 
             result = builder.build(
                 detections,
             )
 
-
             objects.extend(
                 result
             )
 
-
         return objects
-
-
 
     def run(
         self,
-        analysis,
+        analysis: dict,
     ) -> dict:
         """
         Execute semantic recovery.
@@ -83,74 +73,57 @@ class SemanticRecoveryPipeline:
             [],
         )
 
+        reverse_result = analysis.get(
+            "reverse",
+        )
 
-        objects = []
-
-        evidence = {}
-
-
+        result = SemanticRecoveryResult(
+            detections=list(detections),
+            reverse=reverse_result,
+        )
 
         #
         # Reverse analysis
         #
 
-        reverse_result = analysis.get(
-            "reverse",
-        )
-
-
         if reverse_result is not None:
-
 
             semantic = self.adapter.analyze(
                 reverse_result,
             )
 
-
-            objects.extend(
+            result.objects.extend(
                 semantic.get(
                     "objects",
                     [],
                 )
             )
 
-
-            evidence = semantic.get(
-                "evidence",
-                {},
+            result.evidence.update(
+                semantic.get(
+                    "evidence",
+                    {},
+                )
             )
-
-
 
         #
         # Legacy builders
         #
 
-        objects.extend(
-
+        result.objects.extend(
             self.build(
                 detections,
             )
-
         )
 
-
+        #
+        # Temporary compatibility layer.
+        #
 
         return {
-
-            "detections":
-                detections,
-
-
-            "reverse":
-                reverse_result,
-
-
-            "objects":
-                objects,
-
-
-            "evidence":
-                evidence,
-
+            "detections": result.detections,
+            "reverse": result.reverse,
+            "objects": result.objects,
+            "evidence": result.evidence,
+            "result": result,
         }

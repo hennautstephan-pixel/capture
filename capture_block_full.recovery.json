@@ -1,0 +1,100 @@
+{
+    "file": "capture_block_full.bin",
+    "size": 1577296,
+    "objects": [
+        {
+            "name": "Ape Labs Neon Tube",
+            "guid_offset": "0x2d8a",
+            "object_offset": "0x2d0a",
+            "analysis": {
+                "size": 14315,
+                "size_status": "OK",
+                "fields": {
+                    "state_flag": 20,
+                    "position_main": [
+                        3.14522,
+                        17.354513,
+                        8994891.0,
+                        34380992512.0
+                    ],
+                    "geometry_parameters": [
+                        0.0,
+                        0.0,
+                        -0.0,
+                        0.0
+                    ],
+                    "rotation_axis_1": [
+                        0.0,
+                        9975010304.0,
+                        451659497472.0,
+                        0.0
+                    ],
+                    "rotation_axis_2": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        9746245014781952.0
+                    ],
+                    "position_secondary": [
+                        0.0,
+                        3.13898242308263e+24,
+                        -0.0,
+                        -0.0
+                    ],
+                    "dmx_block": {
+                        "hex": "014518a2800a28a280131452d2500145",
+                        "active": true
+                    }
+                },
+                "recovery_score": 40
+            }
+        },
+        {
+            "name": "Nanlux",
+            "guid_offset": "0x314e",
+            "object_offset": "0x30ce",
+            "analysis": {
+                "size": 14315,
+                "size_status": "OK",
+                "fields": {
+                    "state_flag": 82,
+                    "position_main": [
+                        0.0,
+                        0.0,
+                        -0.0,
+                        0.0
+                    ],
+                    "geometry_parameters": [
+                        9950200832.0,
+                        -0.0,
+                        3.3326583797601722e+31,
+                        0.0
+                    ],
+                    "rotation_axis_1": [
+                        1.2781380033791874e+25,
+                        0.0,
+                        0.0,
+                        0.0
+                    ],
+                    "rotation_axis_2": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        28229144576.0
+                    ],
+                    "position_secondary": [
+                        0.0,
+                        3345.25,
+                        3345.25,
+                        -0.0
+                    ],
+                    "dmx_block": {
+                        "hex": "400b494b49400514518a0028a5a43400",
+                        "active": true
+                    }
+                },
+                "recovery_score": 60
+            }
+        }
+    ]
+}

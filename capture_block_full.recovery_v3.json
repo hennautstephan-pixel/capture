@@ -1,0 +1,204 @@
+{
+    "file": "capture_block_full.bin",
+    "objects": [
+        {
+            "name": "Unknown",
+            "offset": "0x2f5d",
+            "score": 50,
+            "valid": true,
+            "position": [
+                757.0285,
+                0.0,
+                39.3654
+            ]
+        },
+        {
+            "name": "Unknown",
+            "offset": "0x3848",
+            "score": 50,
+            "valid": true,
+            "position": [
+                0.0,
+                -0.0,
+                0.0
+            ]
+        },
+        {
+            "name": "Unknown",
+            "offset": "0x391c",
+            "score": 50,
+            "valid": true,
+            "position": [
+                0.0,
+                0.0,
+                -0.0
+            ]
+        },
+        {
+            "name": "Unknown",
+            "offset": "0x391f",
+            "score": 50,
+            "valid": true,
+            "position": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "name": "Unknown",
+            "offset": "0x1655d",
+            "score": 50,
+            "valid": true,
+            "position": [
+                0.0,
+                -0.0,
+                0.0
+            ]
+        },
+        {
+            "name": "Unknown",
+            "offset": "0x2af11",
+            "score": 50,
+            "valid": true,
+            "position": [
+                0.0,
+                -0.0,
+                0.0
+            ]
+        },
+        {
+            "name": "Unknown",
+            "offset": "0x5166c",
+            "score": 50,
+            "valid": true,
+            "position": [
+                0.0,
+                -0.0,
+                0.0
+            ]
+        },
+        {
+            "name": "Unknown",
+            "offset": "0x65a7c",
+            "score": 50,
+            "valid": true,
+            "position": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "name": "Unknown",
+            "offset": "0x65b97",
+            "score": 50,
+            "valid": true,
+            "position": [
+                0.0,
+                -0.0,
+                0.0
+            ]
+        },
+        {
+            "name": "Unknown",
+            "offset": "0x65c6b",
+            "score": 50,
+            "valid": true,
+            "position": [
+                0.0,
+                0.0,
+                -0.0
+            ]
+        },
+        {
+            "name": "Unknown",
+            "offset": "0x65c6e",
+            "score": 50,
+            "valid": true,
+            "position": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "name": "Unknown",
+            "offset": "0xb6b54",
+            "score": 50,
+            "valid": true,
+            "position": [
+                -0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "name": "Unknown",
+            "offset": "0xb6c6f",
+            "score": 50,
+            "valid": true,
+            "position": [
+                0.0,
+                -0.0,
+                0.0
+            ]
+        },
+        {
+            "name": "Unknown",
+            "offset": "0xb6d43",
+            "score": 50,
+            "valid": true,
+            "position": [
+                0.0,
+                0.0,
+                -0.0
+            ]
+        },
+        {
+            "name": "Unknown",
+            "offset": "0xb6d46",
+            "score": 50,
+            "valid": true,
+            "position": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        {
+            "name": "Unknown",
+            "offset": "0x138028",
+            "score": 50,
+            "valid": true,
+            "position": [
+                0.0,
+                -0.0,
+                0.0
+            ]
+        },
+        {
+            "name": "Unknown",
+            "offset": "0x1380fc",
+            "score": 50,
+            "valid": true,
+            "position": [
+                0.0,
+                0.0,
+                -0.0
+            ]
+        },
+        {
+            "name": "Unknown",
+            "offset": "0x1380ff",
+            "score": 50,
+            "valid": true,
+            "position": [
+                0.0,
+                0.0,
+                0.0
+            ]
+        }
+    ],
+    "rejected": 22
+}

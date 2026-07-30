@@ -55,7 +55,7 @@ class Detection:
     description: str | None = None
     """Optional description."""
 
-    metadata: dict[str, Any] = field(default_factory=dict)
+    metadata: dict[str, object] = field(default_factory=dict)
     """Detector-specific metadata."""
 
     # ------------------------------------------------------------------

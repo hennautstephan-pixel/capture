@@ -22,8 +22,8 @@ class KnowledgeRegistry:
     """
 
     def __init__(self) -> None:
-        self._decoders = DecoderRegistry()
-        self._signatures = SignatureRegistry()
+        self._decoders: DecoderRegistry = DecoderRegistry()
+        self._signatures: SignatureRegistry = SignatureRegistry()
 
     def register_decoder(
         self,

@@ -22,10 +22,24 @@ from .offset_iterator import OffsetIterator
 
 
 
+
+
 class GuidDetector:
     """
     Detect GUID values in binary data.
     """
+
+
+    #
+    # Capture project files contain
+    # metadata at the beginning.
+    #
+    # This area may contain text
+    # interpreted as GUIDs.
+    #
+    HEADER_SKIP_SIZE = 128
+
+
 
 
 
@@ -40,10 +54,16 @@ class GuidDetector:
 
 
 
+
+
     @property
-    def name(self) -> str:
+    def name(
+        self,
+    ) -> str:
 
         return "guid"
+
+
 
 
 
@@ -100,12 +120,10 @@ class GuidDetector:
         )
 
 
-
         results: list[GuidValue] = []
 
-        seen: set[
-            tuple[int, str]
-        ] = set()
+
+        seen = set()
 
 
 
@@ -119,12 +137,32 @@ class GuidDetector:
             ):
 
 
+
                 if (
                     max_results is not None
                     and len(results) >= max_results
                 ):
 
                     return results
+
+
+
+                #
+                # Capture-specific protection.
+                #
+                # Applied only on real-sized
+                # binary files.
+                #
+                # Generic GUID detection
+                # remains unchanged.
+                #
+
+                if (
+                    len(buffer) > 1024
+                    and offset < self.HEADER_SKIP_SIZE
+                ):
+
+                    continue
 
 
 
@@ -158,8 +196,11 @@ class GuidDetector:
 
 
                 key = (
+
                     value.offset,
+
                     value.type_name,
+
                 )
 
 
@@ -185,14 +226,14 @@ class GuidDetector:
 
 
 
+
+
     @staticmethod
     def _is_valid_candidate(
         raw: bytes,
     ) -> bool:
         """
-        Reject obvious text interpreted as GUID.
-
-        Do not reject valid binary GUIDs.
+        Reject obvious false GUIDs.
         """
 
         if len(raw) != 16:
@@ -202,10 +243,7 @@ class GuidDetector:
 
 
         #
-        # UTF-16 LE detection
-        #
-        # Example:
-        # 53 00 6F 00 66 00 74 00
+        # UTF16 little endian text
         #
 
         utf16_le_pairs = sum(
@@ -230,7 +268,7 @@ class GuidDetector:
 
 
         #
-        # UTF-16 BE detection
+        # UTF16 big endian text
         #
 
         utf16_be_pairs = sum(
@@ -267,7 +305,7 @@ class GuidDetector:
 
 
         #
-        # Almost entirely printable ASCII
+        # Pure ASCII block
         #
 
         printable = sum(
@@ -288,6 +326,8 @@ class GuidDetector:
 
 
         return True
+
+
 
 
 

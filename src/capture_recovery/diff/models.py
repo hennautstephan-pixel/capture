@@ -15,7 +15,7 @@ from typing import Mapping
 from capture_recovery.structures.field import Field
 
 
-Metadata = Mapping[str, Any]
+Metadata = Mapping[str, object]
 
 
 class ChangeType(Enum):
@@ -147,9 +147,9 @@ class StructureChange:
 
     offset: int
 
-    structure_before: Any | None = None
+    structure_before: object | None = None
 
-    structure_after: Any | None = None
+    structure_after: object | None = None
 
     changed_fields: tuple[str, ...] = ()
 
@@ -394,7 +394,7 @@ class DiffReport:
             ),
         )
 
-    def to_dict(self) -> dict[str, Any]:
+    def to_dict(self) -> dict[str, object]:
         """
         Convert the report into a JSON-serializable dictionary.
         """

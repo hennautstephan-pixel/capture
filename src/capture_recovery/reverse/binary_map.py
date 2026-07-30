@@ -10,6 +10,7 @@ stream so they can later be analysed by higher level tools.
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from dataclasses import dataclass
 import string
 
@@ -18,8 +19,8 @@ _MIN_ASCII = 4
 _MIN_ZERO_BLOCK = 8
 
 _PRINTABLE = set(bytes(string.printable, "ascii"))
-_PRINTABLE.discard(0x0b)
-_PRINTABLE.discard(0x0c)
+_PRINTABLE.discard(0x0B)
+_PRINTABLE.discard(0x0C)
 
 
 @dataclass(slots=True, frozen=True)
@@ -32,6 +33,9 @@ class BinaryNode:
     length: int
     kind: str
     value: object
+
+
+Detector = Callable[[bytes], list[BinaryNode]]
 
 
 class BinaryMap:
@@ -54,12 +58,27 @@ class BinaryMap:
 
         nodes: list[BinaryNode] = []
 
-        nodes.extend(cls._ascii_strings(buffer))
-        nodes.extend(cls._zero_blocks(buffer))
+        for detector in cls._detectors():
+            nodes.extend(detector(buffer))
 
-        nodes.sort(key=lambda n: n.offset)
+        nodes.sort(key=lambda node: node.offset)
 
         return nodes
+
+    # ---------------------------------------------------------
+
+    @classmethod
+    def _detectors(cls) -> tuple[Detector, ...]:
+        """
+        Ordered list of binary detectors.
+
+        The order is stable to keep scan() deterministic.
+        """
+
+        return (
+            cls._ascii_strings,
+            cls._zero_blocks,
+        )
 
     # ---------------------------------------------------------
 

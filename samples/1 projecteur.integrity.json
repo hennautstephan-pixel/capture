@@ -1,0 +1,67 @@
+{
+    "file": "samples\\1 projecteur.bin",
+    "size": 14315,
+    "fields": {
+        "state_flag": {
+            "status": "OK",
+            "offset": "0x2591",
+            "value": 0
+        },
+        "position_main": {
+            "status": "OK",
+            "offset": "0x2bf8",
+            "values": [
+                2.5,
+                -1.896399,
+                1.0,
+                1.0
+            ]
+        },
+        "geometry_parameters": {
+            "status": "OK",
+            "offset": "0x2cfc",
+            "values": [
+                15.2,
+                8.25,
+                0.15,
+                0.75
+            ]
+        },
+        "rotation_axis_1": {
+            "status": "OK",
+            "offset": "0x2d51",
+            "values": [
+                1.0,
+                0.0,
+                0.0,
+                0.0
+            ]
+        },
+        "rotation_axis_2": {
+            "status": "OK",
+            "offset": "0x2d61",
+            "values": [
+                0.0,
+                1.0,
+                0.0,
+                -0.174668
+            ]
+        },
+        "position_secondary": {
+            "status": "OK",
+            "offset": "0x2d71",
+            "values": [
+                0.0,
+                -1.8964,
+                1.0,
+                1.0
+            ]
+        },
+        "dmx_block": {
+            "status": "OK",
+            "offset": "0x30b2",
+            "hex": "00000000000000000000000000000000"
+        }
+    },
+    "recovery_score": 100
+}

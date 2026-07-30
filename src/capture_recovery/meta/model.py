@@ -4,7 +4,7 @@ from dataclasses import dataclass, field
 from enum import Enum
 from typing import Any
 
-from capture_recovery.structures.datatype import DataType
+from capture_recovery.models.data_type import DataType
 
 
 class Cardinality(Enum):
@@ -25,13 +25,13 @@ class FieldDefinition:
 
     description: str = ""
 
-    default: Any = None
+    default: object = None
 
     confidence: float = 1.0
 
     aliases: tuple[str, ...] = ()
 
-    metadata: dict[str, Any] = field(default_factory=dict)
+    metadata: dict[str, object] = field(default_factory=dict)
 
 
 @dataclass(slots=True, frozen=True)
@@ -56,4 +56,4 @@ class ObjectDefinition:
 
     generate_tests: bool = True
 
-    metadata: dict[str, Any] = field(default_factory=dict)
+    metadata: dict[str, object] = field(default_factory=dict)

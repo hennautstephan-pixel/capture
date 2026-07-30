@@ -3,12 +3,18 @@ capture_recovery.semantic.reverse_adapter
 
 Convert reverse analysis results into
 semantic recovery objects.
+
+Version v10:
+- dense GUID scan suppression
+- sliding window filtering
+- balanced fixture candidate recovery
 """
 
 from __future__ import annotations
 
-
 from dataclasses import dataclass, field
+
+
 
 
 
@@ -30,9 +36,6 @@ class SemanticObject:
 
 
     def as_dict(self) -> dict:
-        """
-        Convert object to JSON data.
-        """
 
         return {
 
@@ -52,10 +55,12 @@ class SemanticObject:
 
 
 
+
+
 class ReverseSemanticAdapter:
     """
-    Transform ReverseResult into
-    semantic recovery objects.
+    Transform reverse analysis results
+    into semantic recovery objects.
     """
 
 
@@ -65,9 +70,9 @@ class ReverseSemanticAdapter:
         min_confidence: float = 0.5,
     ) -> None:
 
-        self.min_confidence = (
-            min_confidence
-        )
+        self.min_confidence = min_confidence
+
+
 
 
 
@@ -75,97 +80,56 @@ class ReverseSemanticAdapter:
         self,
         reverse_result,
     ) -> dict:
-        """
-        Compatibility API.
 
-        Called by SemanticRecoveryPipeline.
-        """
 
         objects = self.adapt(
-            reverse_result,
+            reverse_result
         )
-
-
-        strings = [
-
-            item.as_dict()
-
-            for item in getattr(
-                reverse_result,
-                "strings",
-                (),
-            )
-
-            if hasattr(
-                item,
-                "as_dict",
-            )
-
-        ]
-
-
-        guids = [
-
-            item.as_dict()
-
-            for item in getattr(
-                reverse_result,
-                "guids",
-                (),
-            )
-
-            if hasattr(
-                item,
-                "as_dict",
-            )
-
-        ]
-
-
-        numeric = [
-
-            item.as_dict()
-
-            for item in getattr(
-                reverse_result,
-                "numeric",
-                (),
-            )
-
-            if hasattr(
-                item,
-                "as_dict",
-            )
-
-        ]
-
 
 
         return {
 
-            "objects": [
+            "objects":
+                [
+                    obj.as_dict()
+                    for obj in objects
+                ],
 
-                obj.as_dict()
+            "evidence":
+                {
 
-                for obj in objects
+                    "strings":
+                        self._serialize(
+                            getattr(
+                                reverse_result,
+                                "strings",
+                                (),
+                            )
+                        ),
 
-            ],
+                    "guids":
+                        self._serialize(
+                            getattr(
+                                reverse_result,
+                                "guids",
+                                (),
+                            )
+                        ),
 
+                    "numeric":
+                        self._serialize(
+                            getattr(
+                                reverse_result,
+                                "numeric",
+                                (),
+                            )
+                        ),
 
-            "evidence": {
-
-                "strings":
-                    strings,
-
-                "guids":
-                    guids,
-
-                "numeric":
-                    numeric,
-
-            },
+                },
 
         }
+
+
 
 
 
@@ -173,13 +137,9 @@ class ReverseSemanticAdapter:
         self,
         reverse_result,
     ) -> list[SemanticObject]:
-        """
-        Convert reverse detections
-        into semantic objects.
-        """
+
 
         objects = []
-
 
 
         strings = getattr(
@@ -203,10 +163,6 @@ class ReverseSemanticAdapter:
         )
 
 
-
-        #
-        # Capture project metadata
-        #
 
         metadata = self._extract_metadata(
             strings
@@ -233,29 +189,23 @@ class ReverseSemanticAdapter:
 
 
 
-        #
-        # GUID recovery
-        #
-        # A GUID alone is not enough
-        # to prove a fixture.
-        #
-        # It becomes a probable fixture
-        # candidate.
-        #
-
-        for guid in guids:
+        for guid in self._cluster_guids(
+            guids
+        ):
 
 
-            confidence = (
-                self._guid_confidence(
-                    guid
-                )
+            evidence = self._find_near_strings(
+                guid,
+                strings,
             )
 
 
-            if confidence < self.min_confidence:
+            confidence = 0.35
 
-                continue
+
+            if evidence:
+
+                confidence = 0.65
 
 
 
@@ -263,39 +213,31 @@ class ReverseSemanticAdapter:
 
                 SemanticObject(
 
-                    identifier=(
-
-                        f"Fixture_{guid.offset}"
-
-                    ),
+                    identifier=
+                        f"Fixture_{guid.offset}",
 
 
-                    object_type="fixture_candidate",
+                    object_type=
+                        "fixture_candidate",
 
 
-                    confidence=0.65,
+                    confidence=
+                        confidence,
 
 
                     properties={
 
                         "guid":
-
                             guid.value,
 
-
                         "offset":
-
                             guid.offset,
 
-
                         "source":
-
                             "binary_guid",
 
-
-                        "recovery":
-
-                            "probable",
+                        "evidence":
+                            evidence,
 
                     },
 
@@ -304,10 +246,6 @@ class ReverseSemanticAdapter:
             )
 
 
-
-        #
-        # Numeric evidence
-        #
 
         if numerics:
 
@@ -324,7 +262,6 @@ class ReverseSemanticAdapter:
                     properties={
 
                         "count":
-
                             len(numerics),
 
                     },
@@ -334,49 +271,157 @@ class ReverseSemanticAdapter:
             )
 
 
-
         return objects
 
 
 
-    def _extract_metadata(
+
+
+    def _cluster_guids(
         self,
-        strings,
-    ) -> dict:
+        guids,
+    ):
         """
-        Extract Capture metadata markers.
+        Remove dense GUID scans.
+
+        Example:
+
+        128
+        130
+        132
+        134
+
+        becomes:
+
+        128
         """
 
-        result = {}
+        if not guids:
+
+            return []
 
 
 
-        for item in strings:
+        ordered = sorted(
 
-            value = getattr(
-                item,
-                "value",
-                "",
+            guids,
+
+            key=lambda item:
+
+                getattr(
+                    item,
+                    "offset",
+                    0,
+                )
+
+        )
+
+
+        result = []
+
+
+        i = 0
+
+
+        total = len(
+            ordered
+        )
+
+
+
+        while i < total:
+
+
+            current = ordered[i]
+
+
+            if self._guid_score(
+                current
+            ) <= 0:
+
+                i += 1
+
+                continue
+
+
+
+            start = getattr(
+                current,
+                "offset",
+                0,
             )
 
 
-            if value == "Project":
+            cluster = [
 
-                result[
+                current
 
-                    "has_project_marker"
-
-                ] = True
+            ]
 
 
 
-            elif value == "SoftwareVersion":
+            j = i + 1
 
-                result[
 
-                    "has_version_marker"
 
-                ] = True
+            while j < total:
+
+
+                offset = getattr(
+                    ordered[j],
+                    "offset",
+                    0,
+                )
+
+
+                if offset - start <= 32:
+
+                    cluster.append(
+                        ordered[j]
+                    )
+
+                    j += 1
+
+                else:
+
+                    break
+
+
+
+            #
+            # Dense binary area
+            #
+
+            if len(cluster) >= 4:
+
+
+                best = max(
+
+                    cluster,
+
+                    key=self._guid_score,
+
+                )
+
+
+                result.append(
+                    best
+                )
+
+
+                i = j
+
+
+
+            else:
+
+
+                result.append(
+                    current
+                )
+
+
+                i += 1
 
 
 
@@ -384,13 +429,13 @@ class ReverseSemanticAdapter:
 
 
 
-    @staticmethod
-    def _guid_confidence(
+
+
+    def _guid_score(
+        self,
         guid,
     ) -> float:
-        """
-        Estimate GUID reliability.
-        """
+
 
         raw = getattr(
             guid,
@@ -405,22 +450,156 @@ class ReverseSemanticAdapter:
 
 
 
-        zero_ratio = (
+        if raw.count(
+            0
+        ) == 16:
 
-            raw.count(0)
+            return 0.0
 
-            /
 
-            16
+
+        printable = sum(
+
+            1
+
+            for byte in raw
+
+            if 32 <= byte <= 126
 
         )
 
 
+        if printable == 16:
 
-        if zero_ratio > 0.5:
-
-            return 0.2
-
+            return 0.0
 
 
-        return 0.75
+
+        return 1.0
+
+
+
+
+
+    def _find_near_strings(
+        self,
+        guid,
+        strings,
+    ) -> list:
+
+
+        result = []
+
+
+        offset = getattr(
+            guid,
+            "offset",
+            0,
+        )
+
+
+        for item in strings:
+
+
+            item_offset = getattr(
+                item,
+                "offset",
+                -999,
+            )
+
+
+            if abs(
+                item_offset - offset
+            ) <= 128:
+
+
+                value = getattr(
+                    item,
+                    "value",
+                    "",
+                )
+
+
+                if value:
+
+                    result.append(
+                        value
+                    )
+
+
+        return result
+
+
+
+
+
+    def _extract_metadata(
+        self,
+        strings,
+    ) -> dict:
+
+
+        result = {}
+
+
+        for item in strings:
+
+
+            value = getattr(
+                item,
+                "value",
+                "",
+            )
+
+
+            if value == "Project":
+
+                result[
+                    "has_project_marker"
+                ] = True
+
+
+
+            elif value == "SoftwareVersion":
+
+                result[
+                    "has_version_marker"
+                ] = True
+
+
+
+        return result
+
+
+
+
+
+    def _serialize(
+        self,
+        values,
+    ) -> list:
+
+
+        result = []
+
+
+        for item in values:
+
+
+            if hasattr(
+                item,
+                "as_dict",
+            ):
+
+                result.append(
+                    item.as_dict()
+                )
+
+            else:
+
+                result.append(
+                    str(item)
+                )
+
+
+        return result

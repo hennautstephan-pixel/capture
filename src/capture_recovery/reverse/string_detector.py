@@ -1,31 +1,23 @@
 """
 capture_recovery.reverse.string_detector
 
-Optimized string detection engine.
-
-Extracts meaningful strings from
-binary Capture project files.
+Detect strings inside binary buffers.
 """
 
 from __future__ import annotations
 
 
 from collections.abc import Iterable
-import string
 
 
 from .detection_options import DetectionOptions
+
 from .detector_type import DetectorType
 
-
 from .string_type import (
-    ASCII,
-    UTF8,
-    UTF16_LE,
-    UTF16_BE,
+    STRING_TYPES,
     StringType,
 )
-
 
 from .string_value import (
     StringValue,
@@ -33,36 +25,26 @@ from .string_value import (
 
 
 
-_DEFAULT_STRING_TYPES = (
-    ASCII,
-    UTF8,
-    UTF16_LE,
-    UTF16_BE,
-)
-
-
-
-_PRINTABLE = set(
-    string.printable
-)
-
-
-
 class StringDetector:
     """
-    Detect useful text strings inside binary data.
+    Detect readable strings.
     """
 
 
 
     def __init__(
         self,
-        string_types: Iterable[StringType] = _DEFAULT_STRING_TYPES,
+        string_types: Iterable[StringType] = STRING_TYPES,
+        minimum_length: int = 4,
     ) -> None:
+
 
         self._string_types = tuple(
             string_types
         )
+
+
+        self.minimum_length = minimum_length
 
 
 
@@ -86,34 +68,37 @@ class StringDetector:
 
     def detect(
         self,
-        data: bytes | bytearray | memoryview,
+        data,
         options: DetectionOptions | None = None,
-        *,
-        min_length: int = 4,
-        max_results: int = 1000,
+        min_length: int | None = None,
     ) -> list[StringValue]:
-        """
-        Detect strings and remove noise.
-        """
+
+
+        if options is None:
+
+            options = DetectionOptions()
 
 
 
-        if options is not None:
+        if min_length is None:
 
-            enabled = getattr(
-                options,
-                "enabled_types",
-                None,
-            )
+            min_length = self.minimum_length
 
 
-            if (
-                enabled
-                and DetectorType.STRING
-                not in enabled
-            ):
 
-                return []
+        if hasattr(
+            options,
+            "enabled_types",
+        ):
+
+            enabled = options.enabled_types
+
+
+            if enabled is not None:
+
+                if DetectorType.STRING not in enabled:
+
+                    return []
 
 
 
@@ -122,66 +107,102 @@ class StringDetector:
         )
 
 
-        results: list[StringValue] = []
+
+        if options.max_scan_size is not None:
+
+            buffer = buffer[
+                :options.max_scan_size
+            ]
 
 
 
-        if (
-            ASCII in self._string_types
-            or UTF8 in self._string_types
-        ):
+        results = []
 
-            results.extend(
-                self._scan_ascii(
-                    buffer,
-                    min_length,
+
+
+        for string_type in self._string_types:
+
+
+            if string_type.name == "ascii":
+
+
+                results.extend(
+
+                    self._scan_ascii(
+
+                        buffer,
+
+                        string_type,
+
+                        min_length,
+
+                    )
+
                 )
-            )
 
 
 
-        if UTF16_LE in self._string_types:
+            elif string_type.name in (
 
-            results.extend(
-                self._scan_utf16(
-                    buffer,
-                    minimum=min_length,
-                    little=True,
-                    string_type=UTF16_LE,
+                "utf16",
+
+                "utf16-le",
+
+                "utf16_le",
+
+            ):
+
+
+                results.extend(
+
+                    self._scan_utf16(
+
+                        buffer,
+
+                        string_type,
+
+                        min_length,
+
+                    )
+
                 )
-            )
 
 
 
-        if UTF16_BE in self._string_types:
+            elif string_type.name == "utf16_be":
 
-            results.extend(
-                self._scan_utf16(
-                    buffer,
-                    minimum=min_length,
-                    little=False,
-                    string_type=UTF16_BE,
+
+                results.extend(
+
+                    self._scan_utf16_be(
+
+                        buffer,
+
+                        string_type,
+
+                        min_length,
+
+                    )
+
                 )
-            )
 
 
 
-        results = self._remove_overlaps(
+        return self._remove_duplicates(
             results
         )
 
 
-        return results[
-            :max_results
-        ]
 
 
 
     def _scan_ascii(
         self,
-        buffer: bytes,
-        minimum: int,
+        data: bytes,
+        string_type: StringType,
+        minimum_length: int,
     ) -> list[StringValue]:
+
 
         results = []
 
@@ -189,16 +210,227 @@ class StringDetector:
 
 
 
-        for index, byte in enumerate(buffer):
+        for index, byte in enumerate(data):
 
-            char = chr(byte)
+
+            if 32 <= byte <= 126:
+
+
+                if start is None:
+
+                    start = index
+
+
+
+            else:
+
+
+                if start is not None:
+
+
+                    raw = data[
+                        start:index
+                    ]
+
+
+                    value = raw.decode(
+
+                        string_type.encoding,
+
+                        errors="ignore",
+
+                    )
+
+
+
+                    if self._valid(
+
+                        value,
+
+                        minimum_length,
+
+                    ):
+
+
+                        results.append(
+
+                            StringValue(
+
+                                offset=start,
+
+                                string_type=string_type,
+
+                                value=value,
+
+                                raw_bytes=raw,
+
+                                terminated=True,
+
+                            )
+
+                        )
+
+
+                    start = None
+
+
+
+        return results
+
+
+
+
+
+    def _scan_utf16(
+        self,
+        data: bytes,
+        string_type: StringType,
+        minimum_length: int,
+    ) -> list[StringValue]:
+
+
+        results = []
+
+        start = None
+
+        index = 0
+
+
+
+        while index + 1 < len(data):
+
+
+            pair = data[
+                index:index + 2
+            ]
+
+
+
+            valid_utf16_char = (
+
+                pair[1] == 0
+
+                and
+
+                32 <= pair[0] <= 126
+
+            )
+
+
+
+            if valid_utf16_char:
+
+
+                if start is None:
+
+                    start = index
+
+
+
+            else:
+
+
+                if start is not None:
+
+
+                    raw = data[
+                        start:index
+                    ]
+
+
+
+                    try:
+
+                        value = raw.decode(
+
+                            string_type.encoding,
+
+                            errors="ignore",
+
+                        )
+
+
+                    except Exception:
+
+                        value = ""
+
+
+
+                    if self._valid(
+
+                        value,
+
+                        minimum_length,
+
+                    ):
+
+
+                        results.append(
+
+                            StringValue(
+
+                                offset=start,
+
+                                string_type=string_type,
+
+                                value=value,
+
+                                raw_bytes=raw,
+
+                                terminated=True,
+
+                            )
+
+                        )
+
+
+
+                    start = None
+
+
+
+            index += 2
+
+
+
+        return results
+
+
+
+
+
+    def _scan_utf16_be(
+        self,
+        data: bytes,
+        string_type: StringType,
+        minimum_length: int,
+    ) -> list[StringValue]:
+
+
+        results = []
+
+        start = None
+
+        index = 0
+
+
+
+        while index + 1 < len(data):
+
+
+            pair = data[
+                index:index + 2
+            ]
+
 
 
             valid = (
 
-                char in _PRINTABLE
+                pair[0] == 0
 
-                and char not in "\x00\r\n\t"
+                and
+
+                32 <= pair[1] <= 126
 
             )
 
@@ -213,155 +445,41 @@ class StringDetector:
 
 
 
-            elif start is not None:
-
-
-                raw = buffer[
-                    start:index
-                ]
-
-
-
-                if len(raw) >= minimum:
-
-
-                    text = raw.decode(
-                        "ascii",
-                        errors="ignore",
-                    )
-
-
-                    if self._valid_text(
-                        text
-                    ):
-
-
-                        results.append(
-
-                            StringValue(
-
-                                offset=start,
-
-                                value=text,
-
-                                string_type=ASCII,
-
-                                raw_bytes=raw,
-
-                            )
-
-                        )
-
-
-
-                start = None
-
-
-
-        return results
-
-
-
-    def _scan_utf16(
-        self,
-        buffer: bytes,
-        *,
-        minimum: int,
-        little: bool,
-        string_type: StringType,
-    ) -> list[StringValue]:
-
-        results = []
-
-        start = None
-
-
-
-        for offset in range(
-            0,
-            len(buffer)-1,
-            2,
-        ):
-
-
-            pair = buffer[
-                offset:
-                offset + 2
-            ]
-
-
-
-            if little:
-
-                valid = (
-
-                    pair[1] == 0
-
-                    and chr(pair[0])
-                    in _PRINTABLE
-
-                )
-
             else:
 
-                valid = (
 
-                    pair[0] == 0
-
-                    and chr(pair[1])
-                    in _PRINTABLE
-
-                )
+                if start is not None:
 
 
-
-            if valid:
-
-
-                if start is None:
-
-                    start = offset
-
-
-
-            elif start is not None:
-
-
-                length = (
-                    offset - start
-                ) // 2
-
-
-
-                if length >= minimum:
-
-
-                    raw = buffer[
-                        start:offset
+                    raw = data[
+                        start:index
                     ]
 
 
-                    encoding = (
 
-                        "utf-16le"
+                    try:
 
-                        if little
+                        value = raw.decode(
 
-                        else
+                            string_type.encoding,
 
-                        "utf-16be"
+                            errors="ignore",
 
-                    )
-
-
-                    text = raw.decode(
-                        encoding,
-                        errors="ignore",
-                    )
+                        )
 
 
-                    if self._valid_text(
-                        text
+                    except Exception:
+
+                        value = ""
+
+
+
+                    if self._valid(
+
+                        value,
+
+                        minimum_length,
+
                     ):
 
 
@@ -371,18 +489,25 @@ class StringDetector:
 
                                 offset=start,
 
-                                value=text,
-
                                 string_type=string_type,
 
+                                value=value,
+
                                 raw_bytes=raw,
+
+                                terminated=True,
 
                             )
 
                         )
 
 
-                start = None
+
+                    start = None
+
+
+
+            index += 2
 
 
 
@@ -390,19 +515,20 @@ class StringDetector:
 
 
 
-    @staticmethod
-    def _valid_text(
-        text: str,
+
+
+    def _valid(
+        self,
+        value: str,
+        minimum_length: int,
     ) -> bool:
-        """
-        Reject binary ASCII noise.
-        """
 
-        text = text.strip()
+
+        value = value.strip()
 
 
 
-        if len(text) < 4:
+        if len(value) < minimum_length:
 
             return False
 
@@ -412,7 +538,7 @@ class StringDetector:
 
             1
 
-            for char in text
+            for char in value
 
             if char.isprintable()
 
@@ -420,9 +546,7 @@ class StringDetector:
 
 
 
-        if (
-            printable / len(text)
-        ) < 0.95:
+        if printable / len(value) < 0.8:
 
             return False
 
@@ -432,7 +556,7 @@ class StringDetector:
 
             1
 
-            for char in text
+            for char in value
 
             if char.isalpha()
 
@@ -440,57 +564,7 @@ class StringDetector:
 
 
 
-        digits = sum(
-
-            1
-
-            for char in text
-
-            if char.isdigit()
-
-        )
-
-
-
-        symbols = (
-            len(text)
-            -
-            letters
-            -
-            digits
-        )
-
-
-
-        #
-        # Too many symbols
-        #
-
-        if symbols > letters:
-
-            return False
-
-
-
-        #
-        # Short random strings
-        #
-
-        if len(text) <= 6:
-
-            if letters < 3:
-
-                return False
-
-
-
-        #
-        # Text density
-        #
-
-        if (
-            letters / len(text)
-        ) < 0.65:
+        if letters == 0:
 
             return False
 
@@ -500,105 +574,48 @@ class StringDetector:
 
 
 
-    @staticmethod
-    def _remove_overlaps(
+
+
+    def _remove_duplicates(
+        self,
         values: list[StringValue],
     ) -> list[StringValue]:
-        """
-        Keep longest meaningful strings.
 
-        Example:
 
-        Project
-        roject
-        oject
+        result = []
 
-        becomes:
-
-        Project
-        """
+        seen = set()
 
 
 
-        if not values:
-
-            return []
+        for item in values:
 
 
-
-        values = sorted(
-
-            values,
-
-            key=lambda item: (
-
-                -len(item.value),
+            key = (
 
                 item.offset,
 
-            )
+                item.value,
 
-        )
-
-
-
-        result: list[StringValue] = []
-
-
-
-        for candidate in values:
-
-
-            candidate_text = (
-                candidate.value
             )
 
 
-            duplicate = False
+
+            if key in seen:
+
+                continue
 
 
 
-            for existing in result:
+            seen.add(
+                key
+            )
 
 
-                existing_text = (
-                    existing.value
-                )
-
-
-
-                if candidate_text in existing_text:
-
-                    duplicate = True
-
-                    break
+            result.append(
+                item
+            )
 
 
 
-                if existing_text in candidate_text:
-
-
-                    result.remove(
-                        existing
-                    )
-
-                    break
-
-
-
-            if not duplicate:
-
-                result.append(
-                    candidate
-                )
-
-
-
-        return sorted(
-
-            result,
-
-            key=lambda item:
-                item.offset,
-
-        )
+        return result

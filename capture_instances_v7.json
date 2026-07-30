@@ -1,0 +1,362 @@
+[
+    {
+        "guid_offset": "0x2d8a",
+        "matrix_offset": "0x2d9c",
+        "guid": "5fb40e612ab74b58a00fc75047ec4bae",
+        "position": [
+            -3.2712,
+            19.5866,
+            9.4693
+        ]
+    },
+    {
+        "guid_offset": "0x2da2",
+        "matrix_offset": "0x2db4",
+        "guid": "88b1f854f2be00000000b4cbb4bedf76",
+        "position": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    {
+        "guid_offset": "0x2db6",
+        "matrix_offset": "0x2dc8",
+        "guid": "28bf00000000a95ca13ed9fb3e3f9a27",
+        "position": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    {
+        "guid_offset": "0x2dca",
+        "matrix_offset": "0x2ddc",
+        "guid": "0000545b51c064b19c414d8217410000",
+        "position": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    {
+        "guid_offset": "0x2f6c",
+        "matrix_offset": "0x2f7e",
+        "guid": "715a99d3413d444f8402262e761d422a",
+        "position": [
+            5.6363,
+            20.8452,
+            -0.2434
+        ]
+    },
+    {
+        "guid_offset": "0x2fac",
+        "matrix_offset": "0x2fbe",
+        "guid": "0000435cb440dfc2a641004879be0000",
+        "position": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    {
+        "guid_offset": "0x314e",
+        "matrix_offset": "0x3160",
+        "guid": "8ed0691bb3d24d0ba99c57303d3010ab",
+        "position": [
+            0.1763,
+            3.5566,
+            10.4771
+        ]
+    },
+    {
+        "guid_offset": "0x318e",
+        "matrix_offset": "0x31a0",
+        "guid": "00008b7e343e749f63400ca227410000",
+        "position": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    {
+        "guid_offset": "0x160bd",
+        "matrix_offset": "0x160cf",
+        "guid": "8a286266b4009414b400a568a080298a",
+        "position": [
+            0.5,
+            2.85,
+            2.85
+        ]
+    },
+    {
+        "guid_offset": "0x2bfcc",
+        "matrix_offset": "0x2bfde",
+        "guid": "1f8d1dbbd001c738fa5147d7b51fcfa5",
+        "position": [
+            -0.0,
+            -35.8757,
+            -0.0
+        ]
+    },
+    {
+        "guid_offset": "0x33fb7",
+        "matrix_offset": "0x33fc9",
+        "guid": "0a91e8ff009000a3f951f9d03f95028f",
+        "position": [
+            0.0,
+            0.0,
+            -0.0
+        ]
+    },
+    {
+        "guid_offset": "0x3d40c",
+        "matrix_offset": "0x3d41e",
+        "guid": "f9c71cdf003d1d71e93f3f23eb01f97d",
+        "position": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    {
+        "guid_offset": "0x412a9",
+        "matrix_offset": "0x412bb",
+        "guid": "3a9cfed300692045145178a31fb77f0f",
+        "position": [
+            0.0,
+            -0.0,
+            -0.0
+        ]
+    },
+    {
+        "guid_offset": "0x44423",
+        "matrix_offset": "0x44435",
+        "guid": "00ff475e1451b1effdff96e70fe5e9f9",
+        "position": [
+            -0.0,
+            0.0001,
+            -0.0853
+        ]
+    },
+    {
+        "guid_offset": "0x453ad",
+        "matrix_offset": "0x453bf",
+        "guid": "6851f40fad469e9fdeaefe1fd30074d2",
+        "position": [
+            0.0,
+            -0.0,
+            0.0
+        ]
+    },
+    {
+        "guid_offset": "0x49ca0",
+        "matrix_offset": "0x49cb2",
+        "guid": "b68a7fdefafafde683cf38e28e7d9dc2",
+        "position": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    {
+        "guid_offset": "0x69b1e",
+        "matrix_offset": "0x69b30",
+        "guid": "8dc7fc8a00371f6a4dc7da801379ef4b",
+        "position": [
+            0.0,
+            -0.0,
+            0.0451
+        ]
+    },
+    {
+        "guid_offset": "0x6bc28",
+        "matrix_offset": "0x6bc3a",
+        "guid": "a20fce839ce0a01f8d02143aa9c15fd6",
+        "position": [
+            0.0,
+            -0.0,
+            -0.0
+        ]
+    },
+    {
+        "guid_offset": "0x96495",
+        "matrix_offset": "0x964a7",
+        "guid": "ef4649a001b8f5a3afb6e07503de823d",
+        "position": [
+            -0.0,
+            -0.0,
+            0.0
+        ]
+    },
+    {
+        "guid_offset": "0x9e5c9",
+        "matrix_offset": "0x9e5db",
+        "guid": "4048a9d0b29a95117b8a0649f281c75a",
+        "position": [
+            0.0,
+            0.0005,
+            0.0
+        ]
+    },
+    {
+        "guid_offset": "0xb0258",
+        "matrix_offset": "0xb026a",
+        "guid": "23a9a6ed4f56a402848f3d0d2b247e87",
+        "position": [
+            -0.0,
+            -0.0,
+            0.0
+        ]
+    },
+    {
+        "guid_offset": "0xc3e7f",
+        "matrix_offset": "0xc3e91",
+        "guid": "31479618ec403033f33722801c221d70",
+        "position": [
+            0.0,
+            -0.0,
+            0.0
+        ]
+    },
+    {
+        "guid_offset": "0xcb5dc",
+        "matrix_offset": "0xcb5ee",
+        "guid": "0054b75231db110a19411c97c7f77ca1",
+        "position": [
+            0.0,
+            -0.0,
+            0.1984
+        ]
+    },
+    {
+        "guid_offset": "0xd32c8",
+        "matrix_offset": "0xd32da",
+        "guid": "b8cfb00734f58ad9fee35240327d9fa8",
+        "position": [
+            0.0,
+            -0.0,
+            0.0
+        ]
+    },
+    {
+        "guid_offset": "0xe76bf",
+        "matrix_offset": "0xe76d1",
+        "guid": "87d050565c64794ea3971b8981cfcd8f",
+        "position": [
+            0.0,
+            -0.0,
+            0.0
+        ]
+    },
+    {
+        "guid_offset": "0xe8e42",
+        "matrix_offset": "0xe8e54",
+        "guid": "579503f3a0019cec43ae4f5cb7149eed",
+        "position": [
+            0.0,
+            0.0,
+            -2.1407
+        ]
+    },
+    {
+        "guid_offset": "0xf69e6",
+        "matrix_offset": "0xf69f8",
+        "guid": "76f5a5324ca3a67db667833560234b26",
+        "position": [
+            -0.0,
+            -518.1887,
+            0.0
+        ]
+    },
+    {
+        "guid_offset": "0x101a78",
+        "matrix_offset": "0x101a8a",
+        "guid": "13f66a5303c02372f5fe14c668c02369",
+        "position": [
+            0.0038,
+            0.0,
+            0.0
+        ]
+    },
+    {
+        "guid_offset": "0x10dc3e",
+        "matrix_offset": "0x10dc50",
+        "guid": "364fa11c7d29094196f35a4cf5272714",
+        "position": [
+            0.0,
+            0.0,
+            -0.0
+        ]
+    },
+    {
+        "guid_offset": "0x11f3a1",
+        "matrix_offset": "0x11f3b3",
+        "guid": "f7078fd693ce0a7fd5c6013c751c48c6",
+        "position": [
+            -631.0089,
+            0.0,
+            643.3842
+        ]
+    },
+    {
+        "guid_offset": "0x122709",
+        "matrix_offset": "0x12271b",
+        "guid": "5a4e15c2b8390903fa504edb91c46a4f",
+        "position": [
+            0.0,
+            0.0,
+            -0.0
+        ]
+    },
+    {
+        "guid_offset": "0x143758",
+        "matrix_offset": "0x14376a",
+        "guid": "7734a4f38d06e8fb52ef1db1f95167d4",
+        "position": [
+            -0.0,
+            -0.0,
+            0.0
+        ]
+    },
+    {
+        "guid_offset": "0x155405",
+        "matrix_offset": "0x155417",
+        "guid": "7a8ebfa80341420fee0a7043fdca4df9",
+        "position": [
+            -0.0,
+            -0.0517,
+            -0.0
+        ]
+    },
+    {
+        "guid_offset": "0x15ec69",
+        "matrix_offset": "0x15ec7b",
+        "guid": "a37e5464b8109d0071e8073d3f86906a",
+        "position": [
+            -0.0,
+            -0.0,
+            -0.0
+        ]
+    },
+    {
+        "guid_offset": "0x16e87d",
+        "matrix_offset": "0x16e88f",
+        "guid": "9084c1eedf90a44cd19fc6183f033460",
+        "position": [
+            -0.0,
+            -0.0,
+            0.0
+        ]
+    },
+    {
+        "guid_offset": "0x171c5e",
+        "matrix_offset": "0x171c70",
+        "guid": "881fc69fbc3f79f413747db1f9d06450",
+        "position": [
+            0.0,
+            -0.0,
+            -0.0
+        ]
+    }
+]

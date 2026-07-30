@@ -19,7 +19,7 @@ class ObjectFactory:
         self,
         registry: KnowledgeRegistry,
     ) -> None:
-        self.registry = registry
+        self.registry: KnowledgeRegistry = registry
 
     def create(
         self,

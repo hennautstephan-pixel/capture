@@ -7,6 +7,9 @@ existing detector system.
 
 from __future__ import annotations
 
+from capture_recovery.models.detection import Detection
+from .types import BinarySummaryDict
+
 
 class BinaryAnalyzer:
     """
@@ -15,10 +18,10 @@ class BinaryAnalyzer:
 
     def __init__(
         self,
-        detectors=None,
+        detectors: list | None = None,
     ) -> None:
 
-        self.detectors = (
+        self.detectors: list = (
             detectors
             or []
         )
@@ -27,14 +30,14 @@ class BinaryAnalyzer:
     def analyze(
         self,
         data: bytes,
-    ) -> list:
+    ) -> list[Detection]:
         """
         Run all detectors.
 
         Returns detected elements.
         """
 
-        detections = []
+        detections: list[Detection] = []
 
 
         for detector in self.detectors:
@@ -54,7 +57,7 @@ class BinaryAnalyzer:
     def summary(
         self,
         data: bytes,
-    ) -> dict:
+    ) -> BinarySummaryDict:
         """
         Return binary analysis summary.
 

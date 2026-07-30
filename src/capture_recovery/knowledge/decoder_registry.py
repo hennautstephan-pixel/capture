@@ -4,7 +4,7 @@ Registry of generated decoders.
 
 from __future__ import annotations
 
-from collections.abc import Mapping
+from collections.abc import Iterator, Mapping
 
 from capture_recovery.knowledge.decoder import Decoder
 from capture_recovery.knowledge.semantic_object import SemanticObject
@@ -67,7 +67,7 @@ class DecoderRegistry:
     def __len__(self) -> int:
         return len(self._decoders)
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator[str]:
         return iter(self._decoders)
 
     @property

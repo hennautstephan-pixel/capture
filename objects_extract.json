@@ -1,0 +1,1050 @@
+[
+  {
+    "name": "Ape Labs Neon Tube",
+    "offset": 1939,
+    "after_name": "ff 99 99 ff 00 00 40 3f 00 00 00 00 ff ff ff 00 00 00 00 00 64 00 00 00 00 00 01 01 01 82 1c 75 08 be 3d 44 c8 93 0e 82 fc 29 e8 6e 60 09 00 00 00 50 6c 61 6e 63 68 65 72 bf 60 00 ff 00 00 40",
+    "floats": [
+      {
+        "offset": 1939,
+        "value": 0.0
+      },
+      {
+        "offset": 1955,
+        "value": -0.0
+      },
+      {
+        "offset": 1959,
+        "value": 0.0
+      },
+      {
+        "offset": 1963,
+        "value": 0.0
+      },
+      {
+        "offset": 1971,
+        "value": 0.0
+      },
+      {
+        "offset": 1975,
+        "value": 0.0
+      },
+      {
+        "offset": 1979,
+        "value": 0.0
+      },
+      {
+        "offset": 1983,
+        "value": -0.0
+      },
+      {
+        "offset": 1987,
+        "value": -0.133259
+      },
+      {
+        "offset": 1991,
+        "value": -0.0
+      },
+      {
+        "offset": 1995,
+        "value": 0.0
+      },
+      {
+        "offset": 1999,
+        "value": 0.0
+      },
+      {
+        "offset": 2011,
+        "value": -0.94686
+      },
+      {
+        "offset": 2015,
+        "value": 0.0
+      },
+      {
+        "offset": 2019,
+        "value": 0.0
+      },
+      {
+        "offset": 2027,
+        "value": 0.0
+      },
+      {
+        "offset": 2035,
+        "value": 0.0
+      },
+      {
+        "offset": 2039,
+        "value": 0.0
+      },
+      {
+        "offset": 2043,
+        "value": 3e-06
+      },
+      {
+        "offset": 2055,
+        "value": 0.0
+      },
+      {
+        "offset": 2059,
+        "value": 0.0
+      },
+      {
+        "offset": 2067,
+        "value": -0.501838
+      },
+      {
+        "offset": 2071,
+        "value": 0.0
+      },
+      {
+        "offset": 2075,
+        "value": 0.0
+      },
+      {
+        "offset": 2083,
+        "value": 0.0
+      },
+      {
+        "offset": 2087,
+        "value": 0.0
+      },
+      {
+        "offset": 2091,
+        "value": 0.0
+      },
+      {
+        "offset": 2103,
+        "value": -0.230768
+      },
+      {
+        "offset": 2107,
+        "value": -0.0
+      },
+      {
+        "offset": 2111,
+        "value": 0.0
+      },
+      {
+        "offset": 2123,
+        "value": 0.0
+      },
+      {
+        "offset": 2127,
+        "value": -0.813649
+      },
+      {
+        "offset": 2131,
+        "value": 0.0
+      },
+      {
+        "offset": 2135,
+        "value": 0.0
+      }
+    ]
+  },
+  {
+    "name": "Plancher",
+    "offset": 2006,
+    "after_name": "bf 60 00 ff 00 00 40 3f 00 00 00 00 ff ff ff 00 00 00 00 00 64 00 00 00 00 00 01 01 01 ac 3b 31 36 ba ff 44 fb 82 7b 9a 47 85 16 e5 02 07 00 00 00 4e 61 6e 6c 75 78 00 bf 60 ff 00 00 40 3f 00",
+    "floats": [
+      {
+        "offset": 2018,
+        "value": 0.75
+      },
+      {
+        "offset": 2022,
+        "value": 0.0
+      },
+      {
+        "offset": 2026,
+        "value": 0.0
+      },
+      {
+        "offset": 2030,
+        "value": 0.0
+      },
+      {
+        "offset": 2034,
+        "value": 0.0
+      },
+      {
+        "offset": 2038,
+        "value": 0.0
+      },
+      {
+        "offset": 2042,
+        "value": 0.0
+      },
+      {
+        "offset": 2046,
+        "value": 2045.819092
+      },
+      {
+        "offset": 2050,
+        "value": -0.0
+      },
+      {
+        "offset": 2058,
+        "value": 0.0
+      },
+      {
+        "offset": 2066,
+        "value": 0.0
+      },
+      {
+        "offset": 2070,
+        "value": 0.0
+      },
+      {
+        "offset": 2074,
+        "value": 0.0
+      },
+      {
+        "offset": 2082,
+        "value": 0.0
+      },
+      {
+        "offset": 2090,
+        "value": 0.0
+      },
+      {
+        "offset": 2094,
+        "value": 0.0
+      },
+      {
+        "offset": 2098,
+        "value": -0.0
+      },
+      {
+        "offset": 2106,
+        "value": 0.0
+      },
+      {
+        "offset": 2110,
+        "value": 0.0
+      },
+      {
+        "offset": 2114,
+        "value": 0.0
+      },
+      {
+        "offset": 2134,
+        "value": 0.75
+      },
+      {
+        "offset": 2138,
+        "value": 0.0
+      },
+      {
+        "offset": 2142,
+        "value": 0.0
+      },
+      {
+        "offset": 2146,
+        "value": 0.0
+      },
+      {
+        "offset": 2150,
+        "value": 0.0
+      },
+      {
+        "offset": 2154,
+        "value": 0.0
+      },
+      {
+        "offset": 2158,
+        "value": 0.0
+      },
+      {
+        "offset": 2166,
+        "value": -0.0
+      },
+      {
+        "offset": 2170,
+        "value": 0.0
+      },
+      {
+        "offset": 2174,
+        "value": 0.0
+      },
+      {
+        "offset": 2186,
+        "value": 0.0
+      },
+      {
+        "offset": 2190,
+        "value": 0.0
+      },
+      {
+        "offset": 2198,
+        "value": 0.0
+      },
+      {
+        "offset": 2202,
+        "value": 0.0
+      }
+    ]
+  },
+  {
+    "name": "Nanlux",
+    "offset": 2063,
+    "after_name": "00 bf 60 ff 00 00 40 3f 00 00 00 00 ff ff ff 00 00 00 00 00 64 00 00 00 00 00 01 01 01 f2 db fd 8a 6f 6d 4e 6c be c6 75 0a 9f 24 5b 21 0d 00 00 00 50 6c 61 6e 63 68 65 72 20 53 4b 50 bf bf 00",
+    "floats": [
+      {
+        "offset": 2067,
+        "value": -0.501838
+      },
+      {
+        "offset": 2071,
+        "value": 0.0
+      },
+      {
+        "offset": 2075,
+        "value": 0.0
+      },
+      {
+        "offset": 2083,
+        "value": 0.0
+      },
+      {
+        "offset": 2087,
+        "value": 0.0
+      },
+      {
+        "offset": 2091,
+        "value": 0.0
+      },
+      {
+        "offset": 2103,
+        "value": -0.230768
+      },
+      {
+        "offset": 2107,
+        "value": -0.0
+      },
+      {
+        "offset": 2111,
+        "value": 0.0
+      },
+      {
+        "offset": 2123,
+        "value": 0.0
+      },
+      {
+        "offset": 2127,
+        "value": -0.813649
+      },
+      {
+        "offset": 2131,
+        "value": 0.0
+      },
+      {
+        "offset": 2135,
+        "value": 0.0
+      },
+      {
+        "offset": 2143,
+        "value": 0.0
+      },
+      {
+        "offset": 2151,
+        "value": 0.0
+      },
+      {
+        "offset": 2155,
+        "value": 0.0
+      },
+      {
+        "offset": 2159,
+        "value": 0.0
+      },
+      {
+        "offset": 2163,
+        "value": 0.0
+      },
+      {
+        "offset": 2171,
+        "value": -0.0
+      },
+      {
+        "offset": 2175,
+        "value": 0.0
+      },
+      {
+        "offset": 2187,
+        "value": 2.000061
+      },
+      {
+        "offset": 2191,
+        "value": 0.0
+      },
+      {
+        "offset": 2199,
+        "value": 0.0
+      },
+      {
+        "offset": 2203,
+        "value": 0.0
+      },
+      {
+        "offset": 2207,
+        "value": 0.0
+      },
+      {
+        "offset": 2211,
+        "value": -0.0
+      },
+      {
+        "offset": 2219,
+        "value": 0.0
+      },
+      {
+        "offset": 2227,
+        "value": 0.0
+      },
+      {
+        "offset": 2243,
+        "value": 0.0
+      },
+      {
+        "offset": 2247,
+        "value": 0.0
+      },
+      {
+        "offset": 2255,
+        "value": 0.0
+      }
+    ]
+  },
+  {
+    "name": "Plancher SKP",
+    "offset": 2118,
+    "after_name": "bf bf 00 ff 00 00 40 3f 00 00 00 00 ff ff ff 00 00 00 00 00 64 00 00 00 00 00 01 01 01 1a cf 33 05 1a 87 47 0a 8c 27 8c 7c 78 fa 16 ae 06 00 00 00 50 69 61 6e 6f cc ff ff ff 00 00 40 3f 00 00",
+    "floats": [
+      {
+        "offset": 2134,
+        "value": 0.75
+      },
+      {
+        "offset": 2138,
+        "value": 0.0
+      },
+      {
+        "offset": 2142,
+        "value": 0.0
+      },
+      {
+        "offset": 2146,
+        "value": 0.0
+      },
+      {
+        "offset": 2150,
+        "value": 0.0
+      },
+      {
+        "offset": 2154,
+        "value": 0.0
+      },
+      {
+        "offset": 2158,
+        "value": 0.0
+      },
+      {
+        "offset": 2166,
+        "value": -0.0
+      },
+      {
+        "offset": 2170,
+        "value": 0.0
+      },
+      {
+        "offset": 2174,
+        "value": 0.0
+      },
+      {
+        "offset": 2186,
+        "value": 0.0
+      },
+      {
+        "offset": 2190,
+        "value": 0.0
+      },
+      {
+        "offset": 2198,
+        "value": 0.0
+      },
+      {
+        "offset": 2202,
+        "value": 0.0
+      },
+      {
+        "offset": 2206,
+        "value": 0.0
+      },
+      {
+        "offset": 2214,
+        "value": -0.0
+      },
+      {
+        "offset": 2218,
+        "value": -0.0
+      },
+      {
+        "offset": 2222,
+        "value": 3e-06
+      },
+      {
+        "offset": 2226,
+        "value": 0.0
+      },
+      {
+        "offset": 2246,
+        "value": 0.75
+      },
+      {
+        "offset": 2250,
+        "value": 0.0
+      },
+      {
+        "offset": 2254,
+        "value": 0.0
+      },
+      {
+        "offset": 2258,
+        "value": 0.0
+      },
+      {
+        "offset": 2262,
+        "value": 0.0
+      },
+      {
+        "offset": 2266,
+        "value": 0.0
+      },
+      {
+        "offset": 2270,
+        "value": -0.0
+      },
+      {
+        "offset": 2278,
+        "value": 0.0
+      },
+      {
+        "offset": 2282,
+        "value": 0.0
+      },
+      {
+        "offset": 2286,
+        "value": 0.0
+      },
+      {
+        "offset": 2302,
+        "value": 0.75
+      },
+      {
+        "offset": 2306,
+        "value": 0.0
+      },
+      {
+        "offset": 2310,
+        "value": 0.0
+      },
+      {
+        "offset": 2314,
+        "value": 0.0
+      }
+    ]
+  },
+  {
+    "name": "Piano",
+    "offset": 2179,
+    "after_name": "cc ff ff ff 00 00 40 3f 00 00 00 00 ff ff ff 00 00 00 00 00 64 00 00 00 00 00 01 01 01 4b a8 b5 a4 94 fb 4f fc 88 32 da 6a 36 fd e0 b7 0a 00 00 00 4d 61 6e 64 61 72 69 6e 65 ff 00 00 ff 00 00",
+    "floats": [
+      {
+        "offset": 2187,
+        "value": 2.000061
+      },
+      {
+        "offset": 2191,
+        "value": 0.0
+      },
+      {
+        "offset": 2199,
+        "value": 0.0
+      },
+      {
+        "offset": 2203,
+        "value": 0.0
+      },
+      {
+        "offset": 2207,
+        "value": 0.0
+      },
+      {
+        "offset": 2211,
+        "value": -0.0
+      },
+      {
+        "offset": 2219,
+        "value": 0.0
+      },
+      {
+        "offset": 2227,
+        "value": 0.0
+      },
+      {
+        "offset": 2243,
+        "value": 0.0
+      },
+      {
+        "offset": 2247,
+        "value": 0.0
+      },
+      {
+        "offset": 2255,
+        "value": 0.0
+      },
+      {
+        "offset": 2263,
+        "value": 0.0
+      },
+      {
+        "offset": 2267,
+        "value": 0.0
+      },
+      {
+        "offset": 2271,
+        "value": -0.0
+      },
+      {
+        "offset": 2279,
+        "value": -0.0
+      },
+      {
+        "offset": 2283,
+        "value": 0.0
+      },
+      {
+        "offset": 2287,
+        "value": 0.0
+      },
+      {
+        "offset": 2299,
+        "value": 0.0
+      },
+      {
+        "offset": 2303,
+        "value": 0.0
+      },
+      {
+        "offset": 2311,
+        "value": 0.0
+      },
+      {
+        "offset": 2319,
+        "value": 0.0
+      },
+      {
+        "offset": 2323,
+        "value": 0.0
+      },
+      {
+        "offset": 2327,
+        "value": 0.0
+      },
+      {
+        "offset": 2331,
+        "value": 197.032516
+      },
+      {
+        "offset": 2343,
+        "value": 0.0
+      },
+      {
+        "offset": 2355,
+        "value": 0.0
+      },
+      {
+        "offset": 2359,
+        "value": 0.0
+      },
+      {
+        "offset": 2363,
+        "value": 0.0
+      },
+      {
+        "offset": 2371,
+        "value": 0.0
+      }
+    ]
+  },
+  {
+    "name": "Mandarine",
+    "offset": 2233,
+    "after_name": "ff 00 00 ff 00 00 40 3f 00 00 00 00 ff ff ff 00 00 00 00 00 64 00 00 00 00 00 01 01 01 a2 b5 b3 a1 1c e0 49 78 9b c2 06 91 58 0f 0a 10 08 00 00 00 41 6d 70 6f 75 6c 65 ff cc e5 ff 00 00 40 3f",
+    "floats": [
+      {
+        "offset": 2241,
+        "value": 0.0
+      },
+      {
+        "offset": 2245,
+        "value": 2.000061
+      },
+      {
+        "offset": 2249,
+        "value": 0.0
+      },
+      {
+        "offset": 2257,
+        "value": 0.0
+      },
+      {
+        "offset": 2261,
+        "value": 0.0
+      },
+      {
+        "offset": 2265,
+        "value": 0.0
+      },
+      {
+        "offset": 2269,
+        "value": -1e-06
+      },
+      {
+        "offset": 2277,
+        "value": -77.734932
+      },
+      {
+        "offset": 2281,
+        "value": 0.0
+      },
+      {
+        "offset": 2285,
+        "value": 0.0
+      },
+      {
+        "offset": 2301,
+        "value": 2.000061
+      },
+      {
+        "offset": 2305,
+        "value": 0.0
+      },
+      {
+        "offset": 2313,
+        "value": 0.0
+      },
+      {
+        "offset": 2317,
+        "value": 0.0
+      },
+      {
+        "offset": 2321,
+        "value": 0.0
+      },
+      {
+        "offset": 2329,
+        "value": 0.0
+      },
+      {
+        "offset": 2337,
+        "value": -0.000325
+      },
+      {
+        "offset": 2341,
+        "value": 0.0
+      },
+      {
+        "offset": 2357,
+        "value": -0.500007
+      },
+      {
+        "offset": 2361,
+        "value": 2.000061
+      },
+      {
+        "offset": 2365,
+        "value": 0.0
+      },
+      {
+        "offset": 2373,
+        "value": 0.0
+      },
+      {
+        "offset": 2377,
+        "value": 0.0
+      },
+      {
+        "offset": 2381,
+        "value": 0.0
+      },
+      {
+        "offset": 2385,
+        "value": -0.0
+      },
+      {
+        "offset": 2389,
+        "value": -0.0
+      },
+      {
+        "offset": 2401,
+        "value": 0.0
+      },
+      {
+        "offset": 2417,
+        "value": -0.0
+      },
+      {
+        "offset": 2425,
+        "value": 0.0
+      },
+      {
+        "offset": 2429,
+        "value": 0.1
+      }
+    ]
+  },
+  {
+    "name": "Ampoule",
+    "offset": 2291,
+    "after_name": "ff cc e5 ff 00 00 40 3f 00 00 00 00 ff ff ff 00 00 00 00 00 64 00 00 00 00 00 01 01 01 89 d5 ce 0c 53 08 45 43 9a 67 7f 63 aa b9 26 d2 0c 00 00 00 50 65 6e 64 72 69 6c 6c 6f 6e 73 00 00 bf ff",
+    "floats": [
+      {
+        "offset": 2299,
+        "value": 0.0
+      },
+      {
+        "offset": 2303,
+        "value": 0.0
+      },
+      {
+        "offset": 2311,
+        "value": 0.0
+      },
+      {
+        "offset": 2319,
+        "value": 0.0
+      },
+      {
+        "offset": 2323,
+        "value": 0.0
+      },
+      {
+        "offset": 2327,
+        "value": 0.0
+      },
+      {
+        "offset": 2331,
+        "value": 197.032516
+      },
+      {
+        "offset": 2343,
+        "value": 0.0
+      },
+      {
+        "offset": 2355,
+        "value": 0.0
+      },
+      {
+        "offset": 2359,
+        "value": 0.0
+      },
+      {
+        "offset": 2363,
+        "value": 0.0
+      },
+      {
+        "offset": 2371,
+        "value": 0.0
+      },
+      {
+        "offset": 2379,
+        "value": 0.0
+      },
+      {
+        "offset": 2383,
+        "value": 0.0
+      },
+      {
+        "offset": 2391,
+        "value": 0.0
+      },
+      {
+        "offset": 2395,
+        "value": -0.05513
+      },
+      {
+        "offset": 2399,
+        "value": 64.943611
+      },
+      {
+        "offset": 2403,
+        "value": 0.0
+      },
+      {
+        "offset": 2431,
+        "value": 0.0
+      },
+      {
+        "offset": 2439,
+        "value": 0.0
+      },
+      {
+        "offset": 2443,
+        "value": 0.0
+      },
+      {
+        "offset": 2447,
+        "value": 0.0
+      },
+      {
+        "offset": 2455,
+        "value": 0.0
+      },
+      {
+        "offset": 2459,
+        "value": -0.0
+      },
+      {
+        "offset": 2463,
+        "value": 0.0
+      },
+      {
+        "offset": 2467,
+        "value": 0.0
+      },
+      {
+        "offset": 2479,
+        "value": 0.0
+      },
+      {
+        "offset": 2487,
+        "value": 0.0
+      }
+    ]
+  },
+  {
+    "name": "Pendrillons",
+    "offset": 2347,
+    "after_name": "00 00 bf ff 00 00 40 3f 00 00 00 00 ff ff ff 00 00 00 00 00 64 00 00 00 00 00 01 01 01 8e b3 4a e3 ab 93 49 12 88 cf 61 bd 21 e3 81 42 13 00 00 00 43 61 6c 71 75 65 20 70 61 72 20 64 c3 a9 66",
+    "floats": [
+      {
+        "offset": 2355,
+        "value": 0.0
+      },
+      {
+        "offset": 2359,
+        "value": 0.0
+      },
+      {
+        "offset": 2363,
+        "value": 0.0
+      },
+      {
+        "offset": 2371,
+        "value": 0.0
+      },
+      {
+        "offset": 2379,
+        "value": 0.0
+      },
+      {
+        "offset": 2383,
+        "value": 0.0
+      },
+      {
+        "offset": 2391,
+        "value": 0.0
+      },
+      {
+        "offset": 2395,
+        "value": -0.05513
+      },
+      {
+        "offset": 2399,
+        "value": 64.943611
+      },
+      {
+        "offset": 2403,
+        "value": 0.0
+      },
+      {
+        "offset": 2431,
+        "value": 0.0
+      },
+      {
+        "offset": 2439,
+        "value": 0.0
+      },
+      {
+        "offset": 2443,
+        "value": 0.0
+      },
+      {
+        "offset": 2447,
+        "value": 0.0
+      },
+      {
+        "offset": 2455,
+        "value": 0.0
+      },
+      {
+        "offset": 2459,
+        "value": -0.0
+      },
+      {
+        "offset": 2463,
+        "value": 0.0
+      },
+      {
+        "offset": 2467,
+        "value": 0.0
+      },
+      {
+        "offset": 2479,
+        "value": 0.0
+      },
+      {
+        "offset": 2487,
+        "value": 0.0
+      },
+      {
+        "offset": 2495,
+        "value": 0.0
+      },
+      {
+        "offset": 2499,
+        "value": 0.0
+      },
+      {
+        "offset": 2503,
+        "value": 0.0
+      },
+      {
+        "offset": 2511,
+        "value": -0.0
+      },
+      {
+        "offset": 2515,
+        "value": 0.0
+      },
+      {
+        "offset": 2519,
+        "value": 0.0
+      },
+      {
+        "offset": 2523,
+        "value": 0.0
+      },
+      {
+        "offset": 2535,
+        "value": 0.0
+      },
+      {
+        "offset": 2539,
+        "value": 0.0
+      }
+    ]
+  }
+]

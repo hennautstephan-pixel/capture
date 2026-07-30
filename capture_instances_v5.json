@@ -1,0 +1,222 @@
+[
+    {
+        "guid_offset": "0x2d8a",
+        "matrix_offset": "0x2d9c",
+        "guid": "5fb40e612ab74b58a00fc75047ec4bae",
+        "position": [
+            -3.2712,
+            19.5866,
+            9.4693
+        ]
+    },
+    {
+        "guid_offset": "0x2d8e",
+        "matrix_offset": "0x2da0",
+        "guid": "2ab74b58a00fc75047ec4bae00003d80",
+        "position": [
+            19.5866,
+            9.4693,
+            1.0
+        ]
+    },
+    {
+        "guid_offset": "0x2da2",
+        "matrix_offset": "0x2db4",
+        "guid": "88b1f854f2be00000000b4cbb4bedf76",
+        "position": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    {
+        "guid_offset": "0x2db6",
+        "matrix_offset": "0x2dc8",
+        "guid": "28bf00000000a95ca13ed9fb3e3f9a27",
+        "position": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    {
+        "guid_offset": "0x2dca",
+        "matrix_offset": "0x2ddc",
+        "guid": "0000545b51c064b19c414d8217410000",
+        "position": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    {
+        "guid_offset": "0x2dce",
+        "matrix_offset": "0x2de0",
+        "guid": "51c064b19c414d8217410000803f0000",
+        "position": [
+            0.0,
+            0.0,
+            1.0
+        ]
+    },
+    {
+        "guid_offset": "0x2f16",
+        "matrix_offset": "0x2f28",
+        "guid": "00c8420000b4430000a0400000b44202",
+        "position": [
+            0.0,
+            0.0,
+            1.0
+        ]
+    },
+    {
+        "guid_offset": "0x2f6c",
+        "matrix_offset": "0x2f7e",
+        "guid": "715a99d3413d444f8402262e761d422a",
+        "position": [
+            5.6363,
+            20.8452,
+            -0.2434
+        ]
+    },
+    {
+        "guid_offset": "0x2f70",
+        "matrix_offset": "0x2f82",
+        "guid": "413d444f8402262e761d422a00000000",
+        "position": [
+            20.8452,
+            -0.2434,
+            1.0
+        ]
+    },
+    {
+        "guid_offset": "0x2fac",
+        "matrix_offset": "0x2fbe",
+        "guid": "0000435cb440dfc2a641004879be0000",
+        "position": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    {
+        "guid_offset": "0x2fb0",
+        "matrix_offset": "0x2fc2",
+        "guid": "b440dfc2a641004879be0000803f0000",
+        "position": [
+            0.0,
+            0.0,
+            1.0
+        ]
+    },
+    {
+        "guid_offset": "0x30f8",
+        "matrix_offset": "0x310a",
+        "guid": "00c8420000b4430000a0400000b44203",
+        "position": [
+            0.0,
+            0.0,
+            1.0
+        ]
+    },
+    {
+        "guid_offset": "0x313a",
+        "matrix_offset": "0x314c",
+        "guid": "00010001000101010000803f0000803f",
+        "position": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    {
+        "guid_offset": "0x314e",
+        "matrix_offset": "0x3160",
+        "guid": "8ed0691bb3d24d0ba99c57303d3010ab",
+        "position": [
+            0.1763,
+            3.5566,
+            10.4771
+        ]
+    },
+    {
+        "guid_offset": "0x3152",
+        "matrix_offset": "0x3164",
+        "guid": "b3d24d0ba99c57303d3010ab00000000",
+        "position": [
+            3.5566,
+            10.4771,
+            1.0
+        ]
+    },
+    {
+        "guid_offset": "0x318e",
+        "matrix_offset": "0x31a0",
+        "guid": "00008b7e343e749f63400ca227410000",
+        "position": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    {
+        "guid_offset": "0x3192",
+        "matrix_offset": "0x31a4",
+        "guid": "343e749f63400ca227410000803f0000",
+        "position": [
+            0.0,
+            0.0,
+            1.0
+        ]
+    },
+    {
+        "guid_offset": "0x160bd",
+        "matrix_offset": "0x160cf",
+        "guid": "8a286266b4009414b400a568a080298a",
+        "position": [
+            0.5,
+            2.85,
+            2.85
+        ]
+    },
+    {
+        "guid_offset": "0x65980",
+        "matrix_offset": "0x65992",
+        "guid": "617474650000000001000000f0490200",
+        "position": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    {
+        "guid_offset": "0x69b1e",
+        "matrix_offset": "0x69b30",
+        "guid": "8dc7fc8a00371f6a4dc7da801379ef4b",
+        "position": [
+            0.0,
+            -0.0,
+            0.0451
+        ]
+    },
+    {
+        "guid_offset": "0xd32c8",
+        "matrix_offset": "0xd32da",
+        "guid": "b8cfb00734f58ad9fee35240327d9fa8",
+        "position": [
+            0.0,
+            -0.0,
+            0.0
+        ]
+    },
+    {
+        "guid_offset": "0x16e87d",
+        "matrix_offset": "0x16e88f",
+        "guid": "9084c1eedf90a44cd19fc6183f033460",
+        "position": [
+            -0.0,
+            -0.0,
+            0.0
+        ]
+    }
+]

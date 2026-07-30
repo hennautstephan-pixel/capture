@@ -36,6 +36,12 @@ from .capture_project_pipeline import (
     CaptureProjectPipeline,
 )
 
+from .results import (
+    BinaryAnalysisResult,
+    SemanticRecoveryResult,
+    ProjectRecoveryResult,
+    FullRecoveryResult,
+)
 
 __all__ = [
 
@@ -52,5 +58,10 @@ __all__ = [
     "ProjectRecoveryPipeline",
 
     "CaptureProjectPipeline",
+
+    "BinaryAnalysisResult",
+    "SemanticRecoveryResult",
+    "ProjectRecoveryResult",
+    "FullRecoveryResult",
 
 ]

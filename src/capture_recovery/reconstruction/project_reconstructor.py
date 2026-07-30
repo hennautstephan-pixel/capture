@@ -1,30 +1,31 @@
 """
-Project reconstruction engine.
+Project reconstruction.
 
-Converts semantic objects into
-CaptureProject models.
+Transforms semantic recovery objects
+into Capture project models.
 """
 
 from __future__ import annotations
 
 
-from capture_recovery.formats import (
+from capture_recovery.formats.capture_project import (
     CaptureProject,
-    CaptureScene,
     CaptureFixture,
-    SceneNode,
 )
 
 
-from .reconstruction_rules import (
+from capture_recovery.reconstruction.reconstruction_rules import (
     ReconstructionRules,
 )
 
 
 
+
+
 class ProjectReconstructor:
     """
-    Rebuild Capture projects.
+    Build a CaptureProject from
+    semantic recovery objects.
     """
 
 
@@ -34,231 +35,299 @@ class ProjectReconstructor:
         rules=None,
     ) -> None:
 
-
         self.rules = (
-
             rules
-
             or ReconstructionRules()
-
         )
+
+
 
 
 
     def reconstruct(
         self,
         objects,
-        relations=None,
-        name="Recovered Project",
     ) -> CaptureProject:
         """
-        Convert semantic objects
-        into CaptureProject.
+        Reconstruct Capture project.
         """
 
-
-
         project = CaptureProject(
-            name=name,
+            name="Recovered Project"
         )
 
 
-        scene = CaptureScene()
-
-
-
-        fixture_number = 1
-
+        candidates = []
 
 
         for obj in objects:
 
 
-            #
-            # Normalize dict/object format
-            #
-
-            semantic = self._normalize_object(
+            if self.rules.is_project(
                 obj
-            )
-
-
-
-            if self.rules.is_fixture(
-                semantic,
             ):
 
-
-                fixture = self._build_fixture(
-                    semantic,
-                    fixture_number,
+                project.metadata.update(
+                    self._properties(obj)
                 )
 
 
-                fixture_number += 1
 
+            elif self.rules.is_fixture(
+                obj
+            ):
+
+                fixture = self._build_fixture(
+                    obj
+                )
 
 
                 project.add_fixture(
+                    fixture
+                )
+
+
+                self._add_scene_node(
+                    project,
                     fixture,
+                    obj,
                 )
 
 
 
-            node = SceneNode(
+            elif self.rules.is_fixture_candidate(
+                obj
+            ):
 
-                name=str(
-                    semantic["identifier"]
-                ),
-
-
-                parent=(
-
-                    semantic["properties"].get(
-                        "parent"
-                    )
-
-                ),
+                candidates.append(
+                    self._serialize_candidate(obj)
+                )
 
 
-                properties={
 
-                    "object_type":
+            elif self.rules.is_structure(
+                obj
+            ):
 
-                        semantic["object_type"],
-
-
-                    "confidence":
-
-                        semantic["confidence"],
-
-
-                    **semantic["properties"],
-
-                },
-
-            )
+                project.metadata.setdefault(
+                    "structures",
+                    [],
+                ).append(
+                    self._properties(obj)
+                )
 
 
-            scene.add_node(
-                node,
-            )
+
+            elif self.rules.is_group(
+                obj
+            ):
+
+                project.metadata.setdefault(
+                    "groups",
+                    [],
+                ).append(
+                    self._properties(obj)
+                )
+
+
+
+        if candidates:
+
+            project.metadata[
+                "fixture_candidates"
+            ] = candidates
 
 
 
         project.metadata.update(
-
             {
 
-                "recovered":
-
-                    True,
-
+                "recovered": True,
 
                 "source":
-
                     "reverse_analysis",
 
-
                 "objects":
-
                     len(objects),
 
+                "fixtures":
+                    len(project.fixtures),
+
+                "candidates":
+                    len(candidates),
+
             }
-
         )
-
-
-
-        project.set_scene(
-            scene,
-        )
-
 
 
         return project
 
 
 
-    def _normalize_object(
+
+
+    def _build_fixture(
         self,
         obj,
-    ) -> dict:
+    ) -> CaptureFixture:
         """
-        Convert SemanticObject or dict
-        into common dictionary format.
+        Create Capture fixture.
         """
 
+        properties = self._properties(
+            obj
+        )
 
 
-        if isinstance(
-            obj,
-            dict,
-        ):
+        return CaptureFixture(
 
-            return {
-
-                "identifier":
-
-                    obj.get(
-                        "identifier",
-                        "unknown",
-                    ),
+            name=self._get(
+                obj,
+                "identifier",
+                "Recovered Fixture",
+            ),
 
 
-                "object_type":
-
-                    obj.get(
-                        "object_type",
-                        obj.get(
-                            "type",
-                            "unknown",
-                        ),
-                    ),
+            universe=properties.get(
+                "universe",
+                0,
+            ),
 
 
-                "confidence":
+            address=properties.get(
+                "address",
+                0,
+            ),
 
-                    obj.get(
-                        "confidence",
-                        0.0,
-                    ),
+
+            manufacturer=properties.get(
+                "manufacturer",
+            ),
+
+
+            model=properties.get(
+                "model",
+            ),
+
+
+            mode=properties.get(
+                "mode",
+            ),
+
+
+            properties=properties,
+
+        )
+
+
+
+
+
+    def _add_scene_node(
+        self,
+        project,
+        fixture,
+        source,
+    ) -> None:
+        """
+        Add fixture to existing Capture scene.
+        """
+
+        scene = project.scene
+
+
+        name = fixture.name
+
+
+        if name in scene.nodes:
+
+            return
+
+
+
+        properties = self._properties(
+            source
+        )
+
+
+        parent = properties.get(
+            "parent"
+        )
+
+
+
+        #
+        # Existing scene model
+        # does not expose CaptureSceneNode.
+        #
+
+        node = type(
+            "SceneNode",
+            (),
+            {
+
+                "name":
+                    name,
+
+
+                "parent":
+                    parent,
+
+
+                "children":
+                    [],
 
 
                 "properties":
+                    {
 
-                    obj.get(
-                        "properties",
-                        {},
-                    ),
-
-            }
+                        "type":
+                            "fixture",
 
 
+                        "recovered":
+                            True,
+
+                    },
+
+            },
+        )()
+
+
+
+        scene.nodes[name] = node
+
+
+
+        if parent is None:
+
+            if name not in scene.root_nodes:
+
+                scene.root_nodes.append(
+                    name
+                )
+
+
+
+
+
+    def _serialize_candidate(
+        self,
+        obj,
+    ) -> dict:
 
         return {
 
             "identifier":
-
-                getattr(
+                self._get(
                     obj,
                     "identifier",
-                    "unknown",
-                ),
-
-
-            "object_type":
-
-                getattr(
-                    obj,
-                    "object_type",
-                    "unknown",
+                    "",
                 ),
 
 
             "confidence":
-
-                getattr(
+                self._get(
                     obj,
                     "confidence",
                     0.0,
@@ -266,71 +335,64 @@ class ProjectReconstructor:
 
 
             "properties":
-
-                getattr(
-                    obj,
-                    "properties",
-                    {},
+                self._properties(
+                    obj
                 ),
 
         }
 
 
 
-    def _build_fixture(
+
+
+    def _properties(
         self,
         obj,
-        number,
-    ) -> CaptureFixture:
-        """
-        Build CaptureFixture.
-        """
+    ) -> dict:
+
+
+        if isinstance(
+            obj,
+            dict,
+        ):
+
+            return obj.get(
+                "properties",
+                {},
+            )
+
+
+        return getattr(
+            obj,
+            "properties",
+            {},
+        )
 
 
 
-        return CaptureFixture(
-
-            name=(
-
-                f"Recovered Fixture {number:03d}"
-
-            ),
 
 
-            universe=0,
+    def _get(
+        self,
+        obj,
+        key,
+        default=None,
+    ):
 
 
-            address=0,
+        if isinstance(
+            obj,
+            dict,
+        ):
+
+            return obj.get(
+                key,
+                default,
+            )
 
 
-            manufacturer=None,
-
-
-            model=None,
-
-
-            mode=None,
-
-
-            properties={
-
-                "recovered":
-
-                    True,
-
-
-                "confidence":
-
-                    obj["confidence"],
-
-
-                "source":
-
-                    obj["object_type"],
-
-
-                **obj["properties"],
-
-            },
-
+        return getattr(
+            obj,
+            key,
+            default,
         )
