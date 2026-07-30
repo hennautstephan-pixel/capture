@@ -237,6 +237,23 @@ class NumericDetector(BaseDetector):
         )
 
 
+    def _offsets(
+        self,
+        *,
+        buffer: bytes,
+        numeric_type: NumericType,
+        options: DetectionOptions,
+    ):
+        """
+        Return the offsets to scan for a numeric type.
+        """
+        return OffsetIterator.iterate(
+            length=len(buffer),
+            value_size=numeric_type.size,
+            options=options,
+        )
+
+
     def _detect(
         self,
         data,
@@ -310,9 +327,9 @@ class NumericDetector(BaseDetector):
 
 
 
-            offsets = OffsetIterator.iterate(
-                length=len(buffer),
-                value_size=numeric_type.size,
+            offsets = self._offsets(
+                buffer=buffer,
+                numeric_type=numeric_type,
                 options=options,
             )
 
