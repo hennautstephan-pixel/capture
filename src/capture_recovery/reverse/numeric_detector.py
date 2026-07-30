@@ -9,6 +9,7 @@ from __future__ import annotations
 import math
 from collections.abc import Iterable
 
+from .base_detector import BaseDetector
 from .detection_options import DetectionOptions
 from .detector_type import DetectorType
 from .numeric_decoder import NumericDecoder
@@ -78,10 +79,12 @@ class _DualMethod:
 
 
 
-class NumericDetector:
+class NumericDetector(BaseDetector):
     """
     Detect numeric values in binary buffers.
     """
+
+    detector_type = DetectorType.NUMERIC
 
     def __init__(
         self,
@@ -227,27 +230,10 @@ class NumericDetector:
 
 
 
-        enabled = getattr(
-            options,
-            "enabled_types",
-            None,
-        )
-
-
-        if (
-            enabled
-            and DetectorType.NUMERIC not in enabled
-        ):
-
+        if not self._is_enabled(options, self.detector_type):
             return []
 
-
-
-        max_results = getattr(
-            options,
-            "max_results",
-            None,
-        )
+        max_results = options.max_results
 
 
 
@@ -272,16 +258,7 @@ class NumericDetector:
 
 
 
-        buffer = bytes(data)
-
-
-        if (
-            options.max_scan_size is not None
-        ):
-
-            buffer = buffer[
-                :options.max_scan_size
-            ]
+        buffer = bytes(self._buffer(data, options))
 
 
 
@@ -299,7 +276,7 @@ class NumericDetector:
                 and len(results) >= max_results
             ):
 
-                return results
+                return list(self._limit_results(results, options))
 
 
 
@@ -337,7 +314,7 @@ class NumericDetector:
                     and len(results) >= max_results
                 ):
 
-                    return results
+                    return list(self._limit_results(results, options))
 
 
 
@@ -356,7 +333,7 @@ class NumericDetector:
                         and len(results) >= max_results
                     ):
 
-                        return results
+                        return list(self._limit_results(results, options))
 
 
 
@@ -412,4 +389,4 @@ class NumericDetector:
 
 
 
-        return results
+        return list(self._limit_results(results, options))

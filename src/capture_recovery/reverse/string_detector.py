@@ -10,6 +10,7 @@ from __future__ import annotations
 from collections.abc import Iterable
 
 
+from .base_detector import BaseDetector
 from .detection_options import DetectionOptions
 
 from .detector_type import DetectorType
@@ -25,10 +26,12 @@ from .string_value import (
 
 
 
-class StringDetector:
+class StringDetector(BaseDetector):
     """
     Detect readable strings.
     """
+
+    detector_type = DetectorType.STRING
 
 
 
@@ -188,9 +191,7 @@ class StringDetector:
 
 
 
-        return self._remove_duplicates(
-            results
-        )
+        return list(self._limit_results(self._remove_duplicates(results), options))
 
 
 
