@@ -32,6 +32,11 @@ from .step_constraint import StepConstraint
 from .step_correlator import StepCorrelator
 from .constraint_merger import ConstraintMerger
 from .confidence_aggregator import ConfidenceAggregator
+from .constraint_validator import (
+    ConstraintConflict,
+    ConstraintValidationResult,
+    ConstraintValidator,
+)
 
 __all__ = [
     "BooleanCorrelator",
@@ -62,4 +67,7 @@ __all__ = [
     "StepCorrelator",
     "ConstraintMerger",
     "ConfidenceAggregator",
+    "ConstraintConflict",
+    "ConstraintValidationResult",
+    "ConstraintValidator",
 ]
