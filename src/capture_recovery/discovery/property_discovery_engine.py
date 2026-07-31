@@ -7,7 +7,7 @@ from __future__ import annotations
 from collections import defaultdict
 from collections.abc import Iterable
 
-from .correlation import Correlation
+from .correlator_registry import CorrelatorRegistry
 from .discovery_result import DiscoveryResult
 from .numeric_correlator import NumericCorrelator
 from .property_observation import PropertyObservation
@@ -20,14 +20,24 @@ class PropertyDiscoveryEngine:
 
     def __init__(
         self,
-        correlators: Iterable[Correlation] | None = None,
+        registry: CorrelatorRegistry | None = None,
     ) -> None:
 
-        self._correlators = tuple(
-            correlators
-            if correlators is not None
-            else (NumericCorrelator(),)
-        )
+        if registry is None:
+            registry = CorrelatorRegistry(
+                [
+                    NumericCorrelator(),
+                ]
+            )
+
+        self._registry = registry
+
+    @property
+    def registry(self) -> CorrelatorRegistry:
+        """
+        Returns the correlator registry used by the engine.
+        """
+        return self._registry
 
     def discover(
         self,
@@ -58,7 +68,7 @@ class PropertyDiscoveryEngine:
 
         for group in groups.values():
 
-            for correlator in self._correlators:
+            for correlator in self._registry.find_applicable(group):
 
                 candidate = correlator.analyse(group)
 

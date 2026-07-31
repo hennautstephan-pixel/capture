@@ -1,5 +1,5 @@
 """
-Numeric property correlator.
+Correlator detecting enumerated integer properties.
 """
 
 from __future__ import annotations
@@ -11,37 +11,35 @@ from .correlation_utils import (
     build_candidate,
     validate_observations,
 )
+from .enum_constraint import EnumConstraint
+from .observation_statistics import ObservationStatistics
 from .property_candidate import PropertyCandidate
 from .property_observation import PropertyObservation
 from .value_type import ValueType
 
 
-class NumericCorrelator(Correlation):
+class EnumCorrelator(Correlation):
     """
-    Correlates numeric property observations.
+    Detect properties whose values belong to a small finite set.
     """
 
-    PRIORITY = 10
+    PRIORITY = 40
+
+    MIN_OBSERVATIONS = 5
+    MAX_ENUM_VALUES = 8
     MIN_CONFIDENCE = 0.95
 
     @property
     def priority(self) -> int:
-        """
-        Execution priority.
-
-        Generic numeric correlation should execute after more
-        specialised correlators (Boolean, Enum, Vector3, Color...).
-        """
         return self.PRIORITY
 
     def analyse(
         self,
         observations: Sequence[PropertyObservation],
     ) -> PropertyCandidate | None:
-        """
-        Analyse a collection of observations and produce a candidate
-        numeric property when they are sufficiently consistent.
-        """
+
+        if len(observations) < self.MIN_OBSERVATIONS:
+            return None
 
         confidence = validate_observations(
             observations,
@@ -51,8 +49,24 @@ class NumericCorrelator(Correlation):
         if confidence is None:
             return None
 
+        stats = ObservationStatistics(observations)
+
+        if not stats.all_integers:
+            return None
+
+        distinct = tuple(sorted(stats.distinct_semantic_values))
+
+        if len(distinct) <= 1:
+            return None
+
+        if len(distinct) > self.MAX_ENUM_VALUES:
+            return None
+
         return build_candidate(
             observations,
-            value_type=ValueType.FLOAT32,
+            value_type=ValueType.INT32,
             confidence=confidence,
+            constraints=(
+                EnumConstraint(distinct),
+            ),
         )

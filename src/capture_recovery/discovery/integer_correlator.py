@@ -1,5 +1,5 @@
 """
-Numeric property correlator.
+Integer property correlator.
 """
 
 from __future__ import annotations
@@ -11,17 +11,18 @@ from .correlation_utils import (
     build_candidate,
     validate_observations,
 )
+from .observation_statistics import ObservationStatistics
 from .property_candidate import PropertyCandidate
 from .property_observation import PropertyObservation
 from .value_type import ValueType
 
 
-class NumericCorrelator(Correlation):
+class IntegerCorrelator(Correlation):
     """
-    Correlates numeric property observations.
+    Correlates integer property observations.
     """
 
-    PRIORITY = 10
+    PRIORITY = 20
     MIN_CONFIDENCE = 0.95
 
     @property
@@ -29,8 +30,8 @@ class NumericCorrelator(Correlation):
         """
         Execution priority.
 
-        Generic numeric correlation should execute after more
-        specialised correlators (Boolean, Enum, Vector3, Color...).
+        Integer correlation executes before the generic numeric
+        correlator but after specialised correlators such as Boolean.
         """
         return self.PRIORITY
 
@@ -39,9 +40,14 @@ class NumericCorrelator(Correlation):
         observations: Sequence[PropertyObservation],
     ) -> PropertyCandidate | None:
         """
-        Analyse a collection of observations and produce a candidate
-        numeric property when they are sufficiently consistent.
+        Analyse a collection of observations and produce an integer
+        property candidate.
         """
+
+        stats = ObservationStatistics(observations)
+
+        if not stats.all_integers:
+            return None
 
         confidence = validate_observations(
             observations,
@@ -53,6 +59,6 @@ class NumericCorrelator(Correlation):
 
         return build_candidate(
             observations,
-            value_type=ValueType.FLOAT32,
+            value_type=ValueType.INT32,
             confidence=confidence,
         )

@@ -4,41 +4,37 @@ Correlation protocol.
 
 from __future__ import annotations
 
-from collections.abc import Sequence
-from typing import Protocol, runtime_checkable
+from typing import Protocol, Sequence
 
 from .property_candidate import PropertyCandidate
 from .property_observation import PropertyObservation
 
 
-@runtime_checkable
 class Correlation(Protocol):
     """
     Protocol implemented by all property correlators.
     """
 
-    PRIORITY: int
+    PRIORITY: int = 0
 
     @property
     def priority(self) -> int:
         """
         Execution priority.
 
-        Higher values execute first.
+        Correlators having a higher priority are executed before
+        lower priority correlators.
         """
-        ...
+        return self.PRIORITY
 
     def analyse(
         self,
         observations: Sequence[PropertyObservation],
     ) -> PropertyCandidate | None:
         """
-        Analyse a collection of observations and infer a property candidate.
+        Analyse a collection of observations and return a discovered
+        property candidate.
 
-        Returns
-        -------
-        PropertyCandidate | None
-            The inferred candidate, or ``None`` when this correlator does not
-            apply.
+        Returns None if no reliable candidate can be inferred.
         """
         ...
