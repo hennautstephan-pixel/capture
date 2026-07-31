@@ -7,6 +7,7 @@ from __future__ import annotations
 from collections import defaultdict
 from collections.abc import Iterable
 
+from .constraint_merger import ConstraintMerger
 from .correlator_registry import CorrelatorRegistry
 from .discovery_result import DiscoveryResult
 from .numeric_correlator import NumericCorrelator
@@ -31,6 +32,7 @@ class PropertyDiscoveryEngine:
             )
 
         self._registry = registry
+        self._constraint_merger = ConstraintMerger()
 
     @property
     def registry(self) -> CorrelatorRegistry:
@@ -68,13 +70,19 @@ class PropertyDiscoveryEngine:
 
         for group in groups.values():
 
+            group_candidates = []
+
             for correlator in self._registry.find_applicable(group):
 
                 candidate = correlator.analyse(group)
 
                 if candidate is not None:
-                    candidates.append(candidate)
-                    break
+                    group_candidates.append(candidate)
+
+            if group_candidates:
+                candidates.extend(
+                    self._constraint_merger.merge(group_candidates)
+                )
 
         return DiscoveryResult(
             candidates=tuple(candidates),

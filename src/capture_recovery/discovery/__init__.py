@@ -25,6 +25,13 @@ from .property_discovery_engine import PropertyDiscoveryEngine
 from .property_observation import PropertyObservation
 from .value_type import ValueType
 from .range_constraint import RangeConstraint
+from .range_correlator import RangeCorrelator
+from .bitmask_constraint import BitmaskConstraint
+from .bitmask_correlator import BitmaskCorrelator
+from .step_constraint import StepConstraint
+from .step_correlator import StepCorrelator
+from .constraint_merger import ConstraintMerger
+from .confidence_aggregator import ConfidenceAggregator
 
 __all__ = [
     "BooleanCorrelator",
@@ -48,4 +55,11 @@ __all__ = [
     "PropertyObservation",
     "ValueType",
     "RangeConstraint",
+    "RangeCorrelator",
+    "BitmaskConstraint",
+    "BitmaskCorrelator",
+    "StepConstraint",
+    "StepCorrelator",
+    "ConstraintMerger",
+    "ConfidenceAggregator",
 ]
