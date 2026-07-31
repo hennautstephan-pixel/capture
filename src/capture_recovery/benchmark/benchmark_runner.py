@@ -7,6 +7,7 @@ from __future__ import annotations
 from collections.abc import Callable
 
 from .benchmark_result import BenchmarkResult
+from .benchmark_session import BenchmarkSession
 from .benchmark_statistics import BenchmarkStatistics
 from .sample_loader import SampleLoader
 
@@ -33,17 +34,34 @@ class BenchmarkRunner:
     def analyser(self) -> Callable[[str], BenchmarkResult]:
         return self._analyser
 
+    def run_session(self) -> BenchmarkSession:
+        """
+        Execute the benchmark and return a complete session.
+        """
+
+        session = BenchmarkSession(
+            samples_directory=self.loader.root,
+        )
+
+        for sample in self.loader:
+
+            result = self._analyser(
+                str(sample),
+            )
+
+            session.statistics.add(
+                result,
+            )
+
+        session.finish()
+
+        return session
+
     def run(self) -> BenchmarkStatistics:
         """
-        Execute the benchmark.
+        Backward compatible API.
+
+        Returns benchmark statistics.
         """
 
-        statistics = BenchmarkStatistics()
-
-        for sample in self._loader:
-
-            result = self._analyser(str(sample))
-
-            statistics.add(result)
-
-        return statistics
+        return self.run_session().statistics

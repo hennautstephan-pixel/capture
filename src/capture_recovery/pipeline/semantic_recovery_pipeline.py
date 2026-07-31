@@ -55,7 +55,7 @@ class SemanticRecoveryPipeline:
             )
 
             objects.extend(
-                result
+                result,
             )
 
         return objects
@@ -88,15 +88,24 @@ class SemanticRecoveryPipeline:
 
         if reverse_result is not None:
 
-            semantic = self.adapter.analyze(
+            #
+            # Build REAL semantic objects.
+            #
+
+            semantic_objects = self.adapter.adapt(
                 reverse_result,
             )
 
             result.objects.extend(
-                semantic.get(
-                    "objects",
-                    [],
-                )
+                semantic_objects,
+            )
+
+            #
+            # Compatibility layer.
+            #
+
+            semantic = self.adapter.analyze(
+                reverse_result,
             )
 
             result.evidence.update(

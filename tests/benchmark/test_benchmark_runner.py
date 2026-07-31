@@ -54,3 +54,22 @@ def test_run(tmp_path: Path):
     assert stats.total_objects == 20
     assert stats.recovered_objects == 18
     assert stats.recovery_rate == 0.9
+
+def test_run_session(tmp_path):
+
+    (tmp_path / "a.c2p").write_bytes(b"")
+
+    runner = BenchmarkRunner(
+        SampleLoader(tmp_path),
+        fake_analyser,
+    )
+
+    session = runner.run_session()
+
+    assert session.completed
+
+    assert session.statistics.project_count == 1
+
+    assert session.statistics.total_objects == 10
+
+    assert session.duration_seconds >= 0.0

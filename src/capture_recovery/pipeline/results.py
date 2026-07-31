@@ -1,9 +1,8 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from capture_recovery.models.project import Project
 
-#
+from capture_recovery.models.project import Project
 from capture_recovery.types import (
     BinaryDetection,
     Evidence,
@@ -12,7 +11,6 @@ from capture_recovery.types import (
     SemanticDetection,
     SemanticObject,
 )
-
 
 
 @dataclass(slots=True)
@@ -48,29 +46,15 @@ class BinaryAnalysisResult:
         self,
         detection: BinaryDetection,
     ) -> None:
-        """
-        Add a binary detection.
-        """
-
-        self.detections.append(
-            detection,
-        )
+        self.detections.append(detection)
 
     def clear(self) -> None:
-        """
-        Remove every detection.
-        """
-
         self.detections.clear()
 
-    def __len__(
-        self,
-    ) -> int:
+    def __len__(self) -> int:
         return self.count
 
-    def __bool__(
-        self,
-    ) -> bool:
+    def __bool__(self) -> bool:
         return self.count > 0
 
 
@@ -105,33 +89,99 @@ class SemanticRecoveryResult:
         """
         return len(self.objects)
 
+    @property
+    def property_count(self) -> int:
+        """
+        Total number of recovered semantic properties.
+        """
+
+        total = 0
+
+        for obj in self.objects:
+            total += getattr(
+                obj,
+                "property_count",
+                len(getattr(obj, "properties", {})),
+            )
+
+        return total
+
+    @property
+    def candidate_count(self) -> int:
+        """
+        Total number of semantic candidates.
+        Currently one candidate per semantic object.
+        """
+
+        return len(self.objects)
+
+    @property
+    def average_confidence(self) -> float:
+        """
+        Average semantic confidence.
+        """
+
+        if not self.objects:
+            return 0.0
+
+        values = [
+            getattr(obj, "confidence", 0.0)
+            for obj in self.objects
+        ]
+
+        return sum(values) / len(values)
+
+    @property
+    def minimum_confidence(self) -> float:
+        """
+        Lowest semantic confidence.
+        """
+
+        if not self.objects:
+            return 0.0
+
+        return min(
+            getattr(obj, "confidence", 0.0)
+            for obj in self.objects
+        )
+
+    @property
+    def maximum_confidence(self) -> float:
+        """
+        Highest semantic confidence.
+        """
+
+        if not self.objects:
+            return 0.0
+
+        return max(
+            getattr(obj, "confidence", 0.0)
+            for obj in self.objects
+        )
+
+    @property
+    def conflict_count(self) -> int:
+        """
+        Number of semantic conflicts.
+
+        Will later be connected to ConstraintValidator.
+        """
+
+        return 0
+
     def add_object(
         self,
         obj: SemanticObject,
     ) -> None:
-        """
-        Add a semantic object.
-        """
-
-        self.objects.append(
-            obj,
-        )
+        self.objects.append(obj)
 
     def clear(self) -> None:
-        """
-        Remove every semantic object.
-        """
-
         self.objects.clear()
 
-    def __len__(
-        self,
-    ) -> int:
+    def __len__(self) -> int:
         return self.count
 
-    def __bool__(
-        self,
-    ) -> bool:
+    def __bool__(self) -> bool:
         return self.count > 0
 
 
@@ -154,9 +204,7 @@ class ProjectRecoveryResult:
     )
 
     @property
-    def success(
-        self,
-    ) -> bool:
+    def success(self) -> bool:
         """
         Return True if reconstruction succeeded.
         """
@@ -170,29 +218,16 @@ class ProjectRecoveryResult:
         self,
         message: str,
     ) -> None:
-        """
-        Register a validation error.
-        """
 
-        self.errors.append(
-            message,
-        )
-
+        self.errors.append(message)
         self.valid = False
 
-    def clear_errors(
-        self,
-    ) -> None:
-        """
-        Remove every validation error.
-        """
-
+    def clear_errors(self) -> None:
         self.errors.clear()
 
-    def __bool__(
-        self,
-    ) -> bool:
+    def __bool__(self) -> bool:
         return self.success
+
 
 @dataclass(slots=True)
 class FullRecoveryResult:
@@ -217,16 +252,12 @@ class FullRecoveryResult:
     )
 
     @property
-    def success(
-        self,
-    ) -> bool:
+    def success(self) -> bool:
         """
         Global recovery status.
         """
 
         return self.project.success
 
-    def __bool__(
-        self,
-    ) -> bool:
+    def __bool__(self) -> bool:
         return self.success

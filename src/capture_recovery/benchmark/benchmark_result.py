@@ -8,6 +8,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+from capture_recovery.analysis import AnalysisResult
+
 
 @dataclass(frozen=True, slots=True)
 class BenchmarkResult:
@@ -87,3 +89,28 @@ class BenchmarkResult:
         """
 
         return self.duration_seconds >= 0.0
+
+    @classmethod
+    def from_analysis(
+        cls,
+        result: AnalysisResult,
+    ) -> "BenchmarkResult":
+        """
+        Create a BenchmarkResult from an AnalysisResult.
+        """
+
+        return cls(
+            filename=result.filename,
+            file_size=result.file_size,
+            object_count=result.object_count,
+            recovered_objects=result.recovered_objects,
+            unknown_objects=result.unknown_objects,
+            property_count=result.property_count,
+            candidate_count=result.candidate_count,
+            average_confidence=result.average_confidence,
+            minimum_confidence=result.minimum_confidence,
+            maximum_confidence=result.maximum_confidence,
+            conflict_count=result.conflict_count,
+            unknown_signature_count=result.unknown_signatures,
+            duration_seconds=result.duration_seconds,
+        )

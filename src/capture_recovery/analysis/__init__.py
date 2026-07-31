@@ -5,6 +5,10 @@ Contains semantic analysis,
 object relations and relation graphs.
 """
 
+from .analysis_result import (
+    AnalysisResult,
+)
+
 from .object_relation import (
     ObjectRelation,
 )
@@ -23,6 +27,8 @@ from .relation_resolver import (
 
 
 __all__ = [
+
+    "AnalysisResult",
 
     "ObjectRelation",
 
