@@ -7,13 +7,9 @@ from semantic fixtures.
 
 from __future__ import annotations
 
-from capture_recovery.formats import (
-    CaptureFixture,
-)
+from capture_recovery.formats import CaptureFixture
 
-from .property_mapper import (
-    PropertyMapper,
-)
+from .property_mapper import PropertyMapper
 
 
 class FixtureReconstructor:
@@ -21,28 +17,23 @@ class FixtureReconstructor:
     Reconstruct Capture fixtures.
     """
 
+    SUPPORTED_TYPES = {
+        "Fixture",
+        "Projector",
+        "Light",
+    }
+
     def __init__(
         self,
         mapper=None,
     ) -> None:
-
-        self.mapper = (
-            mapper
-            or PropertyMapper()
-        )
-
+        self.mapper = mapper or PropertyMapper()
 
     def can_reconstruct(
         self,
         obj,
     ) -> bool:
-
-        return obj.object_type in (
-            "Fixture",
-            "Projector",
-            "Light",
-        )
-
+        return obj.object_type in self.SUPPORTED_TYPES
 
     def reconstruct(
         self,
@@ -52,35 +43,14 @@ class FixtureReconstructor:
         Build CaptureFixture.
         """
 
-        data = self.mapper.map(
-            obj,
-        )
+        data = self.mapper.map(obj)
 
         return CaptureFixture(
-
-            name=str(
-                obj.identifier,
-            ),
-
-            universe=data[
-                "universe"
-            ],
-
-            address=data[
-                "address"
-            ],
-
-            manufacturer=data[
-                "manufacturer"
-            ],
-
-            model=data[
-                "model"
-            ],
-
-            mode=data[
-                "mode"
-            ],
-
+            name=str(obj.identifier),
+            universe=data["universe"],
+            address=data["address"],
+            manufacturer=data["manufacturer"],
+            model=data["model"],
+            mode=data["mode"],
             properties=data,
         )

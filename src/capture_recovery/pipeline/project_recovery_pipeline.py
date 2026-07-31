@@ -7,10 +7,11 @@ CaptureProject from recovered objects.
 
 from __future__ import annotations
 
+from typing import Any
+
 from capture_recovery.reconstruction import (
     ProjectReconstructor,
 )
-
 from capture_recovery.validation import (
     ReconstructionValidator,
 )
@@ -27,24 +28,23 @@ class ProjectRecoveryPipeline:
 
     def __init__(
         self,
-        reconstructor=None,
-        validator=None,
+        reconstructor: ProjectReconstructor | None = None,
+        validator: ReconstructionValidator | None = None,
     ) -> None:
-
-        self.reconstructor = (
+        self.reconstructor: ProjectReconstructor = (
             reconstructor
             or ProjectReconstructor()
         )
 
-        self.validator = (
+        self.validator: ReconstructionValidator = (
             validator
             or ReconstructionValidator()
         )
 
     def reconstruct(
         self,
-        objects,
-    ):
+        objects: Any,
+    ) -> Any:
         """
         Build CaptureProject.
         """
@@ -55,7 +55,7 @@ class ProjectRecoveryPipeline:
 
     def validate(
         self,
-        project,
+        project: Any,
     ) -> ProjectRecoveryResult:
         """
         Validate reconstructed project.
@@ -69,7 +69,6 @@ class ProjectRecoveryPipeline:
         )
 
         if project is None:
-
             result.add_error(
                 "Project is None",
             )
@@ -85,30 +84,23 @@ class ProjectRecoveryPipeline:
             project,
             "fixtures",
         ):
-
             result.valid = True
 
             return result
 
-        errors = self.validator.validate(
-            project,
-        )
+        validation = self.validator.validate(project)
 
-        if errors:
-
-            for error in errors:
-                result.add_error(
-                    error,
-                )
-
-        else:
+        if validation.valid:
             result.valid = True
+        else:
+            for error in validation.errors:
+                result.add_error(error)
 
         return result
 
     def recover(
         self,
-        objects,
+        objects: Any,
     ) -> dict:
         """
         Execute project recovery.

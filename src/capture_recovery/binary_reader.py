@@ -179,7 +179,7 @@ class BinaryReader:
 
     def read_u8(self) -> int:
 
-        return struct.unpack("<B", self.read(1))[0]
+        return int.from_bytes(self.read(1), "little")
 
     def read_u16(self) -> int:
 

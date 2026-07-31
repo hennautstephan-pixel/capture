@@ -1,0 +1,1448 @@
+﻿Structure du dossier pour le volume OS
+Le numÚro de sÚrie du volume est 000000A1 74A0:821A
+C:.
+|   .coverage
+|   .gitignore
+|   0.9
+|   analyse_float.py
+|   analyse_object_header.py
+|   analyze_catalog_objects.py
+|   arborescence.txt
+|   capture_block_full.bin
+|   capture_block_full.recovery.json
+|   capture_block_full.recovery_v2.json
+|   capture_block_full.recovery_v3.json
+|   capture_block_full.recovery_v4.json
+|   capture_block_full.recovery_v5.json
+|   capture_block_full.recovery_v6.json
+|   capture_block_full.recovery_v7.json
+|   capture_instances_v5.json
+|   capture_instances_v6.json
+|   capture_instances_v7.json
+|   capture_integrity_scanner.py
+|   capture_object_parser.py
+|   capture_scan.py
+|   capture_scene.json
+|   capture_scene_full.json
+|   capture_scene_recovery_scanner.py
+|   capture_scene_recovery_scanner_v2.py
+|   capture_scene_recovery_scanner_v3.py
+|   capture_scene_recovery_scanner_v4.py
+|   capture_scene_recovery_scanner_v5.py
+|   capture_scene_recovery_scanner_v6.py
+|   capture_scene_recovery_scanner_v7.py
+|   compare_internal_v2.py
+|   compare_objects.py
+|   compare_transform_deplacement.py
+|   decode_object_fields.py
+|   decompressed_block.bin
+|   dump_structure.py
+|   extract_all_instances.py
+|   extract_all_instances_v5.py
+|   extract_all_instances_v6.py
+|   extract_all_instances_v7.py
+|   extract_all_objects.py
+|   extract_all_scene.py
+|   extract_catalog.py
+|   extract_full_scene.py
+|   extract_known_instances.py
+|   extract_objects.py
+|   extract_scene_objects.py
+|   extract_scene_objects_v2.py
+|   extract_scene_objects_v3.py
+|   extract_scene_objects_v4.py
+|   extract_transforms.py
+|   extract_zlib_samples.py
+|   extract_zlib_stream.py
+|   find_catalog_guid_usage.py
+|   find_catalog_links.py
+|   find_guid_table.py
+|   find_instance_links_v8.py
+|   find_matrices.py
+|   find_object_index.py
+|   fixtures_context.json
+|   inspect_c2p_zlib.py
+|   inspect_guid_area.py
+|   inspect_guid_entry.py
+|   inspect_instance.py
+|   inspect_object_data.py
+|   instances_scan.json
+|   link_model_instance.py
+|   link_objects_matrix.py
+|   main
+|   objects_extract.json
+|   object_before_guid.py
+|   outputtendre_feu.json
+|   pyproject.toml
+|   pytest.ini
+|   README.md
+|   scan_all_scene_instances.py
+|   scan_curves.py
+|   scan_curve_pointers.py
+|   scan_dmx_structure.py
+|   scan_fixtures_capture.py
+|   scan_fixture_data.py
+|   scan_guids.py
+|   scan_guid_context.py
+|   scan_guid_matrix.py
+|   scan_import_blocks.py
+|   scan_instances_v2.py
+|   scan_matrices2.py
+|   scan_new_structures.py
+|   scan_object_guids.py
+|   scan_object_references.py
+|   scan_possible_curves.py
+|   scan_real_references.py
+|   scan_sources.py
+|   scan_zlib_blocks.py
+|   scene_instances_scan.json
+|   test_blocks.py
+|   test_zlib.py
+|   
++---.pytest_cache
+|   |   .gitignore
+|   |   CACHEDIR.TAG
+|   |   README.md
+|   |   
+|   \---v
+|       \---cache
+|               lastfailed
+|               nodeids
+|               
++---docs
+|       FORMAT.md
+|       REVERSE_ENGINEERING.md
+|       ROADMAP.md
+|       
++---output
+|       report.json
+|       simple_report.json
+|       structure_report.json
+|       tendre_feu.json
+|       tendre_feu_full.json
+|       zlib_000.bin
+|       
++---plugins
+|       base.py
+|       
++---samples
+|       1 projecteur.bin
+|       1 projecteur.c2p
+|       1 projecteur.integrity.json
+|       1 projecteur.json
+|       1 projecteur_allume.c2p
+|       1 projecteur_deplacement.bin
+|       1 projecteur_deplacement.c2p
+|       1 projecteur_dmx.bin
+|       1 projecteur_dmx.c2p
+|       1 projecteur_dmx.integrity.json
+|       1 projecteur_dmx.json
+|       1 projecteur_rotation.bin
+|       1 projecteur_rotation.c2p
+|       2 projecteurs.c2p
+|       Projo.c2p
+|       simple.c2p
+|       Structure(1).c2p
+|       Tendre feu v4_juillet.c2p
+|       Tendre feu v4_juillet_corrompu.c2p
+|       Vide.c2p
+|       
++---src
+|   +---capture_recovery
+|   |   |   binary_reader.py
+|   |   |   cli.py
+|   |   |   generate.py
+|   |   |   gui_app.py
+|   |   |   recover.py
+|   |   |   structure_parser.py
+|   |   |   types.py
+|   |   |   __init__.py
+|   |   |   __main__.py
+|   |   |   
+|   |   +---analysis
+|   |   |   |   object_relation.py
+|   |   |   |   relation_builder.py
+|   |   |   |   relation_graph.py
+|   |   |   |   relation_resolver.py
+|   |   |   |   __init__.py
+|   |   |   |   
+|   |   |   \---__pycache__
+|   |   |           object_relation.cpython-314.pyc
+|   |   |           relation_builder.cpython-314.pyc
+|   |   |           relation_graph.cpython-314.pyc
+|   |   |           relation_resolver.cpython-314.pyc
+|   |   |           __init__.cpython-314.pyc
+|   |   |           
+|   |   +---analyzers
+|   |   |   |   ascii.py
+|   |   |   |   base.py
+|   |   |   |   blocks.py
+|   |   |   |   curve_analyzer.py
+|   |   |   |   entropy.py
+|   |   |   |   float_array_analyzer.py
+|   |   |   |   numbers.py
+|   |   |   |   patterns.py
+|   |   |   |   pipeline.py
+|   |   |   |   pointers.py
+|   |   |   |   signatures.py
+|   |   |   |   structure_analyzer.py
+|   |   |   |   summary_analyzer.py
+|   |   |   |   utf16.py
+|   |   |   |   __init__.py
+|   |   |   |   
+|   |   |   \---__pycache__
+|   |   |           structure_analyzer.cpython-314.pyc
+|   |   |           utf16.cpython-314.pyc
+|   |   |           __init__.cpython-314.pyc
+|   |   |           
+|   |   +---automation
+|   |   |   |   generator.py
+|   |   |   |   __init__.py
+|   |   |   |   
+|   |   |   \---__pycache__
+|   |   |           generator.cpython-314.pyc
+|   |   |           __init__.cpython-314.pyc
+|   |   |           
+|   |   +---binary
+|   |   |   |   binary_container.py
+|   |   |   |   binary_graph.py
+|   |   |   |   binary_index.py
+|   |   |   |   binary_object.py
+|   |   |   |   binary_reference.py
+|   |   |   |   binary_section.py
+|   |   |   |   decode_coverage.py
+|   |   |   |   entropy.py
+|   |   |   |   signatures.py
+|   |   |   |   string_scanner.py
+|   |   |   |   
+|   |   |   \---__pycache__
+|   |   |           binary_container.cpython-314.pyc
+|   |   |           binary_graph.cpython-314.pyc
+|   |   |           binary_index.cpython-314.pyc
+|   |   |           binary_object.cpython-314.pyc
+|   |   |           binary_reference.cpython-314.pyc
+|   |   |           binary_section.cpython-314.pyc
+|   |   |           decode_coverage.cpython-314.pyc
+|   |   |           entropy.cpython-314.pyc
+|   |   |           signatures.cpython-314.pyc
+|   |   |           string_scanner.cpython-314.pyc
+|   |   |           
+|   |   +---builders
+|   |   |   |   decoder_method_builder.py
+|   |   |   |   project_builder.py
+|   |   |   |   reader_type_mapper.py
+|   |   |   |   
+|   |   |   \---__pycache__
+|   |   |           decoder_method_builder.cpython-314.pyc
+|   |   |           project_builder.cpython-314.pyc
+|   |   |           reader_type_mapper.cpython-314.pyc
+|   |   |           
+|   |   +---container
+|   |   |       c2p_scene_parser.py
+|   |   |       
+|   |   +---decoders
+|   |   |   |   base_decoder.py
+|   |   |   |   cue_decoder.py
+|   |   |   |   decoder_registry.py
+|   |   |   |   fixture_decoder.py
+|   |   |   |   universe_decoder.py
+|   |   |   |   __init__.py
+|   |   |   |   
+|   |   |   \---__pycache__
+|   |   |           base_decoder.cpython-314.pyc
+|   |   |           cue_decoder.cpython-314.pyc
+|   |   |           decoder_registry.cpython-314.pyc
+|   |   |           fixture_decoder.cpython-314.pyc
+|   |   |           universe_decoder.cpython-314.pyc
+|   |   |           __init__.cpython-314.pyc
+|   |   |           
+|   |   +---definitions
+|   |   |   |   field_definition.py
+|   |   |   |   import_definition.py
+|   |   |   |   method_definition.py
+|   |   |   |   object_definition.py
+|   |   |   |   
+|   |   |   \---__pycache__
+|   |   |           field_definition.cpython-314.pyc
+|   |   |           object_definition.cpython-314.pyc
+|   |   |           
+|   |   +---detectors
+|   |   |   |   ascii_detector.py
+|   |   |   |   base.py
+|   |   |   |   float_detector.py
+|   |   |   |   integer_detector.py
+|   |   |   |   pipeline.py
+|   |   |   |   signature_detector.py
+|   |   |   |   __init__.py
+|   |   |   |   
+|   |   |   \---__pycache__
+|   |   |           ascii_detector.cpython-314.pyc
+|   |   |           base.cpython-314.pyc
+|   |   |           float_detector.cpython-314.pyc
+|   |   |           integer_detector.cpython-314.pyc
+|   |   |           pipeline.cpython-314.pyc
+|   |   |           signature_detector.cpython-314.pyc
+|   |   |           __init__.cpython-314.pyc
+|   |   |           
+|   |   +---diff
+|   |   |   |   binary_differ.py
+|   |   |   |   detection_diff.py
+|   |   |   |   diff_engine.py
+|   |   |   |   diff_report.py
+|   |   |   |   field_differ.py
+|   |   |   |   models.py
+|   |   |   |   project_differ.py
+|   |   |   |   region_differ.py
+|   |   |   |   report.py
+|   |   |   |   semantic_differ.py
+|   |   |   |   statistics_diff.py
+|   |   |   |   structure_differ.py
+|   |   |   |   __init__.py
+|   |   |   |   
+|   |   |   +---formatters
+|   |   |   |       html_formatter.py
+|   |   |   |       json_formatter.py
+|   |   |   |       
+|   |   |   \---__pycache__
+|   |   |           binary_differ.cpython-314.pyc
+|   |   |           field_differ.cpython-314.pyc
+|   |   |           models.cpython-314.pyc
+|   |   |           region_differ.cpython-314.pyc
+|   |   |           semantic_differ.cpython-314.pyc
+|   |   |           structure_differ.cpython-314.pyc
+|   |   |           __init__.cpython-314.pyc
+|   |   |           
+|   |   +---explorer
+|   |   |   |   binary_exploration_report.py
+|   |   |   |   binary_explorer.py
+|   |   |   |   __init__.py
+|   |   |   |   
+|   |   |   \---__pycache__
+|   |   |           binary_exploration_report.cpython-314.pyc
+|   |   |           binary_explorer.cpython-314.pyc
+|   |   |           binary_report.cpython-314.pyc
+|   |   |           __init__.cpython-314.pyc
+|   |   |           
+|   |   +---export
+|   |   |   |   capture_project_writer.py
+|   |   |   |   json_project_exporter.py
+|   |   |   |   project_exporter.py
+|   |   |   |   __init__.py
+|   |   |   |   
+|   |   |   \---__pycache__
+|   |   |           capture_project_writer.cpython-314.pyc
+|   |   |           json_project_exporter.cpython-314.pyc
+|   |   |           project_exporter.cpython-314.pyc
+|   |   |           __init__.cpython-314.pyc
+|   |   |           
+|   |   +---exporters
+|   |   |   |   html_export.py
+|   |   |   |   json_exporter.py
+|   |   |   |   markdown_export.py
+|   |   |   |   __init__.py
+|   |   |   |   
+|   |   |   \---__pycache__
+|   |   |           capture_project_writer.cpython-314.pyc
+|   |   |           json_exporter.cpython-314.pyc
+|   |   |           __init__.cpython-314.pyc
+|   |   |           
+|   |   +---formats
+|   |   |   |   binding_builder.py
+|   |   |   |   capture_binary_object_analyzer.py
+|   |   |   |   capture_binary_structure_analyzer.py
+|   |   |   |   capture_container_analyzer.py
+|   |   |   |   capture_fixture_builder.py
+|   |   |   |   capture_group.py
+|   |   |   |   capture_json_loader.py
+|   |   |   |   capture_json_serializer.py
+|   |   |   |   capture_object_detector.py
+|   |   |   |   capture_patch.py
+|   |   |   |   capture_project.py
+|   |   |   |   capture_project_builder.py
+|   |   |   |   capture_project_reader.py
+|   |   |   |   capture_scene.py
+|   |   |   |   capture_serializer.py
+|   |   |   |   capture_signature_analyzer.py
+|   |   |   |   capture_signature_detector.py
+|   |   |   |   cue_builder.py
+|   |   |   |   fixture_geometry.py
+|   |   |   |   fixture_geometry_builder.py
+|   |   |   |   fixture_mount.py
+|   |   |   |   fixture_position.py
+|   |   |   |   focus_builder.py
+|   |   |   |   focus_point.py
+|   |   |   |   group_builder.py
+|   |   |   |   hierarchy_resolver.py
+|   |   |   |   mount_builder.py
+|   |   |   |   object_relation.py
+|   |   |   |   patch_builder.py
+|   |   |   |   position_builder.py
+|   |   |   |   relation_builder.py
+|   |   |   |   rotation_math.py
+|   |   |   |   scene_builder.py
+|   |   |   |   scene_node.py
+|   |   |   |   scene_structure.py
+|   |   |   |   spatial_resolver.py
+|   |   |   |   spatial_transform.py
+|   |   |   |   structure_binding.py
+|   |   |   |   structure_builder.py
+|   |   |   |   transform_node_builder.py
+|   |   |   |   universe_builder.py
+|   |   |   |   world_position.py
+|   |   |   |   __init__.py
+|   |   |   |   
+|   |   |   \---__pycache__
+|   |   |           binding_builder.cpython-314.pyc
+|   |   |           capture_binary_object_analyzer.cpython-314.pyc
+|   |   |           capture_binary_structure_analyzer.cpython-314.pyc
+|   |   |           capture_container_analyzer.cpython-314.pyc
+|   |   |           capture_fixture_builder.cpython-314.pyc
+|   |   |           capture_group.cpython-314.pyc
+|   |   |           capture_json_loader.cpython-314.pyc
+|   |   |           capture_json_serializer.cpython-314.pyc
+|   |   |           capture_object_detector.cpython-314.pyc
+|   |   |           capture_patch.cpython-314.pyc
+|   |   |           capture_project.cpython-314.pyc
+|   |   |           capture_project_builder.cpython-314.pyc
+|   |   |           capture_project_reader.cpython-314.pyc
+|   |   |           capture_scene.cpython-314.pyc
+|   |   |           capture_serializer.cpython-314.pyc
+|   |   |           capture_signature_analyzer.cpython-314.pyc
+|   |   |           capture_signature_detector.cpython-314.pyc
+|   |   |           cue_builder.cpython-314.pyc
+|   |   |           fixture_geometry.cpython-314.pyc
+|   |   |           fixture_geometry_builder.cpython-314.pyc
+|   |   |           fixture_mount.cpython-314.pyc
+|   |   |           fixture_position.cpython-314.pyc
+|   |   |           focus_builder.cpython-314.pyc
+|   |   |           focus_point.cpython-314.pyc
+|   |   |           group_builder.cpython-314.pyc
+|   |   |           hierarchy_resolver.cpython-314.pyc
+|   |   |           mount_builder.cpython-314.pyc
+|   |   |           patch_builder.cpython-314.pyc
+|   |   |           position_builder.cpython-314.pyc
+|   |   |           rotation_math.cpython-314.pyc
+|   |   |           scene_builder.cpython-314.pyc
+|   |   |           scene_node.cpython-314.pyc
+|   |   |           scene_structure.cpython-314.pyc
+|   |   |           spatial_resolver.cpython-314.pyc
+|   |   |           spatial_transform.cpython-314.pyc
+|   |   |           structure_binding.cpython-314.pyc
+|   |   |           structure_builder.cpython-314.pyc
+|   |   |           transform_node_builder.cpython-314.pyc
+|   |   |           universe_builder.cpython-314.pyc
+|   |   |           world_position.cpython-314.pyc
+|   |   |           __init__.cpython-314.pyc
+|   |   |           
+|   |   +---generator model
+|   |   |       object_definition.py
+|   |   |       
+|   |   +---generators
+|   |   |   |   base.py
+|   |   |   |   builder_generator.py
+|   |   |   |   code_writer.py
+|   |   |   |   context.py
+|   |   |   |   decoder_generator.py
+|   |   |   |   docs_generator.py
+|   |   |   |   exceptions.py
+|   |   |   |   generated_file.py
+|   |   |   |   object_generator.py
+|   |   |   |   python_generator.py
+|   |   |   |   python_module_builder.py
+|   |   |   |   registry.py
+|   |   |   |   registry_generator.py
+|   |   |   |   signature_generator.py
+|   |   |   |   __init__.py
+|   |   |   |   
+|   |   |   \---__pycache__
+|   |   |           base.cpython-314.pyc
+|   |   |           code_writer.cpython-314.pyc
+|   |   |           context.cpython-314.pyc
+|   |   |           decoder_generator.cpython-314.pyc
+|   |   |           generated_file.cpython-314.pyc
+|   |   |           object_generator.cpython-314.pyc
+|   |   |           python_generator.cpython-314.pyc
+|   |   |           python_module_builder.cpython-314.pyc
+|   |   |           registry.cpython-314.pyc
+|   |   |           signature_generator.cpython-314.pyc
+|   |   |           __init__.cpython-314.pyc
+|   |   |           
+|   |   +---gui
+|   |   |   |   binary_analysis_panel.py
+|   |   |   |   main_window.py
+|   |   |   |   object_analysis_panel.py
+|   |   |   |   recovery_worker.py
+|   |   |   |   signature_analysis_panel.py
+|   |   |   |   __init__.py
+|   |   |   |   
+|   |   |   \---__pycache__
+|   |   |           binary_analysis_panel.cpython-314.pyc
+|   |   |           main_window.cpython-314.pyc
+|   |   |           object_analysis_panel.cpython-314.pyc
+|   |   |           recovery_worker.cpython-314.pyc
+|   |   |           signature_analysis_panel.cpython-314.pyc
+|   |   |           __init__.cpython-314.pyc
+|   |   |           
+|   |   +---importers
+|   |   |       capture_project_importer.py
+|   |   |       
+|   |   +---indexes
+|   |   |   |   detection_index.py
+|   |   |   |   __init__.py
+|   |   |   |   
+|   |   |   \---__pycache__
+|   |   |           detection_index.cpython-314.pyc
+|   |   |           __init__.cpython-314.pyc
+|   |   |           
+|   |   +---inference
+|   |   |   |   confidence.py
+|   |   |   |   field_classifier.py
+|   |   |   |   inference_engine.py
+|   |   |   |   inference_result.py
+|   |   |   |   inference_rule.py
+|   |   |   |   pattern_cluster.py
+|   |   |   |   rule.py
+|   |   |   |   signature_builder.py
+|   |   |   |   structure_inferer.py
+|   |   |   |   __init__.py
+|   |   |   |   
+|   |   |   +---rules
+|   |   |   |   |   color_rgba_rule.py
+|   |   |   |   |   color_rule.py
+|   |   |   |   |   quaternion_rule.py
+|   |   |   |   |   vector3_rule.py
+|   |   |   |   |   __init__.py
+|   |   |   |   |   
+|   |   |   |   \---__pycache__
+|   |   |   |           color_rgba_rule.cpython-314.pyc
+|   |   |   |           vector3_rule.cpython-314.pyc
+|   |   |   |           __init__.cpython-314.pyc
+|   |   |   |           
+|   |   |   \---__pycache__
+|   |   |           inference_engine.cpython-314.pyc
+|   |   |           inference_result.cpython-314.pyc
+|   |   |           inference_rule.cpython-314.pyc
+|   |   |           __init__.cpython-314.pyc
+|   |   |           
+|   |   +---io
+|   |   |   |   capture_binary_reader.py
+|   |   |   |   capture_format_detector.py
+|   |   |   |   capture_reader.py
+|   |   |   |   __init__.py
+|   |   |   |   
+|   |   |   \---__pycache__
+|   |   |           capture_binary_reader.cpython-314.pyc
+|   |   |           capture_format_detector.cpython-314.pyc
+|   |   |           capture_reader.cpython-314.pyc
+|   |   |           __init__.cpython-314.pyc
+|   |   |           
+|   |   +---knowledge
+|   |   |   |   decoder.py
+|   |   |   |   decoder_registry.py
+|   |   |   |   default_knowledge.py
+|   |   |   |   field_signature.py
+|   |   |   |   fixture.py
+|   |   |   |   knowledge_engine.py
+|   |   |   |   knowledge_pipeline.py
+|   |   |   |   knowledge_registry.py
+|   |   |   |   object_factory.py
+|   |   |   |   registry.py
+|   |   |   |   semantic_object.py
+|   |   |   |   signature.py
+|   |   |   |   signature_engine.py
+|   |   |   |   signature_match.py
+|   |   |   |   signature_registry.py
+|   |   |   |   __init__.py
+|   |   |   |   
+|   |   |   +---decoders
+|   |   |   |   |   cue_decoder.py
+|   |   |   |   |   fixture_decoder.py
+|   |   |   |   |   group_decoder.py
+|   |   |   |   |   universe_decoder.py
+|   |   |   |   |   __init__.py
+|   |   |   |   |   
+|   |   |   |   \---__pycache__
+|   |   |   |           fixture_decoder.cpython-314.pyc
+|   |   |   |           __init__.cpython-314.pyc
+|   |   |   |           
+|   |   |   +---signatures
+|   |   |   |   |   cue_signature.py
+|   |   |   |   |   fixture_signature.py
+|   |   |   |   |   universe_signature.py
+|   |   |   |   |   
+|   |   |   |   \---__pycache__
+|   |   |   |           cue_signature.cpython-314.pyc
+|   |   |   |           fixture_signature.cpython-314.pyc
+|   |   |   |           universe_signature.cpython-314.pyc
+|   |   |   |           
+|   |   |   \---__pycache__
+|   |   |           decoder.cpython-314.pyc
+|   |   |           decoder_registry.cpython-314.pyc
+|   |   |           default_knowledge.cpython-314.pyc
+|   |   |           field_signature.cpython-314.pyc
+|   |   |           fixture.cpython-314.pyc
+|   |   |           knowledge_engine.cpython-314.pyc
+|   |   |           knowledge_registry.cpython-314.pyc
+|   |   |           object_factory.cpython-314.pyc
+|   |   |           registry.cpython-314.pyc
+|   |   |           semantic_object.cpython-314.pyc
+|   |   |           signature.cpython-314.pyc
+|   |   |           signature_engine.cpython-314.pyc
+|   |   |           signature_match.cpython-314.pyc
+|   |   |           signature_registry.cpython-314.pyc
+|   |   |           __init__.cpython-314.pyc
+|   |   |           
+|   |   +---library
+|   |   |   |   fixture_definition.py
+|   |   |   |   fixture_library.py
+|   |   |   |   fixture_resolver.py
+|   |   |   |   __init__.py
+|   |   |   |   
+|   |   |   +---manufacturers
+|   |   |   \---__pycache__
+|   |   |           fixture_definition.cpython-314.pyc
+|   |   |           fixture_library.cpython-314.pyc
+|   |   |           fixture_resolver.cpython-314.pyc
+|   |   |           __init__.cpython-314.pyc
+|   |   |           
+|   |   +---memory
+|   |   |   |   memory_index.py
+|   |   |   |   memory_map.py
+|   |   |   |   region.py
+|   |   |   |   region_builder.py
+|   |   |   |   __init__.py
+|   |   |   |   
+|   |   |   \---__pycache__
+|   |   |           memory_index.cpython-314.pyc
+|   |   |           memory_map.cpython-314.pyc
+|   |   |           region.cpython-314.pyc
+|   |   |           region_builder.cpython-314.pyc
+|   |   |           __init__.cpython-314.pyc
+|   |   |           
+|   |   +---meta
+|   |   |   |   compiler.py
+|   |   |   |   ir.py
+|   |   |   |   loader.py
+|   |   |   |   model.py
+|   |   |   |   registry.py
+|   |   |   |   validator.py
+|   |   |   |   
+|   |   |   \---__pycache__
+|   |   |           model.cpython-314.pyc
+|   |   |           
+|   |   +---models
+|   |   |   |   block.py
+|   |   |   |   data_type.py
+|   |   |   |   detection.py
+|   |   |   |   enums.py
+|   |   |   |   field.py
+|   |   |   |   finding.py
+|   |   |   |   pattern.py
+|   |   |   |   project.py
+|   |   |   |   report.py
+|   |   |   |   scan_context.py
+|   |   |   |   signature.py
+|   |   |   |   statistics.py
+|   |   |   |   structure.py
+|   |   |   |   __init__.py
+|   |   |   |   
+|   |   |   \---__pycache__
+|   |   |           block.cpython-314.pyc
+|   |   |           data_type.cpython-314.pyc
+|   |   |           detection.cpython-314.pyc
+|   |   |           enums.cpython-314.pyc
+|   |   |           field.cpython-314.pyc
+|   |   |           finding.cpython-314.pyc
+|   |   |           pattern.cpython-314.pyc
+|   |   |           project.cpython-314.pyc
+|   |   |           report.cpython-314.pyc
+|   |   |           scan_context.cpython-314.pyc
+|   |   |           signature.cpython-314.pyc
+|   |   |           statistics.cpython-314.pyc
+|   |   |           structure.cpython-314.pyc
+|   |   |           __init__.cpython-314.pyc
+|   |   |           
+|   |   +---parser
+|   |   |   |   ascii_detector.py
+|   |   |   |   binary_analysis.py
+|   |   |   |   binary_inspector.py
+|   |   |   |   binary_report.py
+|   |   |   |   binary_stream.py
+|   |   |   |   container_detector.py
+|   |   |   |   container_extractor.py
+|   |   |   |   detection_adapter.py
+|   |   |   |   detector_registry.py
+|   |   |   |   entropy.py
+|   |   |   |   segment.py
+|   |   |   |   segment_detector.py
+|   |   |   |   zip_parser.py
+|   |   |   |   
+|   |   |   \---__pycache__
+|   |   |           ascii_detector.cpython-314.pyc
+|   |   |           binary_analysis.cpython-314.pyc
+|   |   |           binary_inspector.cpython-314.pyc
+|   |   |           binary_report.cpython-314.pyc
+|   |   |           binary_stream.cpython-314.pyc
+|   |   |           container_detector.cpython-314.pyc
+|   |   |           container_extractor.cpython-314.pyc
+|   |   |           detection_adapter.cpython-314.pyc
+|   |   |           detector_registry.cpython-314.pyc
+|   |   |           entropy.cpython-314.pyc
+|   |   |           segment.cpython-314.pyc
+|   |   |           segment_detector.cpython-314.pyc
+|   |   |           zip_parser.cpython-314.pyc
+|   |   |           
+|   |   +---pipeline
+|   |   |   |   binary_analyzer.py
+|   |   |   |   binary_recovery_pipeline.py
+|   |   |   |   capture_project_pipeline.py
+|   |   |   |   full_recovery_pipeline.py
+|   |   |   |   project_recovery_pipeline.py
+|   |   |   |   recovery_pipeline.py
+|   |   |   |   results.py
+|   |   |   |   semantic_recovery_pipeline.py
+|   |   |   |   types.py
+|   |   |   |   __init__.py
+|   |   |   |   
+|   |   |   \---__pycache__
+|   |   |           binary_analyzer.cpython-314.pyc
+|   |   |           binary_recovery_pipeline.cpython-314.pyc
+|   |   |           capture_project_pipeline.cpython-314.pyc
+|   |   |           full_recovery_pipeline.cpython-314.pyc
+|   |   |           project_recovery_pipeline.cpython-314.pyc
+|   |   |           recovery_pipeline.cpython-314.pyc
+|   |   |           results.cpython-314.pyc
+|   |   |           semantic_recovery_pipeline.cpython-314.pyc
+|   |   |           types.cpython-314.pyc
+|   |   |           __init__.cpython-314.pyc
+|   |   |           
+|   |   +---python
+|   |   |   |   python_class.py
+|   |   |   |   python_constant.py
+|   |   |   |   python_field.py
+|   |   |   |   python_import.py
+|   |   |   |   python_method.py
+|   |   |   |   python_module.py
+|   |   |   |   
+|   |   |   \---__pycache__
+|   |   |           python_class.cpython-314.pyc
+|   |   |           python_constant.cpython-314.pyc
+|   |   |           python_field.cpython-314.pyc
+|   |   |           python_import.cpython-314.pyc
+|   |   |           python_method.cpython-314.pyc
+|   |   |           python_module.cpython-314.pyc
+|   |   |           
+|   |   +---reconstruction
+|   |   |   |   fixture_assembler.py
+|   |   |   |   fixture_reconstructor.py
+|   |   |   |   fixture_transform_reconstructor.py
+|   |   |   |   focus_reconstructor.py
+|   |   |   |   project_finalize.py
+|   |   |   |   project_pipeline.py
+|   |   |   |   project_reconstructor.py
+|   |   |   |   property_mapper.py
+|   |   |   |   reconstruction_rules.py
+|   |   |   |   relation_applier.py
+|   |   |   |   scene_reconstruction.py
+|   |   |   |   __init__.py
+|   |   |   |   
+|   |   |   \---__pycache__
+|   |   |           fixture_assembler.cpython-314.pyc
+|   |   |           fixture_reconstructor.cpython-314.pyc
+|   |   |           fixture_transform_reconstructor.cpython-314.pyc
+|   |   |           focus_reconstructor.cpython-314.pyc
+|   |   |           project_finalize.cpython-314.pyc
+|   |   |           project_pipeline.cpython-314.pyc
+|   |   |           project_reconstructor.cpython-314.pyc
+|   |   |           property_mapper.cpython-314.pyc
+|   |   |           reconstruction_rules.cpython-314.pyc
+|   |   |           relation_applier.cpython-314.pyc
+|   |   |           scene_reconstruction.cpython-314.pyc
+|   |   |           __init__.cpython-314.pyc
+|   |   |           
+|   |   +---recovery
+|   |   +---reports
+|   |   |   |   analysis_report.py
+|   |   |   |   json_report_writer.py
+|   |   |   |   __init__.py
+|   |   |   |   
+|   |   |   \---__pycache__
+|   |   |           analysis_report.cpython-314.pyc
+|   |   |           json_report_writer.cpython-314.pyc
+|   |   |           __init__.cpython-314.pyc
+|   |   |           
+|   |   +---reverse
+|   |   |   |   alignment_detector.py
+|   |   |   |   alignment_value.py
+|   |   |   |   api.py
+|   |   |   |   base_detector.py
+|   |   |   |   binary_map.py
+|   |   |   |   detection_options.py
+|   |   |   |   detection_strategy.py
+|   |   |   |   detector.py
+|   |   |   |   detector_type.py
+|   |   |   |   entropy_detector.py
+|   |   |   |   entropy_value.py
+|   |   |   |   guid_decoder.py
+|   |   |   |   guid_detector.py
+|   |   |   |   guid_type.py
+|   |   |   |   guid_value.py
+|   |   |   |   hex_inspector.py
+|   |   |   |   numeric_decoder.py
+|   |   |   |   numeric_detector.py
+|   |   |   |   numeric_type.py
+|   |   |   |   numeric_value.py
+|   |   |   |   offset_iterator.py
+|   |   |   |   pattern_detector.py
+|   |   |   |   registry.py
+|   |   |   |   reverse_engine.py
+|   |   |   |   string_decoder.py
+|   |   |   |   string_detector.py
+|   |   |   |   string_type.py
+|   |   |   |   string_value.py
+|   |   |   |   __init__.py
+|   |   |   |   
+|   |   |   \---__pycache__
+|   |   |           alignment_detector.cpython-314.pyc
+|   |   |           alignment_value.cpython-314.pyc
+|   |   |           api.cpython-314.pyc
+|   |   |           base_detector.cpython-314.pyc
+|   |   |           binary_map.cpython-314.pyc
+|   |   |           detection_options.cpython-314.pyc
+|   |   |           detection_strategy.cpython-314.pyc
+|   |   |           detector.cpython-314.pyc
+|   |   |           detector_type.cpython-314.pyc
+|   |   |           entropy_detector.cpython-314.pyc
+|   |   |           entropy_value.cpython-314.pyc
+|   |   |           guid_decoder.cpython-314.pyc
+|   |   |           guid_detector.cpython-314.pyc
+|   |   |           guid_type.cpython-314.pyc
+|   |   |           guid_value.cpython-314.pyc
+|   |   |           hex_inspector.cpython-314.pyc
+|   |   |           numeric_decoder.cpython-314.pyc
+|   |   |           numeric_detector.cpython-313.pyc
+|   |   |           numeric_detector.cpython-314.pyc
+|   |   |           numeric_type.cpython-314.pyc
+|   |   |           numeric_value.cpython-314.pyc
+|   |   |           offset_iterator.cpython-314.pyc
+|   |   |           pattern_detector.cpython-314.pyc
+|   |   |           registry.cpython-314.pyc
+|   |   |           reverse_engine.cpython-314.pyc
+|   |   |           string_decoder.cpython-314.pyc
+|   |   |           string_detector.cpython-314.pyc
+|   |   |           string_type.cpython-314.pyc
+|   |   |           string_value.cpython-314.pyc
+|   |   |           __init__.cpython-314.pyc
+|   |   |           
+|   |   +---scanners
+|   |   |   |   file_scanner.py
+|   |   |   |   __init__.py
+|   |   |   |   
+|   |   |   \---__pycache__
+|   |   |           file_scanner.cpython-314.pyc
+|   |   |           __init__.cpython-314.pyc
+|   |   |           
+|   |   +---semantic
+|   |   |   |   reverse_adapter.py
+|   |   |   |   
+|   |   |   \---__pycache__
+|   |   |           reverse_adapter.cpython-314.pyc
+|   |   |           
+|   |   +---structures
+|   |   |   |   field.py
+|   |   |   |   structure.py
+|   |   |   |   structure_builder.py
+|   |   |   |   structure_index.py
+|   |   |   |   __init__.py
+|   |   |   |   
+|   |   |   \---__pycache__
+|   |   |           field.cpython-314.pyc
+|   |   |           structure.cpython-314.pyc
+|   |   |           structure_builder.cpython-314.pyc
+|   |   |           structure_index.cpython-314.pyc
+|   |   |           __init__.cpython-314.pyc
+|   |   |           
+|   |   +---templates
+|   |   +---validation
+|   |   |   |   project_validator.py
+|   |   |   |   reconstruction_validator.py
+|   |   |   |   validation_result.py
+|   |   |   |   __init__.py
+|   |   |   |   
+|   |   |   \---__pycache__
+|   |   |           project_validator.cpython-314.pyc
+|   |   |           reconstruction_validator.cpython-314.pyc
+|   |   |           validation_result.cpython-314.pyc
+|   |   |           __init__.cpython-314.pyc
+|   |   |           
+|   |   +---writers
+|   |   |   |   code_writer.py
+|   |   |   |   file_writer.py
+|   |   |   |   python_writer.py
+|   |   |   |   
+|   |   |   \---__pycache__
+|   |   |           code_writer.cpython-314.pyc
+|   |   |           python_writer.cpython-314.pyc
+|   |   |           
+|   |   +---_codegen
+|   |   |   |   datatypes.py
+|   |   |   |   field.py
+|   |   |   |   object.py
+|   |   |   |   registry.py
+|   |   |   |   relationship.py
+|   |   |   |   __init__.py
+|   |   |   |   
+|   |   |   \---__pycache__
+|   |   |           object.cpython-314.pyc
+|   |   |           __init__.cpython-314.pyc
+|   |   |           
+|   |   \---__pycache__
+|   |           binary_reader.cpython-314.pyc
+|   |           cli.cpython-314.pyc
+|   |           gui_app.cpython-314.pyc
+|   |           recover.cpython-314.pyc
+|   |           types.cpython-314.pyc
+|   |           __init__.cpython-314.pyc
+|   |           __main__.cpython-314.pyc
+|   |           
+|   \---capture_recovery.egg-info
+|           dependency_links.txt
+|           entry_points.txt
+|           PKG-INFO
+|           requires.txt
+|           SOURCES.txt
+|           top_level.txt
+|           
++---tests
+|   |   test_ascii_detector.py
+|   |   test_binary_reader.py
+|   |   test_cli.py
+|   |   test_detection.py
+|   |   test_detection_index.py
+|   |   test_file_scanner.py
+|   |   test_float_detector.py
+|   |   test_integer_detector.py
+|   |   test_json_exporter.py
+|   |   test_pipeline.py
+|   |   test_recover.py
+|   |   test_signature_detector.py
+|   |   test_types.py
+|   |   test_utf16.py
+|   |   
+|   +---analysis
+|   |   |   test_relation_builder.py
+|   |   |   test_relation_graph.py
+|   |   |   
+|   |   \---__pycache__
+|   |           test_relation_builder.cpython-314-pytest-9.1.1.pyc
+|   |           test_relation_graph.cpython-314-pytest-9.1.1.pyc
+|   |           
+|   +---automation
+|   |   |   test_generator.py
+|   |   |   
+|   |   \---__pycache__
+|   |           test_generator.cpython-314-pytest-9.1.1.pyc
+|   |           
+|   +---binary
+|   |   |   test_binary_container.py
+|   |   |   test_binary_graph.py
+|   |   |   test_binary_index.py
+|   |   |   test_binary_object.py
+|   |   |   test_binary_reference.py
+|   |   |   test_binary_section.py
+|   |   |   test_decode_coverage.py
+|   |   |   test_shannon_entropy.py
+|   |   |   test_signatures.py
+|   |   |   test_string_scanner.py
+|   |   |   
+|   |   \---__pycache__
+|   |           test_binary_container.cpython-314-pytest-9.1.1.pyc
+|   |           test_binary_graph.cpython-314-pytest-9.1.1.pyc
+|   |           test_binary_index.cpython-314-pytest-9.1.1.pyc
+|   |           test_binary_object.cpython-314-pytest-9.1.1.pyc
+|   |           test_binary_reference.cpython-314-pytest-9.1.1.pyc
+|   |           test_binary_section.cpython-314-pytest-9.1.1.pyc
+|   |           test_decode_coverage.cpython-314-pytest-9.1.1.pyc
+|   |           test_entropy.cpython-314-pytest-9.1.1.pyc
+|   |           test_shannon_entropy.cpython-314-pytest-9.1.1.pyc
+|   |           test_signatures.cpython-314-pytest-9.1.1.pyc
+|   |           test_string_scanner.cpython-314-pytest-9.1.1.pyc
+|   |           
+|   +---builders
+|   |   |   test_decoder_method_builder.py
+|   |   |   test_project_builder.py
+|   |   |   test_python_module_builder.py
+|   |   |   
+|   |   \---__pycache__
+|   |           test_decoder_method_builder.cpython-314-pytest-9.1.1.pyc
+|   |           test_project_builder.cpython-314-pytest-9.1.1.pyc
+|   |           test_python_module_builder.cpython-314-pytest-9.1.1.pyc
+|   |           
+|   +---decoders
+|   |   |   test_cue_object_decoder.py
+|   |   |   test_default_decoder_registry.py
+|   |   |   test_fixture_object_decoder.py
+|   |   |   test_universe_object_decoder.py
+|   |   |   
+|   |   \---__pycache__
+|   |           test_cue_object_decoder.cpython-314-pytest-9.1.1.pyc
+|   |           test_default_decoder_registry.cpython-314-pytest-9.1.1.pyc
+|   |           test_fixture_object_decoder.cpython-314-pytest-9.1.1.pyc
+|   |           test_universe_object_decoder.cpython-314-pytest-9.1.1.pyc
+|   |           
+|   +---diff
+|   |   |   test_binary_differ.py
+|   |   |   test_field_differ.py
+|   |   |   test_models.py
+|   |   |   test_region_differ.py
+|   |   |   test_semantic_differ.py
+|   |   |   test_structure_differ.py
+|   |   |   
+|   |   \---__pycache__
+|   |           test_binary_differ.cpython-314-pytest-9.1.1.pyc
+|   |           test_field_differ.cpython-314-pytest-9.1.1.pyc
+|   |           test_models.cpython-314-pytest-9.1.1.pyc
+|   |           test_region_differ.cpython-314-pytest-9.1.1.pyc
+|   |           test_semantic_differ.cpython-314-pytest-9.1.1.pyc
+|   |           test_structure_differ.cpython-314-pytest-9.1.1.pyc
+|   |           
+|   +---explorer
+|   |   |   test_binary_explorer.py
+|   |   |   test_binary_report.py
+|   |   |   
+|   |   \---__pycache__
+|   |           test_binary_explorer.cpython-314-pytest-9.1.1.pyc
+|   |           test_binary_report.cpython-314-pytest-9.1.1.pyc
+|   |           test_binary_report.cpython-314.pyc
+|   |           
+|   +---export
+|   |   |   test_capture_project_writer.py
+|   |   |   test_json_project_exporter.py
+|   |   |   
+|   |   \---__pycache__
+|   |           test_capture_project_writer.cpython-314-pytest-9.1.1.pyc
+|   |           test_json_project_exporter.cpython-314-pytest-9.1.1.pyc
+|   |           
+|   +---formats
+|   |   |   capture_signature_analyzer.py
+|   |   |   test_capture_binary_object_analyzer.py
+|   |   |   test_capture_binary_structure_analyzer.py
+|   |   |   test_capture_container_analyzer.py
+|   |   |   test_capture_fixture_builder.py
+|   |   |   test_capture_fixture_builder_geometry.py
+|   |   |   test_capture_fixture_focus.py
+|   |   |   test_capture_fixture_mount.py
+|   |   |   test_capture_json_fixture_position.py
+|   |   |   test_capture_json_groups.py
+|   |   |   test_capture_json_loader.py
+|   |   |   test_capture_json_patch.py
+|   |   |   test_capture_json_serializer.py
+|   |   |   test_capture_object_detector.py
+|   |   |   test_capture_project_bindings.py
+|   |   |   test_capture_project_builder.py
+|   |   |   test_capture_project_builder_enriched.py
+|   |   |   test_capture_project_groups.py
+|   |   |   test_capture_project_patch.py
+|   |   |   test_capture_project_reader.py
+|   |   |   test_capture_project_scene.py
+|   |   |   test_capture_project_structures.py
+|   |   |   test_capture_scene.py
+|   |   |   test_capture_serializer.py
+|   |   |   test_capture_serializer_enriched.py
+|   |   |   test_capture_serializer_universe.py
+|   |   |   test_capture_signature_analyzer.py
+|   |   |   test_capture_signature_detector.py
+|   |   |   test_cue_builder.py
+|   |   |   test_fixture_geometry.py
+|   |   |   test_fixture_geometry_builder.py
+|   |   |   test_focus_builder.py
+|   |   |   test_group_builder.py
+|   |   |   test_mount_builder.py
+|   |   |   test_object_analysis_panel.py
+|   |   |   test_patch_builder.py
+|   |   |   test_position_builder.py
+|   |   |   test_scene_hierarchy.py
+|   |   |   test_scene_structure_builder.py
+|   |   |   test_spatial_resolver.py
+|   |   |   test_spatial_resolver_rotation.py
+|   |   |   test_spatial_transform.py
+|   |   |   test_structure_binding.py
+|   |   |   test_universe_builder.py
+|   |   |   
+|   |   \---__pycache__
+|   |           test_capture_binary_object_analyzer.cpython-314-pytest-9.1.1.pyc
+|   |           test_capture_binary_structure_analyzer.cpython-314-pytest-9.1.1.pyc
+|   |           test_capture_container_analyzer.cpython-314-pytest-9.1.1.pyc
+|   |           test_capture_fixture_builder.cpython-314-pytest-9.1.1.pyc
+|   |           test_capture_fixture_builder_geometry.cpython-314-pytest-9.1.1.pyc
+|   |           test_capture_fixture_focus.cpython-314-pytest-9.1.1.pyc
+|   |           test_capture_fixture_mount.cpython-314-pytest-9.1.1.pyc
+|   |           test_capture_json_fixture_position.cpython-314-pytest-9.1.1.pyc
+|   |           test_capture_json_groups.cpython-314-pytest-9.1.1.pyc
+|   |           test_capture_json_loader.cpython-314-pytest-9.1.1.pyc
+|   |           test_capture_json_patch.cpython-314-pytest-9.1.1.pyc
+|   |           test_capture_json_serializer.cpython-314-pytest-9.1.1.pyc
+|   |           test_capture_object_detector.cpython-314-pytest-9.1.1.pyc
+|   |           test_capture_project_bindings.cpython-314-pytest-9.1.1.pyc
+|   |           test_capture_project_builder.cpython-314-pytest-9.1.1.pyc
+|   |           test_capture_project_builder_enriched.cpython-314-pytest-9.1.1.pyc
+|   |           test_capture_project_groups.cpython-314-pytest-9.1.1.pyc
+|   |           test_capture_project_patch.cpython-314-pytest-9.1.1.pyc
+|   |           test_capture_project_reader.cpython-314-pytest-9.1.1.pyc
+|   |           test_capture_project_scene.cpython-314-pytest-9.1.1.pyc
+|   |           test_capture_project_structures.cpython-314-pytest-9.1.1.pyc
+|   |           test_capture_scene.cpython-314-pytest-9.1.1.pyc
+|   |           test_capture_serializer.cpython-314-pytest-9.1.1.pyc
+|   |           test_capture_serializer_enriched.cpython-314-pytest-9.1.1.pyc
+|   |           test_capture_serializer_universe.cpython-314-pytest-9.1.1.pyc
+|   |           test_capture_signature_analyzer.cpython-314-pytest-9.1.1.pyc
+|   |           test_capture_signature_detector.cpython-314-pytest-9.1.1.pyc
+|   |           test_cue_builder.cpython-314-pytest-9.1.1.pyc
+|   |           test_fixture_geometry.cpython-314-pytest-9.1.1.pyc
+|   |           test_fixture_geometry_builder.cpython-314-pytest-9.1.1.pyc
+|   |           test_focus_builder.cpython-314-pytest-9.1.1.pyc
+|   |           test_group_builder.cpython-314-pytest-9.1.1.pyc
+|   |           test_mount_builder.cpython-314-pytest-9.1.1.pyc
+|   |           test_object_analysis_panel.cpython-314-pytest-9.1.1.pyc
+|   |           test_patch_builder.cpython-314-pytest-9.1.1.pyc
+|   |           test_position_builder.cpython-314-pytest-9.1.1.pyc
+|   |           test_relation_builder.cpython-314-pytest-9.1.1.pyc
+|   |           test_scene_hierarchy.cpython-314-pytest-9.1.1.pyc
+|   |           test_scene_structure_builder.cpython-314-pytest-9.1.1.pyc
+|   |           test_spatial_resolver.cpython-314-pytest-9.1.1.pyc
+|   |           test_spatial_resolver_rotation.cpython-314-pytest-9.1.1.pyc
+|   |           test_spatial_transform.cpython-314-pytest-9.1.1.pyc
+|   |           test_structure_binding.cpython-314-pytest-9.1.1.pyc
+|   |           test_universe_builder.cpython-314-pytest-9.1.1.pyc
+|   |           
+|   +---generators
+|   |   |   test_base.py
+|   |   |   test_code_writer.py
+|   |   |   test_decoder_generator.py
+|   |   |   test_field_definition.py
+|   |   |   test_generated_file.py
+|   |   |   test_generator_registry.py
+|   |   |   test_object_definition.py
+|   |   |   test_object_generator.py
+|   |   |   test_python_generator.py
+|   |   |   test_signature_generator.py
+|   |   |   
+|   |   \---__pycache__
+|   |           test_base.cpython-314-pytest-9.1.1.pyc
+|   |           test_code_writer.cpython-314-pytest-9.1.1.pyc
+|   |           test_decoder_generator.cpython-314-pytest-9.1.1.pyc
+|   |           test_field_definition.cpython-314-pytest-9.1.1.pyc
+|   |           test_generated_file.cpython-314-pytest-9.1.1.pyc
+|   |           test_generator_registry.cpython-314-pytest-9.1.1.pyc
+|   |           test_object_definition.cpython-314-pytest-9.1.1.pyc
+|   |           test_object_generator.cpython-314-pytest-9.1.1.pyc
+|   |           test_python_generator.cpython-314-pytest-9.1.1.pyc
+|   |           test_signature_generator.cpython-314-pytest-9.1.1.pyc
+|   |           
+|   +---gui
+|   |   |   test_binary_analysis_panel.py
+|   |   |   test_signature_analysis_panel.py
+|   |   |   
+|   |   \---__pycache__
+|   |           test_binary_analysis_panel.cpython-314-pytest-9.1.1.pyc
+|   |           test_signature_analysis_panel.cpython-314-pytest-9.1.1.pyc
+|   |           
+|   +---inference
+|   |   |   test_color_rgba_rule.py
+|   |   |   test_inference_engine.py
+|   |   |   test_vector3_rule.py
+|   |   |   
+|   |   \---__pycache__
+|   |           test_color_rgba_rule.cpython-314-pytest-9.1.1.pyc
+|   |           test_inference_engine.cpython-314-pytest-9.1.1.pyc
+|   |           test_vector3_rule.cpython-314-pytest-9.1.1.pyc
+|   |           
+|   +---io
+|   |   |   test_capture_format_detector.py
+|   |   |   test_capture_reader.py
+|   |   |   
+|   |   \---__pycache__
+|   |           test_capture_format_detector.cpython-314-pytest-9.1.1.pyc
+|   |           test_capture_reader.cpython-314-pytest-9.1.1.pyc
+|   |           
+|   +---knowledge
+|   |   |   test_decoder.py
+|   |   |   test_decoder_registry.py
+|   |   |   test_fixture_decoder.py
+|   |   |   test_fixture_signature.py
+|   |   |   test_knowledge_engine.py
+|   |   |   test_knowledge_engine_integration.py
+|   |   |   test_knowledge_registry.py
+|   |   |   test_object_factory.py
+|   |   |   test_semantic_object.py
+|   |   |   test_signature_registry.py
+|   |   |   
+|   |   \---__pycache__
+|   |           test_candidate.cpython-314-pytest-9.1.1.pyc
+|   |           test_decoder.cpython-314-pytest-9.1.1.pyc
+|   |           test_decoder_registry.cpython-314-pytest-9.1.1.pyc
+|   |           test_fixture_decoder.cpython-314-pytest-9.1.1.pyc
+|   |           test_fixture_signature.cpython-314-pytest-9.1.1.pyc
+|   |           test_knowledge_engine.cpython-314-pytest-9.1.1.pyc
+|   |           test_knowledge_engine_integration.cpython-314-pytest-9.1.1.pyc
+|   |           test_knowledge_registry.cpython-314-pytest-9.1.1.pyc
+|   |           test_object_factory.cpython-314-pytest-9.1.1.pyc
+|   |           test_semantic_object.cpython-314-pytest-9.1.1.pyc
+|   |           test_signature_registry.cpython-314-pytest-9.1.1.pyc
+|   |           
+|   +---library
+|   |   |   test_fixture_library.py
+|   |   |   test_fixture_resolver.py
+|   |   |   
+|   |   \---__pycache__
+|   |           test_fixture_library.cpython-314-pytest-9.1.1.pyc
+|   |           test_fixture_resolver.cpython-314-pytest-9.1.1.pyc
+|   |           
+|   +---memory
+|   |   |   test_memory_index.py
+|   |   |   test_memory_map.py
+|   |   |   test_memory_region.py
+|   |   |   test_region_builder.py
+|   |   |   
+|   |   \---__pycache__
+|   |           test_memory_index.cpython-314-pytest-9.1.1.pyc
+|   |           test_memory_map.cpython-314-pytest-9.1.1.pyc
+|   |           test_memory_region.cpython-314-pytest-9.1.1.pyc
+|   |           test_region_builder.cpython-314-pytest-9.1.1.pyc
+|   |           
+|   +---meta
+|   |   |   test_model.py
+|   |   |   
+|   |   \---__pycache__
+|   |           test_model.cpython-314-pytest-9.1.1.pyc
+|   |           
+|   +---models
+|   |   |   test_project.py
+|   |   |   
+|   |   \---__pycache__
+|   |           test_project.cpython-314-pytest-9.1.1.pyc
+|   |           
+|   +---parser
+|   |   |   test_binary_analysis.py
+|   |   |   test_binary_inspector.py
+|   |   |   test_binary_report_parser.py
+|   |   |   test_binary_stream.py
+|   |   |   test_container_detector.py
+|   |   |   test_detection_adapter.py
+|   |   |   test_detector_registry.py
+|   |   |   test_entropy.py
+|   |   |   test_parser_ascii_detector.py
+|   |   |   test_segment.py
+|   |   |   test_segment_detector.py
+|   |   |   test_zip_parser.py
+|   |   |   
+|   |   \---__pycache__
+|   |           test_binary_analysis.cpython-314-pytest-9.1.1.pyc
+|   |           test_binary_inspector.cpython-314-pytest-9.1.1.pyc
+|   |           test_binary_report.cpython-314-pytest-9.1.1.pyc
+|   |           test_binary_report_parser.cpython-314-pytest-9.1.1.pyc
+|   |           test_binary_stream.cpython-314-pytest-9.1.1.pyc
+|   |           test_container_detector.cpython-314-pytest-9.1.1.pyc
+|   |           test_container_extractor.cpython-314-pytest-9.1.1.pyc
+|   |           test_detection_adapter.cpython-314-pytest-9.1.1.pyc
+|   |           test_detector_registry.cpython-314-pytest-9.1.1.pyc
+|   |           test_entropy.cpython-314-pytest-9.1.1.pyc
+|   |           test_parser_ascii_detector.cpython-314-pytest-9.1.1.pyc
+|   |           test_segment.cpython-314-pytest-9.1.1.pyc
+|   |           test_segment_detector.cpython-314-pytest-9.1.1.pyc
+|   |           test_zip_parser.cpython-314-pytest-9.1.1.pyc
+|   |           
+|   +---pipeline
+|   |   |   test_binary_analyzer.py
+|   |   |   test_binary_recovery_pipeline.py
+|   |   |   test_binary_reverse_integration.py
+|   |   |   test_capture_project_pipeline.py
+|   |   |   test_full_recovery_pipeline.py
+|   |   |   test_pipeline_types.py
+|   |   |   test_project_recovery_pipeline.py
+|   |   |   test_recovery_pipeline.py
+|   |   |   test_results.py
+|   |   |   test_semantic_recovery_pipeline.py
+|   |   |   
+|   |   \---__pycache__
+|   |           test_binary_analyzer.cpython-314-pytest-9.1.1.pyc
+|   |           test_binary_recovery_pipeline.cpython-314-pytest-9.1.1.pyc
+|   |           test_binary_reverse_integration.cpython-314-pytest-9.1.1.pyc
+|   |           test_capture_project_pipeline.cpython-314-pytest-9.1.1.pyc
+|   |           test_full_recovery_pipeline.cpython-314-pytest-9.1.1.pyc
+|   |           test_pipeline_types.cpython-314-pytest-9.1.1.pyc
+|   |           test_project_recovery_pipeline.cpython-314-pytest-9.1.1.pyc
+|   |           test_recovery_pipeline.cpython-314-pytest-9.1.1.pyc
+|   |           test_results.cpython-314-pytest-9.1.1.pyc
+|   |           test_semantic_recovery_pipeline.cpython-314-pytest-9.1.1.pyc
+|   |           test_types.cpython-314-pytest-9.1.1.pyc
+|   |           
+|   +---python
+|   |   |   test_python_class.py
+|   |   |   test_python_constant.py
+|   |   |   test_python_field.py
+|   |   |   test_python_import.py
+|   |   |   test_python_method.py
+|   |   |   test_python_module.py
+|   |   |   test_python_writer_constants.py
+|   |   |   
+|   |   \---__pycache__
+|   |           test_python_class.cpython-314-pytest-9.1.1.pyc
+|   |           test_python_constant.cpython-314-pytest-9.1.1.pyc
+|   |           test_python_field.cpython-314-pytest-9.1.1.pyc
+|   |           test_python_import.cpython-314-pytest-9.1.1.pyc
+|   |           test_python_method.cpython-314-pytest-9.1.1.pyc
+|   |           test_python_module.cpython-314-pytest-9.1.1.pyc
+|   |           test_python_writer_constants.cpython-314-pytest-9.1.1.pyc
+|   |           
+|   +---reconstruction
+|   |   |   test_fixture_assembler.py
+|   |   |   test_fixture_reconstructor.py
+|   |   |   test_fixture_transform_reconstructor.py
+|   |   |   test_project_pipeline.py
+|   |   |   test_project_reconstructor.py
+|   |   |   test_relation_applier.py
+|   |   |   
+|   |   \---__pycache__
+|   |           test_fixture_assembler.cpython-314-pytest-9.1.1.pyc
+|   |           test_fixture_reconstructor.cpython-314-pytest-9.1.1.pyc
+|   |           test_fixture_transform_reconstructor.cpython-314-pytest-9.1.1.pyc
+|   |           test_project_pipeline.cpython-314-pytest-9.1.1.pyc
+|   |           test_project_reconstructor.cpython-314-pytest-9.1.1.pyc
+|   |           test_relation_applier.cpython-314-pytest-9.1.1.pyc
+|   |           
+|   +---reports
+|   |   |   test_analysis_report.py
+|   |   |   test_json_report_writer.py
+|   |   |   
+|   |   \---__pycache__
+|   |           test_analysis_report.cpython-314-pytest-9.1.1.pyc
+|   |           test_json_report_writer.cpython-314-pytest-9.1.1.pyc
+|   |           
+|   +---reverse
+|   |   |   test_api.py
+|   |   |   test_base_detector.py
+|   |   |   test_binary_map.py
+|   |   |   test_detector_implementations.py
+|   |   |   test_detector_protocol.py
+|   |   |   test_engine_custom_registry.py
+|   |   |   test_hex_inspector.py
+|   |   |   test_numeric_detector.py
+|   |   |   test_pattern_detector.py
+|   |   |   test_public_imports.py
+|   |   |   test_registry.py
+|   |   |   test_reverse_engine.py
+|   |   |   
+|   |   +---detectors
+|   |   |   |   test_alignment_detector.py
+|   |   |   |   test_entropy_detector.py
+|   |   |   |   test_guid_detector.py
+|   |   |   |   test_string_detector.py
+|   |   |   |   
+|   |   |   \---__pycache__
+|   |   |           test_alignment_detector.cpython-314-pytest-9.1.1.pyc
+|   |   |           test_entropy_detector.cpython-314-pytest-9.1.1.pyc
+|   |   |           test_guid_detector.cpython-314-pytest-9.1.1.pyc
+|   |   |           test_string_detector.cpython-314-pytest-9.1.1.pyc
+|   |   |           
+|   |   +---infrastructure
+|   |   |   |   test_alignment_value.py
+|   |   |   |   test_detection_options.py
+|   |   |   |   test_detection_strategy.py
+|   |   |   |   test_detector_type.py
+|   |   |   |   test_entropy_value.py
+|   |   |   |   test_guid_decoder.py
+|   |   |   |   test_guid_type.py
+|   |   |   |   test_guid_value.py
+|   |   |   |   test_numeric_decoder.py
+|   |   |   |   test_numeric_type.py
+|   |   |   |   test_numeric_value.py
+|   |   |   |   test_offset_iterator.py
+|   |   |   |   test_string_decoder.py
+|   |   |   |   test_string_type.py
+|   |   |   |   test_string_value.py
+|   |   |   |   
+|   |   |   \---__pycache__
+|   |   |           test_alignment_value.cpython-314-pytest-9.1.1.pyc
+|   |   |           test_detection_options.cpython-314-pytest-9.1.1.pyc
+|   |   |           test_detection_strategy.cpython-314-pytest-9.1.1.pyc
+|   |   |           test_detector_type.cpython-314-pytest-9.1.1.pyc
+|   |   |           test_entropy_value.cpython-314-pytest-9.1.1.pyc
+|   |   |           test_guid_decoder.cpython-314-pytest-9.1.1.pyc
+|   |   |           test_guid_type.cpython-314-pytest-9.1.1.pyc
+|   |   |           test_guid_value.cpython-314-pytest-9.1.1.pyc
+|   |   |           test_numeric_decoder.cpython-314-pytest-9.1.1.pyc
+|   |   |           test_numeric_type.cpython-314-pytest-9.1.1.pyc
+|   |   |           test_numeric_value.cpython-314-pytest-9.1.1.pyc
+|   |   |           test_offset_iterator.cpython-314-pytest-9.1.1.pyc
+|   |   |           test_string_decoder.cpython-314-pytest-9.1.1.pyc
+|   |   |           test_string_type.cpython-314-pytest-9.1.1.pyc
+|   |   |           test_string_value.cpython-314-pytest-9.1.1.pyc
+|   |   |           
+|   |   \---__pycache__
+|   |           test_api.cpython-314-pytest-9.1.1.pyc
+|   |           test_base_detector.cpython-314-pytest-9.1.1.pyc
+|   |           test_binary_map.cpython-314-pytest-9.1.1.pyc
+|   |           test_detector_implementations.cpython-314-pytest-9.1.1.pyc
+|   |           test_detector_protocol.cpython-314-pytest-9.1.1.pyc
+|   |           test_engine_custom_registry.cpython-314-pytest-9.1.1.pyc
+|   |           test_hex_inspector.cpython-314-pytest-9.1.1.pyc
+|   |           test_numeric_detector.cpython-314-pytest-9.1.1.pyc
+|   |           test_pattern_detector.cpython-314-pytest-9.1.1.pyc
+|   |           test_public_imports.cpython-314-pytest-9.1.1.pyc
+|   |           test_registry.cpython-314-pytest-9.1.1.pyc
+|   |           test_reverse_engine.cpython-314-pytest-9.1.1.pyc
+|   |           __init__.cpython-314.pyc
+|   |           
+|   +---structures
+|   |   |   test_field.py
+|   |   |   test_structure.py
+|   |   |   test_structure_builder.py
+|   |   |   test_structure_index.py
+|   |   |   
+|   |   \---__pycache__
+|   |           test_field.cpython-314-pytest-9.1.1.pyc
+|   |           test_structure.cpython-314-pytest-9.1.1.pyc
+|   |           test_structure_builder.cpython-314-pytest-9.1.1.pyc
+|   |           test_structure_index.cpython-314-pytest-9.1.1.pyc
+|   |           
+|   +---validation
+|   |   |   test_project_validator.py
+|   |   |   
+|   |   \---__pycache__
+|   |           test_project_validator.cpython-314-pytest-9.1.1.pyc
+|   |           
+|   +---writers
+|   |   |   test_python_method_writer.py
+|   |   |   test_python_writer.py
+|   |   |   
+|   |   \---__pycache__
+|   |           test_python_method_writer.cpython-314-pytest-9.1.1.pyc
+|   |           test_python_writer.cpython-314-pytest-9.1.1.pyc
+|   |           
+|   +---_codegen
+|   |   |   test_object.py
+|   |   |   
+|   |   \---__pycache__
+|   |           test_object.cpython-314-pytest-9.1.1.pyc
+|   |           
+|   \---__pycache__
+|           test_ascii_detector.cpython-314-pytest-9.1.1.pyc
+|           test_binary_reader.cpython-314-pytest-9.1.1.pyc
+|           test_cli.cpython-314-pytest-9.1.1.pyc
+|           test_detection.cpython-314-pytest-9.1.1.pyc
+|           test_detection_index.cpython-314-pytest-9.1.1.pyc
+|           test_file_scanner.cpython-314-pytest-9.1.1.pyc
+|           test_float_detector.cpython-314-pytest-9.1.1.pyc
+|           test_integer_detector.cpython-314-pytest-9.1.1.pyc
+|           test_json_exporter.cpython-314-pytest-9.1.1.pyc
+|           test_pipeline.cpython-314-pytest-9.1.1.pyc
+|           test_recover.cpython-314-pytest-9.1.1.pyc
+|           test_signature_detector.cpython-314-pytest-9.1.1.pyc
+|           test_types.cpython-314-pytest-9.1.1.pyc
+|           test_utf16.cpython-314-pytest-9.1.1.pyc
+|           
++---testsreversedetectors
+\---tools
+        inspect_c2p.py
+        

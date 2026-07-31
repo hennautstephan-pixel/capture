@@ -5,8 +5,8 @@ from .segment_detector import SegmentDetector
 
 
 class BinaryInspector:
+    """Facade for binary segment inspection."""
 
-    @classmethod
-    def inspect(cls, data: bytes) -> list[Segment]:
-
+    @staticmethod
+    def inspect(data: bytes) -> list[Segment]:
         return SegmentDetector.detect(data)

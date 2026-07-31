@@ -10,7 +10,6 @@ from __future__ import annotations
 from capture_recovery.io import (
     CaptureBinaryReader,
 )
-
 from capture_recovery.reverse import (
     ReverseEngine,
 )
@@ -18,7 +17,6 @@ from capture_recovery.reverse import (
 from .binary_analyzer import (
     BinaryAnalyzer,
 )
-
 from .results import (
     BinaryAnalysisResult,
 )
@@ -37,7 +35,6 @@ class BinaryRecoveryPipeline:
         analyzer: BinaryAnalyzer | None = None,
         reverse_engine: ReverseEngine | None = None,
     ) -> None:
-
         self.reader: CaptureBinaryReader = (
             reader
             or CaptureBinaryReader()
@@ -77,7 +74,7 @@ class BinaryRecoveryPipeline:
             data,
         )
 
-        result = BinaryAnalysisResult(
+        analysis = BinaryAnalysisResult(
             data=data,
             size=summary["size"],
             signature=data[:16],
@@ -87,16 +84,16 @@ class BinaryRecoveryPipeline:
             },
         )
 
-        result.reverse = self.reverse_engine.analyze(
+        analysis.reverse = self.reverse_engine.analyze(
             data,
         )
 
-        return result
+        return analysis
 
     def run(
         self,
         path: str,
-     ) -> BinaryPipelineDict:
+    ) -> BinaryPipelineDict:
         """
         Execute binary recovery.
         """

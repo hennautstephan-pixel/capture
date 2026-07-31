@@ -13,64 +13,30 @@ class PropertyMapper:
     Extract fixture properties.
     """
 
-    def map(
-        self,
-        obj,
-    ) -> dict:
-        """
-        Convert semantic properties
-        into fixture data.
-        """
+    DEFAULT_VECTOR = (
+        0.0,
+        0.0,
+        0.0,
+    )
+
+    DEFAULTS = {
+        "manufacturer": None,
+        "model": None,
+        "mode": None,
+        "universe": 0,
+        "address": 0,
+        "position": DEFAULT_VECTOR,
+        "rotation": DEFAULT_VECTOR,
+        "focus_point": None,
+        "mount": None,
+    }
+
+    def map(self, obj) -> dict:
+        """Convert semantic properties into fixture data."""
 
         properties = obj.properties or {}
 
         return {
-
-            "manufacturer": properties.get(
-                "manufacturer",
-            ),
-
-            "model": properties.get(
-                "model",
-            ),
-
-            "mode": properties.get(
-                "mode",
-            ),
-
-            "universe": properties.get(
-                "universe",
-                0,
-            ),
-
-            "address": properties.get(
-                "address",
-                0,
-            ),
-
-            "position": properties.get(
-                "position",
-                (
-                    0.0,
-                    0.0,
-                    0.0,
-                ),
-            ),
-
-            "rotation": properties.get(
-                "rotation",
-                (
-                    0.0,
-                    0.0,
-                    0.0,
-                ),
-            ),
-
-            "focus_point": properties.get(
-                "focus_point",
-            ),
-
-            "mount": properties.get(
-                "mount",
-            ),
+            key: properties.get(key, default)
+            for key, default in self.DEFAULTS.items()
         }

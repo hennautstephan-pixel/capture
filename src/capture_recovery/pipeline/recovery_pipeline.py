@@ -9,11 +9,9 @@ from __future__ import annotations
 from capture_recovery.io import (
     CaptureReader,
 )
-
 from capture_recovery.reconstruction import (
     ProjectFinalize,
 )
-
 from capture_recovery.validation import (
     ReconstructionValidator,
 )
@@ -26,15 +24,11 @@ class RecoveryPipeline:
 
     def __init__(
         self,
-        reader=None,
-        validator=None,
-        finalizer=None,
+        reader: CaptureReader | None = None,
+        validator: ReconstructionValidator | None = None,
+        finalizer: ProjectFinalize | None = None,
     ) -> None:
-
-        self.reader = (
-            reader
-            or CaptureReader()
-        )
+        self.reader = reader or CaptureReader()
 
         self.validator = (
             validator
@@ -46,10 +40,9 @@ class RecoveryPipeline:
             or ProjectFinalize()
         )
 
-
     def load(
         self,
-        path,
+        path: str,
     ) -> dict:
         """
         Load Capture data.
@@ -59,7 +52,6 @@ class RecoveryPipeline:
             path,
         )
 
-
     def validate(
         self,
         project,
@@ -68,23 +60,18 @@ class RecoveryPipeline:
         Validate reconstructed project.
         """
 
-        errors = self.validator.validate(
-            project,
-        )
+        result = self.validator.validate(project)
 
         return {
-
-            "valid": len(errors) == 0,
-
-            "errors": errors,
-
+            "valid": result.valid,
+            "errors": list(result.errors),
+            "warnings": list(result.warnings),
         }
-
 
     def finalize(
         self,
-        project,
-    ):
+        project: dict,
+    ) -> dict:
         """
         Finalize project.
         """
@@ -93,11 +80,10 @@ class RecoveryPipeline:
             project,
         )
 
-
     def run(
         self,
-        path,
-        project,
+        path: str,
+        project: dict,
     ) -> dict:
         """
         Execute recovery workflow.
@@ -112,18 +98,12 @@ class RecoveryPipeline:
         )
 
         if result["valid"]:
-
             project = self.finalize(
                 project,
             )
 
-
         return {
-
             "source": source,
-
             "validation": result,
-
             "project": project,
-
         }

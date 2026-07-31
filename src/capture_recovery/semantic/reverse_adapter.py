@@ -13,6 +13,7 @@ Version v10:
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from typing import Any
 
 
 
@@ -30,12 +31,12 @@ class SemanticObject:
 
     confidence: float = 0.0
 
-    properties: dict = field(
+    properties: dict[str, Any] = field(
         default_factory=dict
     )
 
 
-    def as_dict(self) -> dict:
+    def as_dict(self) -> dict[str, Any]:
 
         return {
 
@@ -78,14 +79,16 @@ class ReverseSemanticAdapter:
 
     def analyze(
         self,
-        reverse_result,
-    ) -> dict:
+        reverse_result: Any,
+    ) -> dict[str, Any]:
 
 
         objects = self.adapt(
             reverse_result
         )
 
+
+        serialized_objects = [obj.as_dict() for obj in objects]
 
         return {
 
@@ -135,11 +138,11 @@ class ReverseSemanticAdapter:
 
     def adapt(
         self,
-        reverse_result,
+        reverse_result: Any,
     ) -> list[SemanticObject]:
 
 
-        objects = []
+        objects: list[SemanticObject] = []
 
 
         strings = getattr(
@@ -210,39 +213,11 @@ class ReverseSemanticAdapter:
 
 
             objects.append(
-
-                SemanticObject(
-
-                    identifier=
-                        f"Fixture_{guid.offset}",
-
-
-                    object_type=
-                        "fixture_candidate",
-
-
-                    confidence=
-                        confidence,
-
-
-                    properties={
-
-                        "guid":
-                            guid.value,
-
-                        "offset":
-                            guid.offset,
-
-                        "source":
-                            "binary_guid",
-
-                        "evidence":
-                            evidence,
-
-                    },
-
+                self._build_fixture_candidate(
+                    guid,
+                    confidence,
+                    evidence,
                 )
-
             )
 
 
@@ -250,24 +225,9 @@ class ReverseSemanticAdapter:
         if numerics:
 
             objects.append(
-
-                SemanticObject(
-
-                    identifier="numeric_data",
-
-                    object_type="numeric_block",
-
-                    confidence=0.55,
-
-                    properties={
-
-                        "count":
-                            len(numerics),
-
-                    },
-
+                self._build_numeric_block(
+                    numerics
                 )
-
             )
 
 
@@ -275,12 +235,48 @@ class ReverseSemanticAdapter:
 
 
 
+    def _build_fixture_candidate(
+        self,
+        guid: Any,
+        confidence: float,
+        evidence: list[str],
+    ) -> SemanticObject:
+
+        return SemanticObject(
+            identifier=f"Fixture_{guid.offset}",
+            object_type="fixture_candidate",
+            confidence=confidence,
+            properties={
+                "guid": guid.value,
+                "offset": guid.offset,
+                "source": "binary_guid",
+                "evidence": evidence,
+            },
+        )
+
+
+
+
+
+    def _build_numeric_block(
+        self,
+        numerics: Any,
+    ) -> SemanticObject:
+
+        return SemanticObject(
+            identifier="numeric_data",
+            object_type="numeric_block",
+            confidence=0.55,
+            properties={
+                "count": len(numerics),
+            },
+        )
 
 
     def _cluster_guids(
         self,
-        guids,
-    ):
+        guids: Any,
+    ) -> list[Any]:
         """
         Remove dense GUID scans.
 
@@ -317,7 +313,7 @@ class ReverseSemanticAdapter:
         )
 
 
-        result = []
+        result: list[Any] = []
 
 
         i = 0
@@ -388,39 +384,13 @@ class ReverseSemanticAdapter:
 
 
 
-            #
-            # Dense binary area
-            #
-
             if len(cluster) >= 4:
-
-
-                best = max(
-
-                    cluster,
-
-                    key=self._guid_score,
-
-                )
-
-
                 result.append(
-                    best
+                    self._select_best_guid(cluster)
                 )
-
-
                 i = j
-
-
-
             else:
-
-
-                result.append(
-                    current
-                )
-
-
+                result.append(current)
                 i += 1
 
 
@@ -431,9 +401,21 @@ class ReverseSemanticAdapter:
 
 
 
+
+    def _select_best_guid(
+        self,
+        cluster: list[Any],
+    ) -> Any:
+
+        return max(
+            cluster,
+            key=self._guid_score,
+        )
+
+
     def _guid_score(
         self,
-        guid,
+        guid: Any,
     ) -> float:
 
 
@@ -483,9 +465,9 @@ class ReverseSemanticAdapter:
 
     def _find_near_strings(
         self,
-        guid,
-        strings,
-    ) -> list:
+        guid: Any,
+        strings: Any,
+    ) -> list[str]:
 
 
         result = []
@@ -535,11 +517,11 @@ class ReverseSemanticAdapter:
 
     def _extract_metadata(
         self,
-        strings,
-    ) -> dict:
+        strings: Any,
+    ) -> dict[str, bool]:
 
 
-        result = {}
+        result: dict[str, bool] = {}
 
 
         for item in strings:
@@ -576,8 +558,8 @@ class ReverseSemanticAdapter:
 
     def _serialize(
         self,
-        values,
-    ) -> list:
+        values: Any,
+    ) -> list[Any]:
 
 
         result = []

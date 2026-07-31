@@ -286,6 +286,58 @@ class NumericDetector(BaseDetector):
         return value
 
 
+    def _scan_numeric_type(
+        self,
+        *,
+        buffer: bytes,
+        numeric_type: NumericType,
+        options: DetectionOptions,
+        endian_list: tuple[str, ...],
+        integers: bool,
+        floats: bool,
+        finite_only: bool,
+        results: list,
+        seen: set,
+    ) -> bool:
+        """Scan a single numeric type. Return False if max_results reached."""
+        max_results = options.max_results
+
+        if numeric_type.floating and not floats:
+            return True
+        if not numeric_type.floating and not integers:
+            return True
+
+        offsets = self._offsets(
+            buffer=buffer,
+            numeric_type=numeric_type,
+            options=options,
+        )
+
+        for offset in offsets:
+            if max_results is not None and len(results) >= max_results:
+                return False
+            if offset % numeric_type.size != 0:
+                continue
+            for current_endianness in endian_list:
+                if max_results is not None and len(results) >= max_results:
+                    return False
+                value = self._decode_candidate(
+                    buffer=buffer,
+                    offset=offset,
+                    numeric_type=numeric_type,
+                    endianness=current_endianness,
+                    finite_only=finite_only,
+                )
+                if value is None:
+                    continue
+                key=(value.offset,value.type_name,value.endianness)
+                if key in seen:
+                    continue
+                seen.add(key)
+                results.append(value)
+        return True
+
+
     def _detect(
         self,
         data,
@@ -330,107 +382,18 @@ class NumericDetector(BaseDetector):
 
 
         for numeric_type in self._numeric_types:
-
-
-            if (
-                max_results is not None
-                and len(results) >= max_results
-            ):
-
-                return list(self._limit_results(results, options))
-
-
-
-            if (
-                numeric_type.floating
-                and not floats
-            ):
-
-                continue
-
-
-
-            if (
-                not numeric_type.floating
-                and not integers
-            ):
-
-                continue
-
-
-
-            offsets = self._offsets(
+            if not self._scan_numeric_type(
                 buffer=buffer,
                 numeric_type=numeric_type,
                 options=options,
-            )
-
-
-
-            for offset in offsets:
-
-
-                if (
-                    max_results is not None
-                    and len(results) >= max_results
-                ):
-
-                    return list(self._limit_results(results, options))
-
-
-
-                if offset % numeric_type.size != 0:
-
-                    continue
-
-
-
-                for current_endianness in endian_list:
-
-
-
-                    if (
-                        max_results is not None
-                        and len(results) >= max_results
-                    ):
-
-                        return list(self._limit_results(results, options))
-
-
-
-                    value = self._decode_candidate(
-                        buffer=buffer,
-                        offset=offset,
-                        numeric_type=numeric_type,
-                        endianness=current_endianness,
-                        finite_only=finite_only,
-                    )
-
-                    if value is None:
-                        continue
-
-
-
-                    key = (
-                        value.offset,
-                        value.type_name,
-                        value.endianness,
-                    )
-
-
-
-                    if key in seen:
-
-                        continue
-
-
-
-                    seen.add(key)
-
-                    results.append(
-                        value
-                    )
-
-
+                endian_list=endian_list,
+                integers=integers,
+                floats=floats,
+                finite_only=finite_only,
+                results=results,
+                seen=seen,
+            ):
+                return list(self._limit_results(results, options))
 
         return list(self._limit_results(results, options))
+

@@ -7,7 +7,8 @@ Detect strings inside binary buffers.
 from __future__ import annotations
 
 
-from collections.abc import Iterable
+from collections.abc import Callable, Iterable
+from typing import TypeAlias
 
 
 from .base_detector import BaseDetector
@@ -25,6 +26,12 @@ from .string_value import (
 )
 
 
+_Scanner: TypeAlias = Callable[
+    [bytes, StringType, int],
+    list[StringValue],
+]
+_Validator: TypeAlias = Callable[[bytes], bool]
+
 
 class StringDetector(BaseDetector):
     """
@@ -32,6 +39,13 @@ class StringDetector(BaseDetector):
     """
 
     detector_type = DetectorType.STRING
+    _ASCII_TYPE = "ascii"
+    _UTF16_BE_TYPE = "utf16_be"
+    _UTF16_ALIASES = (
+        "utf16",
+        "utf16-le",
+        "utf16_le",
+    )
 
 
 
@@ -48,6 +62,7 @@ class StringDetector(BaseDetector):
 
 
         self.minimum_length = minimum_length
+        self._scanners: dict[str, _Scanner] | None = None
 
 
 
@@ -66,6 +81,35 @@ class StringDetector(BaseDetector):
     ) -> tuple[StringType, ...]:
 
         return self._string_types
+
+
+
+    def _build_scanners(self) -> dict[str, _Scanner]:
+        scanners = {
+            self._ASCII_TYPE: self._scan_ascii,
+            self._UTF16_BE_TYPE: self._scan_utf16_be,
+        }
+
+        for alias in self._UTF16_ALIASES:
+            scanners[alias] = self._scan_utf16
+
+        return scanners
+
+
+
+    def _get_scanners(self) -> dict[str, _Scanner]:
+        if self._scanners is None:
+            self._scanners = self._build_scanners()
+
+        return self._scanners
+
+
+
+    def _get_scanner(
+        self,
+        string_type: StringType,
+    ) -> _Scanner | None:
+        return self._get_scanners().get(string_type.name)
 
 
 
@@ -119,75 +163,32 @@ class StringDetector(BaseDetector):
 
 
 
-        results = []
+        results: list[StringValue] = []
 
 
 
         for string_type in self._string_types:
 
+            scanner = self._get_scanner(string_type)
 
-            if string_type.name == "ascii":
+            if scanner is None:
 
-
-                results.extend(
-
-                    self._scan_ascii(
-
-                        buffer,
-
-                        string_type,
-
-                        min_length,
-
-                    )
-
-                )
+                continue
 
 
+            results.extend(
 
-            elif string_type.name in (
+                scanner(
 
-                "utf16",
+                    buffer,
 
-                "utf16-le",
+                    string_type,
 
-                "utf16_le",
-
-            ):
-
-
-                results.extend(
-
-                    self._scan_utf16(
-
-                        buffer,
-
-                        string_type,
-
-                        min_length,
-
-                    )
+                    min_length,
 
                 )
 
-
-
-            elif string_type.name == "utf16_be":
-
-
-                results.extend(
-
-                    self._scan_utf16_be(
-
-                        buffer,
-
-                        string_type,
-
-                        min_length,
-
-                    )
-
-                )
+            )
 
 
 
@@ -197,88 +198,86 @@ class StringDetector(BaseDetector):
 
 
 
-    def _scan_ascii(
+    def _scan_generic(
         self,
         data: bytes,
         string_type: StringType,
         minimum_length: int,
+        step: int,
+        validator: _Validator,
     ) -> list[StringValue]:
 
 
-        results = []
+        results: list[StringValue] = []
 
         start = None
 
+        index = 0
 
 
-        for index, byte in enumerate(data):
+        def finalize(end: int) -> None:
+            nonlocal start
+
+            if start is None:
+
+                return
+
+            self._append_string(
+                results,
+                start,
+                end,
+                data,
+                string_type,
+                minimum_length,
+            )
+
+            start = None
 
 
-            if 32 <= byte <= 126:
 
+        while index + step <= len(data):
+
+            element = data[
+                index:index + step
+            ]
+
+
+            if validator(element):
 
                 if start is None:
 
                     start = index
 
-
-
             else:
 
-
-                if start is not None:
-
-
-                    raw = data[
-                        start:index
-                    ]
+                finalize(index)
 
 
-                    value = raw.decode(
-
-                        string_type.encoding,
-
-                        errors="ignore",
-
-                    )
+            index += step
 
 
 
-                    if self._valid(
-
-                        value,
-
-                        minimum_length,
-
-                    ):
-
-
-                        results.append(
-
-                            StringValue(
-
-                                offset=start,
-
-                                string_type=string_type,
-
-                                value=value,
-
-                                raw_bytes=raw,
-
-                                terminated=True,
-
-                            )
-
-                        )
-
-
-                    start = None
+        finalize(len(data))
 
 
 
         return results
 
 
+
+    def _scan_ascii(
+        self,
+        data: bytes,
+        string_type: StringType,
+        minimum_length: int,
+    ) -> list[StringValue]:
+        return self._scan_generic(
+            data,
+            string_type,
+            minimum_length,
+            1,
+            self._validate_ascii_element,
+        )
 
 
 
@@ -288,117 +287,12 @@ class StringDetector(BaseDetector):
         string_type: StringType,
         minimum_length: int,
     ) -> list[StringValue]:
-
-
-        results = []
-
-        start = None
-
-        index = 0
-
-
-
-        while index + 1 < len(data):
-
-
-            pair = data[
-                index:index + 2
-            ]
-
-
-
-            valid_utf16_char = (
-
-                pair[1] == 0
-
-                and
-
-                32 <= pair[0] <= 126
-
-            )
-
-
-
-            if valid_utf16_char:
-
-
-                if start is None:
-
-                    start = index
-
-
-
-            else:
-
-
-                if start is not None:
-
-
-                    raw = data[
-                        start:index
-                    ]
-
-
-
-                    try:
-
-                        value = raw.decode(
-
-                            string_type.encoding,
-
-                            errors="ignore",
-
-                        )
-
-
-                    except Exception:
-
-                        value = ""
-
-
-
-                    if self._valid(
-
-                        value,
-
-                        minimum_length,
-
-                    ):
-
-
-                        results.append(
-
-                            StringValue(
-
-                                offset=start,
-
-                                string_type=string_type,
-
-                                value=value,
-
-                                raw_bytes=raw,
-
-                                terminated=True,
-
-                            )
-
-                        )
-
-
-
-                    start = None
-
-
-
-            index += 2
-
-
-
-        return results
-
-
-
-
+        return self._scan_utf16_generic(
+            data,
+            string_type,
+            minimum_length,
+            self._validate_utf16_le_element,
+        )
 
     def _scan_utf16_be(
         self,
@@ -406,117 +300,120 @@ class StringDetector(BaseDetector):
         string_type: StringType,
         minimum_length: int,
     ) -> list[StringValue]:
+        return self._scan_utf16_generic(
+            data,
+            string_type,
+            minimum_length,
+            self._validate_utf16_be_element,
+        )
+
+    def _scan_utf16_generic(
+        self,
+        data: bytes,
+        string_type: StringType,
+        minimum_length: int,
+        validator: _Validator,
+    ) -> list[StringValue]:
+        return self._scan_generic(
+            data,
+            string_type,
+            minimum_length,
+            2,
+            validator,
+        )
 
 
-        results = []
-
-        start = None
-
-        index = 0
 
 
 
-        while index + 1 < len(data):
-
-
-            pair = data[
-                index:index + 2
-            ]
 
 
 
-            valid = (
+    def _validate_ascii_element(
+        self,
+        element: bytes,
+    ) -> bool:
+        return self._is_ascii_byte(element[0])
 
-                pair[0] == 0
+    def _validate_utf16_le_element(
+        self,
+        element: bytes,
+    ) -> bool:
+        return self._is_utf16_le_pair(element)
 
-                and
+    def _validate_utf16_be_element(
+        self,
+        element: bytes,
+    ) -> bool:
+        return self._is_utf16_be_pair(element)
 
-                32 <= pair[1] <= 126
+    def _is_ascii_byte(
+        self,
+        byte: int,
+    ) -> bool:
+        return 32 <= byte <= 126
 
+    def _is_utf16_le_pair(
+        self,
+        pair: bytes,
+    ) -> bool:
+        return pair[1] == 0 and 32 <= pair[0] <= 126
+
+    def _is_utf16_be_pair(
+        self,
+        pair: bytes,
+    ) -> bool:
+        return pair[0] == 0 and 32 <= pair[1] <= 126
+
+    def _append_string(
+        self,
+        results: list[StringValue],
+        start: int,
+        end: int,
+        data: bytes,
+        string_type: StringType,
+        minimum_length: int,
+    ) -> None:
+        raw = data[start:end]
+        value = self._decode_string(raw, string_type.encoding)
+
+        if self._valid(value, minimum_length):
+            results.append(
+                self._build_string_value(
+                    start,
+                    string_type,
+                    value,
+                    raw,
+                )
             )
 
+    def _decode_string(
+        self,
+        raw: bytes,
+        encoding: str,
+    ) -> str:
+        try:
+            return raw.decode(
+                encoding,
+                errors="ignore",
+            )
+        except Exception:
+            return ""
 
-
-            if valid:
-
-
-                if start is None:
-
-                    start = index
-
-
-
-            else:
-
-
-                if start is not None:
-
-
-                    raw = data[
-                        start:index
-                    ]
-
-
-
-                    try:
-
-                        value = raw.decode(
-
-                            string_type.encoding,
-
-                            errors="ignore",
-
-                        )
-
-
-                    except Exception:
-
-                        value = ""
-
-
-
-                    if self._valid(
-
-                        value,
-
-                        minimum_length,
-
-                    ):
-
-
-                        results.append(
-
-                            StringValue(
-
-                                offset=start,
-
-                                string_type=string_type,
-
-                                value=value,
-
-                                raw_bytes=raw,
-
-                                terminated=True,
-
-                            )
-
-                        )
-
-
-
-                    start = None
-
-
-
-            index += 2
-
-
-
-        return results
-
-
-
-
+    def _build_string_value(
+        self,
+        offset: int,
+        string_type: StringType,
+        value: str,
+        raw: bytes,
+    ) -> StringValue:
+        return StringValue(
+            offset=offset,
+            string_type=string_type,
+            value=value,
+            raw_bytes=raw,
+            terminated=True,
+        )
 
     def _valid(
         self,
@@ -583,9 +480,9 @@ class StringDetector(BaseDetector):
     ) -> list[StringValue]:
 
 
-        result = []
+        result: list[StringValue] = []
 
-        seen = set()
+        seen: set[tuple[int, str]] = set()
 
 
 

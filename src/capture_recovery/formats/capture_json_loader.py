@@ -47,6 +47,9 @@ from .scene_structure import (
 )
 
 
+DEFAULT_VEC3 = (0.0, 0.0, 0.0)
+
+
 class CaptureJsonLoader:
     """
     Load Capture projects from JSON.
@@ -146,11 +149,7 @@ class CaptureJsonLoader:
 
             mount_rotation = mount_data.get(
                 "rotation",
-                [
-                    0.0,
-                    0.0,
-                    0.0,
-                ],
+                list(DEFAULT_VEC3),
             )
 
             mount = FixtureMount(
@@ -365,11 +364,7 @@ class CaptureJsonLoader:
 
             position = structure_data.get(
                 "position",
-                [
-                    0.0,
-                    0.0,
-                    0.0,
-                ],
+                list(DEFAULT_VEC3),
             )
 
             rotation = structure_data.get(

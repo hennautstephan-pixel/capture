@@ -20,11 +20,9 @@ from __future__ import annotations
 from capture_recovery.pipeline.binary_recovery_pipeline import (
     BinaryRecoveryPipeline,
 )
-
 from capture_recovery.pipeline.semantic_recovery_pipeline import (
     SemanticRecoveryPipeline,
 )
-
 from capture_recovery.reconstruction.project_reconstructor import (
     ProjectReconstructor,
 )
@@ -49,18 +47,17 @@ class FullRecoveryPipeline:
         semantic_pipeline: SemanticRecoveryPipeline | None = None,
         reconstructor: ProjectReconstructor | None = None,
     ) -> None:
-
-        self.binary_pipeline = (
+        self.binary_pipeline: BinaryRecoveryPipeline = (
             binary_pipeline
             or BinaryRecoveryPipeline()
         )
 
-        self.semantic_pipeline = (
+        self.semantic_pipeline: SemanticRecoveryPipeline = (
             semantic_pipeline
             or SemanticRecoveryPipeline()
         )
 
-        self.reconstructor = (
+        self.reconstructor: ProjectReconstructor = (
             reconstructor
             or ProjectReconstructor()
         )
@@ -68,7 +65,7 @@ class FullRecoveryPipeline:
     def analyze(
         self,
         path: str,
-     ) -> BinaryPipelineDict:
+    ) -> BinaryPipelineDict:
         """
         Execute binary analysis.
         """
@@ -80,7 +77,7 @@ class FullRecoveryPipeline:
     def recover(
         self,
         path: str,
-     ) -> FullPipelineDict:
+    ) -> FullPipelineDict:
         """
         Execute complete recovery.
         """
@@ -98,16 +95,12 @@ class FullRecoveryPipeline:
             analysis,
         )
 
-        project = None
-
-        if self.reconstructor:
-
-            project = self.reconstructor.reconstruct(
-                semantic_result.get(
-                    "objects",
-                    [],
-                ),
-            )
+        project = self.reconstructor.reconstruct(
+            semantic_result.get(
+                "objects",
+                [],
+            ),
+        )
 
         result = FullRecoveryResult()
 

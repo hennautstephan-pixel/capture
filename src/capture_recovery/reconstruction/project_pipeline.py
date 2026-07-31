@@ -7,9 +7,7 @@ before export.
 
 from __future__ import annotations
 
-from capture_recovery.validation import (
-    ReconstructionValidator,
-)
+from capture_recovery.validation import ReconstructionValidator
 
 
 class ReconstructionPipeline:
@@ -19,14 +17,9 @@ class ReconstructionPipeline:
 
     def __init__(
         self,
-        validator=None,
+        validator: ReconstructionValidator | None = None,
     ) -> None:
-
-        self.validator = (
-            validator
-            or ReconstructionValidator()
-        )
-
+        self.validator = validator or ReconstructionValidator()
 
     def process(
         self,
@@ -36,16 +29,11 @@ class ReconstructionPipeline:
         Validate reconstructed project.
         """
 
-        errors = self.validator.validate(
-            project,
-        )
+        validation = self.validator.validate(project)
 
         return {
-
-            "valid": len(errors) == 0,
-
-            "errors": errors,
-
+            "valid": validation.valid,
+            "errors": list(validation.errors),
+            "warnings": list(validation.warnings),
             "project": project,
-
         }

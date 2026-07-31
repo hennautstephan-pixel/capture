@@ -1,5 +1,5 @@
 """
-Reconstruction rules.
+Project reconstruction rules.
 
 Defines how semantic recovery objects
 are converted into Capture objects.
@@ -8,376 +8,128 @@ are converted into Capture objects.
 from __future__ import annotations
 
 
-
-
-
 class ReconstructionRules:
     """
     Rules used during project reconstruction.
     """
 
-
-
     FIXTURE_TYPES = {
-
         "fixture",
-
         "Fixture",
-
         "fixture_candidate",
-
     }
-
 
     STRUCTURE_TYPES = {
-
         "structure",
-
         "scene_structure",
-
         "Structure",
-
     }
-
 
     GROUP_TYPES = {
-
         "group",
-
         "Group",
-
     }
-
 
     BINDING_TYPES = {
-
         "binding",
-
         "structure_binding",
-
         "Binding",
-
     }
-
 
     PROJECT_TYPES = {
-
         "project",
-
         "Project",
-
     }
-
-
-
-
 
     def __init__(
         self,
         min_confidence: float = 0.5,
     ) -> None:
-
-        self.min_confidence = (
-            min_confidence
-        )
-
-
-
-
+        self.min_confidence = min_confidence
 
     def confidence_ok(
         self,
         obj,
     ) -> bool:
-        """
-        Check confidence threshold.
-        """
-
-        confidence = self._get(
-            obj,
-            "confidence",
-            0.0,
-        )
-
-
+        """Check confidence threshold."""
         return (
-            confidence
-            >=
-            self.min_confidence
+            self._get(obj, "confidence", 0.0)
+            >= self.min_confidence
         )
 
+    def is_project(self, obj) -> bool:
+        return self._is_type(obj, self.PROJECT_TYPES)
 
+    def is_structure(self, obj) -> bool:
+        return self._is_type(obj, self.STRUCTURE_TYPES)
 
+    def is_group(self, obj) -> bool:
+        return self._is_type(obj, self.GROUP_TYPES)
 
-
-    def is_project(
-        self,
-        obj,
-    ) -> bool:
-        """
-        Check project object.
-        """
-
-        return (
-
-            self._type(obj)
-
-            in
-
-            self.PROJECT_TYPES
-
-        )
-
-
-
-
-
-    def is_fixture(
-        self,
-        obj,
-    ) -> bool:
-        """
-        Check if object can become
-        a real Capture fixture.
-        """
-
-        object_type = self._type(
-            obj,
-        )
-
-
-        #
-        # Normalisation
-        #
-
-        normalized = object_type.lower()
-
-
-
-        #
-        # Legacy objects
-        #
-        # Existing reconstruction objects
-        # are already trusted.
-        #
-
-        if normalized == "fixture":
-
-            return True
-
-
-
-        #
-        # Reverse candidates
-        #
-        # Need additional proof.
-        #
-
-        if normalized != "fixture_candidate":
-
-            return False
-
-
-
-        confidence = self._get(
-            obj,
-            "confidence",
-            0.0,
-        )
-
-
-        properties = self._properties(
-            obj,
-        )
-
-
-
-        evidence = properties.get(
-            "evidence",
-            [],
-        )
-
-
-        manufacturer = properties.get(
-            "manufacturer",
-        )
-
-
-        model = properties.get(
-            "model",
-        )
-
-
-        address = properties.get(
-            "address",
-        )
-
-
-        universe = properties.get(
-            "universe",
-        )
-
-
-
-        #
-        # Strong confidence
-        #
-
-        if confidence >= 0.80:
-
-            return True
-
-
-
-        #
-        # Real Capture information
-        #
-
-        if manufacturer and model:
-
-            return True
-
-
-
-        if address is not None:
-
-            return True
-
-
-
-        if universe is not None:
-
-            return True
-
-
-
-        if len(evidence) >= 2:
-
-            return True
-
-
-
-        #
-        # GUID alone is not enough
-        #
-
-        return False
-
-
-
-
+    def is_binding(self, obj) -> bool:
+        return self._is_type(obj, self.BINDING_TYPES)
 
     def is_fixture_candidate(
         self,
         obj,
     ) -> bool:
-        """
-        Keep weak candidates.
-        """
+        return self._type(obj).lower() == "fixture_candidate"
 
-        return (
-
-            self._type(obj)
-
-            .lower()
-
-            ==
-
-            "fixture_candidate"
-
-        )
-
-
-
-
-
-    def is_structure(
+    def is_fixture(
         self,
         obj,
     ) -> bool:
+        object_type = self._type(obj).lower()
+
+        if object_type == "fixture":
+            return True
+
+        if object_type != "fixture_candidate":
+            return False
+
+        confidence = self._get(obj, "confidence", 0.0)
+        properties = self._properties(obj)
+
+        evidence = properties.get("evidence", [])
+        manufacturer = properties.get("manufacturer")
+        model = properties.get("model")
+        address = properties.get("address")
+        universe = properties.get("universe")
 
         return (
-
-            self._type(obj)
-
-            in
-
-            self.STRUCTURE_TYPES
-
+            confidence >= 0.80
+            or (manufacturer and model)
+            or address is not None
+            or universe is not None
+            or len(evidence) >= 2
         )
 
-
-
-
-
-    def is_group(
+    def _is_type(
         self,
         obj,
+        valid_types,
     ) -> bool:
+        return self._type(obj) in valid_types
 
-        return (
-
-            self._type(obj)
-
-            in
-
-            self.GROUP_TYPES
-
-        )
-
-
-
-
-
-    def is_binding(
-        self,
+    @staticmethod
+    def _read(
         obj,
-    ) -> bool:
-
-        return (
-
-            self._type(obj)
-
-            in
-
-            self.BINDING_TYPES
-
-        )
-
-
-
-
+        key,
+        default,
+    ):
+        if isinstance(obj, dict):
+            return obj.get(key, default)
+        return getattr(obj, key, default)
 
     def _type(
         self,
         obj,
     ) -> str:
-        """
-        Get object type from dict
-        or SemanticObject.
-        """
-
-        if isinstance(
-            obj,
-            dict,
-        ):
-
-            return obj.get(
-                "object_type",
-                "",
-            )
-
-
-
-        return getattr(
+        return self._read(
             obj,
             "object_type",
             "",
         )
-
-
-
-
 
     def _get(
         self,
@@ -385,50 +137,17 @@ class ReconstructionRules:
         key,
         default=None,
     ):
-
-        if isinstance(
-            obj,
-            dict,
-        ):
-
-            return obj.get(
-                key,
-                default,
-            )
-
-
-
-        return getattr(
+        return self._read(
             obj,
             key,
             default,
         )
 
-
-
-
-
     def _properties(
         self,
         obj,
     ) -> dict:
-        """
-        Extract properties.
-        """
-
-        if isinstance(
-            obj,
-            dict,
-        ):
-
-            return obj.get(
-                "properties",
-                {},
-            )
-
-
-
-        return getattr(
+        return self._read(
             obj,
             "properties",
             {},
