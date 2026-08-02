@@ -134,6 +134,19 @@ from .corpus_knowledge import (
     CorpusSample,
 )
 
+from .corpus_builder import (
+    CorpusBuilder,
+    CorpusBuildResult,
+)
+
+from .corpus_exporter import (
+    CorpusExporter,
+)
+
+from .corpus_loader import (
+    CorpusLoader,
+)
+
 
 __all__ = [
     "CorpusAnalyzer",
@@ -222,4 +235,11 @@ __all__ = [
     "CorpusKnowledgeBase",
     "CorpusKnowledgeEntry",
     "CorpusSample",
+
+    "CorpusBuilder",
+    "CorpusBuildResult",
+
+    "CorpusExporter",
+
+    "CorpusLoader",
 ]
