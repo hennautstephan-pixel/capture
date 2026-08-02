@@ -147,6 +147,11 @@ from .corpus_loader import (
     CorpusLoader,
 )
 
+from .corpus_classifier import (
+    CorpusClassifier,
+    ClassificationResult,
+)
+
 
 __all__ = [
     "CorpusAnalyzer",
@@ -242,4 +247,7 @@ __all__ = [
     "CorpusExporter",
 
     "CorpusLoader",
+
+    "CorpusClassifier",
+    "ClassificationResult",
 ]

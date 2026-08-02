@@ -41,6 +41,12 @@ from .object_identifier import (
     ObjectCandidate,
 )
 
+from .intelligent_object_identifier import (
+    IntelligentObjectIdentifier,
+    IntelligentObjectCandidate,
+    IntelligentObjectIdentification,
+)
+
 __all__ = [
     "CompareAll",
     "Comparison",
@@ -60,4 +66,7 @@ __all__ = [
     "ObjectIdentifier",
     "ObjectIdentification",
     "ObjectCandidate",
+    "IntelligentObjectIdentifier",
+    "IntelligentObjectCandidate",
+    "IntelligentObjectIdentification",
 ]
