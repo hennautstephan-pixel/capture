@@ -1,3 +1,10 @@
+"""
+Research package.
+
+Reverse engineering, corpus analysis,
+knowledge extraction and recovery strategies.
+"""
+
 from .corpus_analyzer import CorpusAnalyzer
 
 from .corpus_diff import (
@@ -121,6 +128,13 @@ from .recovery_pipeline import (
     RecoveryResult,
 )
 
+from .corpus_knowledge import (
+    CorpusKnowledgeBase,
+    CorpusKnowledgeEntry,
+    CorpusSample,
+)
+
+
 __all__ = [
     "CorpusAnalyzer",
 
@@ -204,4 +218,8 @@ __all__ = [
 
     "RecoveryPipeline",
     "RecoveryResult",
+
+    "CorpusKnowledgeBase",
+    "CorpusKnowledgeEntry",
+    "CorpusSample",
 ]
