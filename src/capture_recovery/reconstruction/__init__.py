@@ -3,8 +3,8 @@ Reconstruction package.
 
 Contains project reconstruction,
 scene reconstruction, relation handling,
-fixture reconstruction, spatial recovery
-and final project assembly.
+fixture reconstruction, spatial recovery,
+candidate management and final project assembly.
 """
 
 from .project_reconstructor import (
@@ -51,28 +51,38 @@ from .project_pipeline import (
     ReconstructionPipeline,
 )
 
+from .reconstruction_candidate import (
+    ReconstructionCandidate,
+)
+
+from .reconstruction_context import (
+    ReconstructionContext,
+)
+
+from .registry import (
+    ReconstructionRegistry,
+)
+
+from .heuristic import (
+    NoOpReconstructionHeuristic,
+    ReconstructionHeuristic,
+)
 
 __all__ = [
-
     "ProjectReconstructor",
-
     "ReconstructionRules",
-
     "RelationApplier",
-
     "SceneReconstruction",
-
     "PropertyMapper",
-
     "FixtureReconstructor",
-
     "FixtureTransformReconstructor",
-
     "FocusReconstructor",
-
     "FixtureAssembler",
-
     "ProjectFinalize",
-
     "ReconstructionPipeline",
+    "ReconstructionCandidate",
+    "ReconstructionContext",
+    "ReconstructionRegistry",
+    "NoOpReconstructionHeuristic",
+    "ReconstructionHeuristic",
 ]
