@@ -68,6 +68,16 @@ from .heuristic import (
     ReconstructionHeuristic,
 )
 
+from .header_scanner import (
+    HeaderScanner,
+    HeaderSignature,
+    ScanResult,
+)
+
+from .header_recovery_heuristic import (
+    HeaderRecoveryHeuristic,
+)
+
 __all__ = [
     "ProjectReconstructor",
     "ReconstructionRules",
@@ -85,4 +95,8 @@ __all__ = [
     "ReconstructionRegistry",
     "NoOpReconstructionHeuristic",
     "ReconstructionHeuristic",
+    "HeaderScanner",
+    "HeaderSignature",
+    "ScanResult",
+    "HeaderRecoveryHeuristic",
 ]

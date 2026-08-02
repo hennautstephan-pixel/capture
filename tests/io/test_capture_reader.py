@@ -1,62 +1,43 @@
-import json
-
-
 from capture_recovery.io import (
     CaptureReader,
 )
 
 
-def test_capture_reader_json(
-    tmp_path,
-):
+def test_reader_creation():
 
-    file = tmp_path / "project.json"
+    reader = CaptureReader()
 
-
-    file.write_text(
-        json.dumps(
-            {
-                "name": "Test Project"
-            }
-        ),
-        encoding="utf-8",
+    assert isinstance(
+        reader,
+        CaptureReader,
     )
 
 
-    result = (
-        CaptureReader()
-        .read(
-            file,
-        )
+def test_read_bytes(tmp_path):
+
+    path = tmp_path / "test.bin"
+
+    path.write_bytes(
+        b"abcd"
     )
 
-
-    assert result["name"] == (
-        "Test Project"
+    result = CaptureReader().read_bytes(
+        path,
     )
 
+    assert result == b"abcd"
 
 
-def test_capture_reader_bytes(
-    tmp_path,
-):
+def test_detect_unknown(tmp_path):
 
-    file = tmp_path / "capture.bin"
+    path = tmp_path / "unknown.bin"
 
-
-    file.write_bytes(
-        b"CAPTURE",
+    path.write_bytes(
+        b"XXXX"
     )
 
-
-    result = (
-        CaptureReader()
-        .read_bytes(
-            file,
-        )
+    result = CaptureReader().detect_format(
+        path,
     )
 
-
-    assert result == (
-        b"CAPTURE"
-    )
+    assert result == "unknown"

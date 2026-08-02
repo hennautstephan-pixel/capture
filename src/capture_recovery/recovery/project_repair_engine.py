@@ -4,6 +4,7 @@ from copy import deepcopy
 from typing import Any
 
 from .integrity_report import IntegrityReport
+from .repair_action import RepairAction, RepairResult
 
 
 class ProjectRepairEngine:
@@ -16,6 +17,8 @@ class ProjectRepairEngine:
 
     def __init__(self) -> None:
         self._repairs: list[str] = []
+        self._actions: list[RepairAction] = []
+        self._results: list[RepairResult] = []
 
     @property
     def repairs(self) -> tuple[str, ...]:
@@ -24,11 +27,42 @@ class ProjectRepairEngine:
         """
         return tuple(self._repairs)
 
+    @property
+    def actions(self) -> tuple[RepairAction, ...]:
+        """
+        Registered repair actions.
+        """
+        return tuple(self._actions)
+
+    @property
+    def results(self) -> tuple[RepairResult, ...]:
+        """
+        Results produced by the last repair execution.
+        """
+        return tuple(self._results)
+
+    def register(
+        self,
+        action: RepairAction,
+    ) -> None:
+        """
+        Register a repair action.
+        """
+        self._actions.append(action)
+        self._actions.sort()
+
     def clear(self) -> None:
         """
         Clears the repair history.
         """
         self._repairs.clear()
+        self._results.clear()
+
+    def clear_actions(self) -> None:
+        """
+        Removes every registered repair action.
+        """
+        self._actions.clear()
 
     def repair(
         self,
@@ -37,22 +71,28 @@ class ProjectRepairEngine:
     ) -> Any:
         """
         Repairs a project according to an IntegrityReport.
-
-        For now no repair is applied.
-        A deep copy of the project is returned.
         """
 
         self.clear()
 
         repaired = deepcopy(project)
 
-        # Future commits:
-        #
-        # - repair GUIDs
-        # - repair references
-        # - repair hierarchy
-        # - repair scenes
-        # - repair universes
-        #
+        for action in self._actions:
+
+            if not action.applicable(
+                repaired,
+                report,
+            ):
+                continue
+
+            result = action.execute(
+                repaired,
+                report,
+            )
+
+            self._results.append(result)
+
+            if result.executed:
+                self._repairs.append(action.name)
 
         return repaired

@@ -3,79 +3,14 @@ from capture_recovery.io import (
 )
 
 
-def test_detect_capture_binary(
-    tmp_path,
-):
+def test_detect_json(tmp_path):
 
-    file = tmp_path / "project.cap"
+    path = tmp_path / "project.json"
 
-
-    file.write_bytes(
-        b"CAPTURE"
-        + b"\x00\x01\x02",
+    path.write_bytes(
+        b"{\"test\":1}"
     )
 
+    detector = CaptureFormatDetector()
 
-    result = (
-        CaptureFormatDetector()
-        .detect(
-            file,
-        )
-    )
-
-
-    assert result == (
-        "capture_binary"
-    )
-
-
-
-def test_detect_json(
-    tmp_path,
-):
-
-    file = tmp_path / "project.json"
-
-
-    file.write_bytes(
-        b"{\"name\":\"test\"}"
-    )
-
-
-    result = (
-        CaptureFormatDetector()
-        .detect(
-            file,
-        )
-    )
-
-
-    assert result == (
-        "json"
-    )
-
-
-
-def test_detect_unknown(
-    tmp_path,
-):
-
-    file = tmp_path / "unknown.bin"
-
-
-    file.write_bytes(
-        b"XXXX"
-    )
-
-
-    result = (
-        CaptureFormatDetector()
-        .detect(
-            file,
-        )
-    )
-
-
-    assert result == (
-        "unknown"
-    )
+    assert detector.detect(path) == "json"

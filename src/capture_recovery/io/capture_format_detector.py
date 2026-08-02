@@ -12,46 +12,60 @@ from pathlib import Path
 
 class CaptureFormatDetector:
     """
-    Detect Capture file format.
+    Detect the format of a Capture project.
     """
 
     SIGNATURES = {
-
         "capture_binary": (
             b"CAPTURE",
         ),
-
         "json": (
             b"{",
         ),
-
     }
 
+    UNKNOWN = "unknown"
 
     def detect(
         self,
-        path,
+        path: str | Path,
     ) -> str:
         """
-        Detect format from file header.
+        Detect a file format from its header.
         """
 
-        file_path = Path(
-            path,
-        )
+        file_path = Path(path)
+
+        if not file_path.exists():
+            raise FileNotFoundError(str(file_path))
 
         header = file_path.read_bytes()[:32]
 
+        return self.detect_bytes(header)
+
+    def detect_bytes(
+        self,
+        data: bytes,
+    ) -> str:
+        """
+        Detect a format directly from binary data.
+        """
 
         for name, signatures in self.SIGNATURES.items():
 
             for signature in signatures:
 
-                if header.startswith(
-                    signature,
-                ):
-
+                if data.startswith(signature):
                     return name
 
+        return self.UNKNOWN
 
-        return "unknown"
+    def is_supported(
+        self,
+        path: str | Path,
+    ) -> bool:
+        """
+        Return True if the file format is recognised.
+        """
+
+        return self.detect(path) != self.UNKNOWN
