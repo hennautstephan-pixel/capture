@@ -11,6 +11,11 @@ from capture_recovery.structures import Structure
 class InferenceContext:
     """
     Context shared by every inference rule.
+
+    The context is intentionally lightweight. It carries every piece of
+    information that inference rules may need while recovering a Capture
+    project and also provides a shared workspace where rules can exchange
+    information.
     """
 
     #
@@ -32,7 +37,7 @@ class InferenceContext:
     project: Any = None
 
     #
-    # Options
+    # Engine options
     #
 
     options: dict[str, Any] = field(
@@ -45,6 +50,26 @@ class InferenceContext:
 
     metadata: dict[str, Any] = field(
         default_factory=dict,
+    )
+
+    #
+    # Shared cache
+    #
+
+    cache: dict[str, Any] = field(
+        default_factory=dict,
+    )
+
+    #
+    # Diagnostics
+    #
+
+    warnings: list[str] = field(
+        default_factory=list,
+    )
+
+    notes: list[str] = field(
+        default_factory=list,
     )
 
     # ---------------------------------------------------------
@@ -137,6 +162,54 @@ class InferenceContext:
             default,
         )
 
+    def has_option(
+        self,
+        key: str,
+    ) -> bool:
+
+        return key in self.options
+
+    # ---------------------------------------------------------
+    # Shared cache
+    # ---------------------------------------------------------
+
+    def cache_get(
+        self,
+        key: str,
+        default: Any = None,
+    ) -> Any:
+
+        return self.cache.get(
+            key,
+            default,
+        )
+
+    def cache_set(
+        self,
+        key: str,
+        value: Any,
+    ) -> None:
+
+        self.cache[key] = value
+
+    # ---------------------------------------------------------
+    # Diagnostics
+    # ---------------------------------------------------------
+
+    def add_warning(
+        self,
+        message: str,
+    ) -> None:
+
+        self.warnings.append(message)
+
+    def add_note(
+        self,
+        message: str,
+    ) -> None:
+
+        self.notes.append(message)
+
     # ---------------------------------------------------------
     # Representation
     # ---------------------------------------------------------
@@ -148,5 +221,7 @@ class InferenceContext:
             f"offset=0x{self.offset:X}, "
             f"length={self.length}, "
             f"score={self.score:.2f}, "
-            f"knowledge={self.has_knowledge})"
+            f"knowledge={self.has_knowledge}, "
+            f"warnings={len(self.warnings)}, "
+            f"notes={len(self.notes)})"
         )

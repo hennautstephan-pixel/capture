@@ -13,6 +13,13 @@ from .engine_factory import (
     create_default_engine,
 )
 
+from .capture_format import (
+    CaptureField,
+    CaptureFormat,
+)
+
+from .capture_format_builder import CaptureFormatBuilder
+
 
 __all__ = [
     "Decoder",
@@ -28,4 +35,7 @@ __all__ = [
     "RegistryBuilder",
     "build_default_registry",
     "create_default_engine",
+    "CaptureField",
+    "CaptureFormat",
+    "CaptureFormatBuilder",
 ]

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from capture_recovery.inference import (
+    InferenceContext,
     InferenceResult,
     InferenceRule,
 )
@@ -12,7 +13,7 @@ class Vector3Rule(InferenceRule):
     """
     Recognize a Vector3 structure.
 
-    A Vector3 is defined as three consecutive FLOAT32 fields.
+    A Vector3 consists of three contiguous FLOAT32 values.
     """
 
     @property
@@ -21,28 +22,29 @@ class Vector3Rule(InferenceRule):
 
     def match(
         self,
-        structure: Structure,
+        context: InferenceContext | Structure,
     ) -> InferenceResult:
+
+        # Compatibility during migration
+        if isinstance(context, Structure):
+            structure = context
+        else:
+            structure = context.structure
 
         if len(structure.fields) != 3:
             return InferenceResult(False)
 
-        expected_offsets = [
-            structure.offset,
-            structure.offset + 4,
-            structure.offset + 8,
-        ]
+        expected_offset = structure.offset
 
-        for field, expected in zip(
-            structure.fields,
-            expected_offsets,
-        ):
+        for field in structure.fields:
 
             if field.datatype != DataType.FLOAT32:
                 return InferenceResult(False)
 
-            if field.offset != expected:
+            if field.offset != expected_offset:
                 return InferenceResult(False)
+
+            expected_offset += 4
 
         return InferenceResult(
             matched=True,
