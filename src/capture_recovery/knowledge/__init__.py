@@ -4,11 +4,20 @@ from .knowledge_inference_engine import Inference, InferenceReport, KnowledgeInf
 from .knowledge_query_engine import KnowledgeQueryEngine, QueryResult
 from .registry import DecoderRegistry
 from .semantic_object import SemanticObject
+from .knowledge_result import KnowledgeResult
+from .registry_builder import (
+    RegistryBuilder,
+    build_default_registry,
+)
+from .engine_factory import (
+    create_default_engine,
+)
 
 
 __all__ = [
     "Decoder",
     "DecoderRegistry",
+    "KnowledgeResult",
     "Inference",
     "InferenceReport",
     "KnowledgeEngine",
@@ -16,4 +25,7 @@ __all__ = [
     "KnowledgeQueryEngine",
     "QueryResult",
     "SemanticObject",
+    "RegistryBuilder",
+    "build_default_registry",
+    "create_default_engine",
 ]

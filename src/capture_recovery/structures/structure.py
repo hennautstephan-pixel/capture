@@ -27,26 +27,78 @@ class Structure:
     def end(self) -> int:
         return self.offset + self.length
 
-    def add(self, field: Field) -> None:
+    @property
+    def score(self) -> float:
+        """
+        Reconstruction score.
+
+        Falls back to confidence when no explicit score
+        has been computed.
+        """
+
+        return float(
+            self.metadata.get(
+                "score",
+                self.confidence,
+            )
+        )
+
+    @property
+    def estimated_type(self) -> str:
+        """
+        Best inferred semantic type.
+
+        Falls back to the structure name.
+        """
+
+        return str(
+            self.metadata.get(
+                "estimated_type",
+                self.name,
+            )
+        )
+
+    def add(
+        self,
+        field: Field,
+    ) -> None:
+
         self.fields.append(field)
 
     def sort(self) -> None:
-        self.fields.sort(key=lambda f: f.offset)
 
-    def contains(self, offset: int) -> bool:
-        return self.offset <= offset < self.end
+        self.fields.sort(
+            key=lambda f: f.offset,
+        )
+
+    def contains(
+        self,
+        offset: int,
+    ) -> bool:
+
+        return (
+            self.offset
+            <= offset
+            < self.end
+        )
 
     def __len__(self) -> int:
+
         return self.length
 
     def __iter__(self):
-        return iter(self.fields)
+
+        return iter(
+            self.fields,
+        )
 
     def __repr__(self) -> str:
+
         return (
-            f"Structure("
+            "Structure("
             f"name={self.name!r}, "
             f"offset=0x{self.offset:X}, "
             f"length={self.length}, "
+            f"score={self.score:.2f}, "
             f"fields={len(self.fields)})"
         )

@@ -7,6 +7,8 @@ from capture_recovery.pipeline.results import (
     SemanticRecoveryResult,
 )
 
+from capture_recovery.knowledge import KnowledgeResult
+
 
 def test_binary_analysis_defaults():
     result = BinaryAnalysisResult()
@@ -120,3 +122,17 @@ def test_full_result_failure():
     )
 
     assert result.success is False
+
+def test_binary_analysis_contains_knowledge():
+
+    result = BinaryAnalysisResult()
+
+    assert isinstance(
+        result.knowledge,
+        KnowledgeResult,
+    )
+
+    assert result.known_signature_count == 0
+    assert result.unknown_signature_count == 0
+    assert result.decoded_object_count == 0
+    assert result.coverage == 0.0

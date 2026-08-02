@@ -1,66 +1,132 @@
 from __future__ import annotations
 
-from capture_recovery.indexes import DetectionIndex
-from capture_recovery.models import Detection
-
+from .cluster import Cluster
+from .cluster_builder import ClusterBuilder
 from .field import Field
 from .structure import Structure
+from .structure_candidate import StructureCandidate
+from .structure_scorer import StructureScorer
 
 
 class StructureBuilder:
     """
-    Build high-level structures from a DetectionIndex.
+    Build reconstructed structures.
 
-    The initial implementation groups detections that are contiguous
-    or separated by only a few bytes.
+    Pipeline
+    --------
+
+    DetectionIndex
+            │
+            ▼
+    ClusterBuilder
+            │
+            ▼
+    Cluster
+            │
+            ▼
+    StructureCandidate
+            │
+            ▼
+    StructureScorer
+            │
+            ▼
+    Structure
     """
 
-    def __init__(self, max_gap: int = 8) -> None:
+    def __init__(
+        self,
+        max_gap: int = 8,
+        scorer: StructureScorer | None = None,
+    ) -> None:
 
-        self.max_gap = max_gap
+        self._cluster_builder = ClusterBuilder(
+            max_gap=max_gap,
+        )
 
-    def build(self, index: DetectionIndex) -> list[Structure]:
+        self._scorer = (
+            scorer
+            if scorer is not None
+            else StructureScorer()
+        )
 
-        detections = sorted(index.all(), key=lambda d: d.offset)
+    @property
+    def max_gap(self) -> int:
+        return self._cluster_builder.max_gap
 
-        if not detections:
-            return []
+    @property
+    def scorer(self) -> StructureScorer:
+        return self._scorer
 
-        structures: list[Structure] = []
+    # ---------------------------------------------------------
+    # Public API
+    # ---------------------------------------------------------
 
-        current: list[Detection] = [detections[0]]
+    def build(
+        self,
+        index,
+    ) -> list[Structure]:
 
-        for detection in detections[1:]:
+        clusters = self._cluster_builder.build(
+            index,
+        )
 
-            previous = current[-1]
+        return [
+            self._process_cluster(cluster)
+            for cluster in clusters
+        ]
 
-            gap = detection.offset - previous.end
+    # ---------------------------------------------------------
+    # Internal pipeline
+    # ---------------------------------------------------------
 
-            if gap <= self.max_gap:
-                current.append(detection)
-            else:
-                structures.append(self._build_structure(current))
-                current = [detection]
+    def _process_cluster(
+        self,
+        cluster: Cluster,
+    ) -> Structure:
 
-        structures.append(self._build_structure(current))
+        candidate = self._create_candidate(
+            cluster,
+        )
 
-        return structures
+        self._score_candidate(
+            candidate,
+        )
+
+        return self._build_structure(
+            candidate,
+        )
+
+    def _create_candidate(
+        self,
+        cluster: Cluster,
+    ) -> StructureCandidate:
+
+        return StructureCandidate(
+            cluster=cluster,
+        )
+
+    def _score_candidate(
+        self,
+        candidate: StructureCandidate,
+    ) -> None:
+
+        self._scorer.score(
+            candidate,
+        )
 
     def _build_structure(
         self,
-        detections: list[Detection],
+        candidate: StructureCandidate,
     ) -> Structure:
 
-        first = detections[0]
-        last = detections[-1]
-
         structure = Structure(
-            name="Structure",
-            offset=first.offset,
-            length=last.end - first.offset,
+            name=candidate.estimated_type,
+            offset=candidate.offset,
+            length=candidate.length,
+            confidence=candidate.confidence,
         )
 
-        for i, detection in enumerate(detections):
+        for i, detection in enumerate(candidate):
 
             structure.add(
                 Field(
@@ -73,4 +139,28 @@ class StructureBuilder:
                 )
             )
 
+        #
+        # Additional reconstruction metadata.
+        #
+
+        structure.metadata.update(
+            {
+                "score": candidate.score,
+                "estimated_type": candidate.estimated_type,
+            }
+        )
+
         return structure
+
+    # ---------------------------------------------------------
+    # Callable
+    # ---------------------------------------------------------
+
+    def __call__(
+        self,
+        index,
+    ) -> list[Structure]:
+
+        return self.build(
+            index,
+        )

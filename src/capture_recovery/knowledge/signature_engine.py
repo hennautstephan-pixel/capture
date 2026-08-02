@@ -19,6 +19,7 @@ class SignatureEngine:
         self,
         registry: SignatureRegistry,
     ) -> None:
+
         self.registry = registry
 
     # ------------------------------------------------------------------
@@ -36,7 +37,10 @@ class SignatureEngine:
         """
 
         matches = [
-            self._match_signature(structure, signature)
+            self._match_signature(
+                structure,
+                signature,
+            )
             for signature in self.registry
         ]
 
@@ -58,7 +62,9 @@ class SignatureEngine:
         Return the best signature match.
         """
 
-        matches = self.match(structure)
+        matches = self.match(
+            structure,
+        )
 
         if not matches:
             return None
@@ -75,8 +81,45 @@ class SignatureEngine:
 
         return tuple(
             match
-            for match in self.match(structure)
+            for match in self.match(
+                structure,
+            )
             if match.accepted
+        )
+
+    def is_unknown(
+        self,
+        structure: Structure,
+    ) -> bool:
+        """
+        Return True if no registered signature accepts
+        the structure.
+        """
+
+        return (
+            len(
+                self.accepted_matches(
+                    structure,
+                )
+            )
+            == 0
+        )
+
+    def unknown_count(
+        self,
+        structures: Iterable[Structure],
+    ) -> int:
+        """
+        Count structures that do not match any
+        registered signature.
+        """
+
+        return sum(
+            1
+            for structure in structures
+            if self.is_unknown(
+                structure,
+            )
         )
 
     # ------------------------------------------------------------------
@@ -99,21 +142,33 @@ class SignatureEngine:
 
         for expected in signature.required:
 
-            if self._contains(structure, expected):
+            if self._contains(
+                structure,
+                expected,
+            ):
 
-                matched_required.append(expected.name)
+                matched_required.append(
+                    expected.name,
+                )
 
                 score += expected.weight
 
             else:
 
-                missing_required.append(expected.name)
+                missing_required.append(
+                    expected.name,
+                )
 
         for expected in signature.optional:
 
-            if self._contains(structure, expected):
+            if self._contains(
+                structure,
+                expected,
+            ):
 
-                matched_optional.append(expected.name)
+                matched_optional.append(
+                    expected.name,
+                )
 
                 score += expected.weight
 
@@ -121,14 +176,23 @@ class SignatureEngine:
 
         if signature.maximum_score > 0:
 
-            confidence = score / signature.maximum_score
+            confidence = (
+                score
+                / signature.maximum_score
+            )
 
         return SignatureMatch(
             signature=signature,
             score=score,
-            matched_required=tuple(matched_required),
-            matched_optional=tuple(matched_optional),
-            missing_required=tuple(missing_required),
+            matched_required=tuple(
+                matched_required,
+            ),
+            matched_optional=tuple(
+                matched_optional,
+            ),
+            missing_required=tuple(
+                missing_required,
+            ),
             confidence=confidence,
         )
 
@@ -140,7 +204,9 @@ class SignatureEngine:
 
         for field in structure.fields:
 
-            dimensions = self._dimensions(field.value)
+            dimensions = self._dimensions(
+                field.value,
+            )
 
             if expected.matches(
                 name=field.name,
@@ -159,22 +225,16 @@ class SignatureEngine:
         Infer the dimensionality of a field value.
         """
 
-        if isinstance(value, tuple):
+        if isinstance(
+            value,
+            tuple,
+        ):
             return len(value)
 
-        if isinstance(value, list):
+        if isinstance(
+            value,
+            list,
+        ):
             return len(value)
 
         return 1
-
-    def __len__(self) -> int:
-        return len(self.registry)
-
-    def __bool__(self) -> bool:
-        return len(self) > 0
-
-    def __repr__(self) -> str:
-        return (
-            f"{self.__class__.__name__}"
-            f"(signatures={len(self.registry)})"
-        )

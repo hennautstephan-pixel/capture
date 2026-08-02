@@ -24,6 +24,7 @@ from capture_recovery.reverse.guid_type import (
 
 
 
+
 WINDOWS_BYTES = bytes.fromhex(
     "78563412"
     "3412"

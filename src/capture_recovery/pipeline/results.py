@@ -12,6 +12,8 @@ from capture_recovery.types import (
     SemanticObject,
 )
 
+from capture_recovery.knowledge import KnowledgeResult
+
 
 @dataclass(slots=True)
 class BinaryAnalysisResult:
@@ -31,6 +33,10 @@ class BinaryAnalysisResult:
 
     reverse: ReverseAnalysis | None = None
 
+    knowledge: KnowledgeResult = field(
+        default_factory=KnowledgeResult,
+    )
+
     metadata: Metadata = field(
         default_factory=dict,
     )
@@ -42,6 +48,22 @@ class BinaryAnalysisResult:
         """
         return len(self.detections)
 
+    @property
+    def known_signature_count(self) -> int:
+        return self.knowledge.known_signature_count
+
+    @property
+    def unknown_signature_count(self) -> int:
+        return self.knowledge.unknown_signature_count
+
+    @property
+    def decoded_object_count(self) -> int:
+        return self.knowledge.decoded_object_count
+
+    @property
+    def coverage(self) -> float:
+        return self.knowledge.coverage
+
     def add_detection(
         self,
         detection: BinaryDetection,
@@ -50,6 +72,7 @@ class BinaryAnalysisResult:
 
     def clear(self) -> None:
         self.detections.clear()
+        self.knowledge.clear()
 
     def __len__(self) -> int:
         return self.count
