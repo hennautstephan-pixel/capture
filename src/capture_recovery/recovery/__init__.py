@@ -35,6 +35,12 @@ from .repair_missing_collections_action import (
     RepairMissingCollectionsAction,
 )
 
+from .intelligent_repair_engine import (
+    IntelligentRepairEngine,
+    IntelligentRepairCandidate,
+    IntelligentRepairResult,
+)
+
 __all__ = [
     "IntegrityIssue",
     "IntegritySeverity",
@@ -46,4 +52,7 @@ __all__ = [
     "RepairResult",
     "RepairStatus",
     "RepairMissingCollectionsAction",
+    "IntelligentRepairEngine",
+    "IntelligentRepairCandidate",
+    "IntelligentRepairResult",
 ]
