@@ -41,6 +41,15 @@ from .intelligent_repair_engine import (
     IntelligentRepairResult,
 )
 
+from .intelligent_repair_adapter import (
+    IntelligentRepairAdapter,
+    AdaptedRepairPlan,
+)
+
+from .intelligent_restore_action import (
+    IntelligentRestoreAction,
+)
+
 __all__ = [
     "IntegrityIssue",
     "IntegritySeverity",
@@ -55,4 +64,7 @@ __all__ = [
     "IntelligentRepairEngine",
     "IntelligentRepairCandidate",
     "IntelligentRepairResult",
+    "IntelligentRepairAdapter",
+    "AdaptedRepairPlan",
+    "IntelligentRestoreAction",
 ]
