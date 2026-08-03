@@ -50,6 +50,32 @@ from .intelligent_restore_action import (
     IntelligentRestoreAction,
 )
 
+from .intelligent_repair_executor import (
+    IntelligentRepairExecutor,
+    IntelligentExecutionResult,
+)
+
+from .intelligent_recovery_pipeline import (
+    IntelligentRecoveryPipeline,
+    IntelligentRecoveryResult,
+)
+
+from .binary_repair_writer import (
+    BinaryRepairWriter,
+    BinaryRepairOperation,
+    BinaryRepairResult,
+)
+
+from .binary_repair_executor import (
+    BinaryRepairExecutor,
+    BinaryExecutionResult,
+)
+
+from .full_recovery_engine import (
+    FullRecoveryEngine,
+    RecoveryReport,
+)
+
 __all__ = [
     "IntegrityIssue",
     "IntegritySeverity",
@@ -67,4 +93,15 @@ __all__ = [
     "IntelligentRepairAdapter",
     "AdaptedRepairPlan",
     "IntelligentRestoreAction",
+    "IntelligentRepairExecutor",
+    "IntelligentExecutionResult",
+    "IntelligentRecoveryPipeline",
+    "IntelligentRecoveryResult",
+    "BinaryRepairWriter",
+    "BinaryRepairOperation",
+    "BinaryRepairResult",
+    "BinaryRepairExecutor",
+    "BinaryExecutionResult",
+    "FullRecoveryEngine",
+    "RecoveryReport",
 ]
