@@ -78,6 +78,40 @@ from .header_recovery_heuristic import (
     HeaderRecoveryHeuristic,
 )
 
+from .object_library import (
+    ObjectLibrary,
+    LibraryObject,
+)
+
+from .object_reconstructor import (
+    ObjectReconstructor,
+    ReconstructedObject,
+)
+
+from .sample_object_extractor import (
+    SampleObjectExtractor,
+    ExtractedObject,
+)
+
+from .structured_object_extractor import (
+    StructuredObjectExtractor,
+    StructuredExtractedObject,
+)
+
+from .parser_object_extractor import (
+    ParserObjectExtractor,
+)
+
+from .corpus_object_indexer import (
+    CorpusObjectIndexer,
+    CorpusIndexResult,
+)
+
+from .reconstruction_planner import (
+    ReconstructionPlanner,
+    ReconstructionPlan,
+)
+
 __all__ = [
     "ProjectReconstructor",
     "ReconstructionRules",
@@ -99,4 +133,17 @@ __all__ = [
     "HeaderSignature",
     "ScanResult",
     "HeaderRecoveryHeuristic",
+    "ObjectLibrary",
+    "LibraryObject",
+    "ObjectReconstructor",
+    "ReconstructedObject",
+    "SampleObjectExtractor",
+    "ExtractedObject",
+    "StructuredObjectExtractor",
+    "StructuredExtractedObject",
+    "ParserObjectExtractor",
+    "CorpusObjectIndexer",
+    "CorpusIndexResult",
+    "ReconstructionPlanner",
+    "ReconstructionPlan",
 ]
