@@ -14,8 +14,18 @@ class ProjectValidator:
         self,
         project: Project,
     ) -> ValidationResult:
+        """
+        Validate a reconstructed project.
+        """
 
         result = ValidationResult()
+
+        if project is None:
+            result.add_error(
+                "Project is missing"
+            )
+
+            return result
 
         self._validate_fixtures(
             project,
@@ -29,15 +39,25 @@ class ProjectValidator:
 
         return result
 
+
     def _validate_fixtures(
         self,
         project: Project,
         result: ValidationResult,
     ) -> None:
+        """
+        Validate fixture patch consistency.
+        """
+
+        fixtures = getattr(
+            project,
+            "fixtures",
+            [],
+        )
 
         used_addresses: set[tuple[int, int]] = set()
 
-        for fixture in project.fixtures:
+        for fixture in fixtures:
 
             universe = fixture.get(
                 "universe",
@@ -47,23 +67,29 @@ class ProjectValidator:
                 "address",
             )
 
+            identifier = getattr(
+                fixture,
+                "identifier",
+                "unknown",
+            )
+
             if universe is None:
                 result.add_error(
-                    f"Fixture {fixture.identifier}: missing universe"
+                    f"Fixture {identifier}: missing universe"
                 )
 
                 continue
 
             if address is None:
                 result.add_error(
-                    f"Fixture {fixture.identifier}: missing address"
+                    f"Fixture {identifier}: missing address"
                 )
 
                 continue
 
             if not 1 <= address <= 512:
                 result.add_error(
-                    f"Fixture {fixture.identifier}: invalid DMX address"
+                    f"Fixture {identifier}: invalid DMX address"
                 )
 
             key = (
@@ -80,23 +106,39 @@ class ProjectValidator:
                 key,
             )
 
+
     def _validate_universes(
         self,
         project: Project,
         result: ValidationResult,
     ) -> None:
+        """
+        Validate universe declarations.
+        """
+
+        universes = getattr(
+            project,
+            "universes",
+            [],
+        )
 
         numbers: set[int] = set()
 
-        for universe in project.universes:
+        for universe in universes:
 
             number = universe.get(
                 "universe",
             )
 
+            identifier = getattr(
+                universe,
+                "identifier",
+                "unknown",
+            )
+
             if number is None:
                 result.add_error(
-                    f"Universe {universe.identifier}: missing number"
+                    f"Universe {identifier}: missing number"
                 )
 
                 continue
