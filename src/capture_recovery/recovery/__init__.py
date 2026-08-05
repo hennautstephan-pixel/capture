@@ -76,6 +76,21 @@ from .full_recovery_engine import (
     RecoveryReport,
 )
 
+from .full_recovery_pipeline import (
+    FullRecoveryPipeline,
+    FullRecoveryResult,
+)
+
+from .recovery_report_generator import (
+    RecoveryReportGenerator,
+    RecoveryReport,
+)
+
+from .file_recovery_engine import (
+    FileRecoveryEngine,
+    FileRecoveryResult,
+)
+
 __all__ = [
     "IntegrityIssue",
     "IntegritySeverity",
@@ -104,4 +119,10 @@ __all__ = [
     "BinaryExecutionResult",
     "FullRecoveryEngine",
     "RecoveryReport",
+    "FullRecoveryPipeline",
+    "FullRecoveryResult",
+    "RecoveryReportGenerator",
+    "RecoveryReport",
+    "FileRecoveryEngine",
+    "FileRecoveryResult"
 ]
