@@ -154,4 +154,5 @@ samples/generated/
 analysis/
 
 # Exports temporaires
-reports/
+reports/sample.c2p
+samples/1 projecteur.c2p samples/1 projecteur_allume.c2p samples/1 projecteur_deplacement.c2p samples/1 projecteur_dmx.c2p samples/1 projecteur_rotation.c2p samples/2 projecteurs.c2p samples/Projo.c2p samples/simple.c2p samples/Structure(1).c2p samples/Tendre feu v4_juillet.c2p samples/Tendre feu v4_juillet_corrompu.c2p samples/test_v1.c2p samples/Vide.c2p
