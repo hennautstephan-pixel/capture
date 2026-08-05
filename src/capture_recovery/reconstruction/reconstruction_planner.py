@@ -2,9 +2,6 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from capture_recovery.recovery.intelligent_restore_action import (
-    IntelligentRestoreAction,
-)
 
 from capture_recovery.reconstruction.object_library import (
     ObjectLibrary,
@@ -12,18 +9,26 @@ from capture_recovery.reconstruction.object_library import (
 )
 
 
+from capture_recovery.recovery.intelligent_restore_action import (
+    IntelligentRestoreAction,
+)
 
-@dataclass(slots=True, frozen=True)
+
+
+@dataclass(frozen=True, slots=True)
 class ReconstructionPlan:
     """
-    Planned reconstruction of a missing object.
-    """
+    Result of a reconstruction decision.
 
-    object_type: str
+    Keeps compatibility with existing
+    reconstruction pipeline.
+    """
 
     offset: int
 
     size: int
+
+    object_type: str
 
     replacement: bytes
 
@@ -31,21 +36,40 @@ class ReconstructionPlan:
 
     confidence: float
 
+    object: LibraryObject | None = None
+
+
+    @property
+    def data(
+        self,
+    ) -> bytes:
+        """
+        Compatibility alias.
+        """
+
+        return self.replacement
+
 
 
 class ReconstructionPlanner:
     """
-    Create reconstruction plans from intelligent
-    repair actions and known corpus objects.
+    Creates reconstruction plans from
+    restoration actions.
+
+    Uses candidate ranking when available.
     """
+
 
 
     def __init__(
         self,
-        object_library: ObjectLibrary,
+        library: ObjectLibrary,
+        ranker=None,
     ) -> None:
 
-        self._library = object_library
+        self._library = library
+
+        self._ranker = ranker
 
 
 
@@ -54,7 +78,7 @@ class ReconstructionPlanner:
         action: IntelligentRestoreAction,
     ) -> ReconstructionPlan | None:
         """
-        Find the best object and create a plan.
+        Create a reconstruction plan.
         """
 
         candidate = self._find_candidate(
@@ -68,12 +92,19 @@ class ReconstructionPlanner:
 
 
         return ReconstructionPlan(
-            object_type=action.object_type,
             offset=action.offset,
-            size=len(candidate.data),
+
+            size=action.size,
+
+            object_type=candidate.object_type,
+
             replacement=candidate.data,
+
             source=candidate.source,
+
             confidence=action.confidence,
+
+            object=candidate,
         )
 
 
@@ -83,20 +114,49 @@ class ReconstructionPlanner:
         action: IntelligentRestoreAction,
     ) -> LibraryObject | None:
         """
-        Search the object library.
+        Find best reconstruction candidate.
+
+        Priority:
+
+        1. CandidateRanker
+        2. Historical ObjectLibrary.find()
         """
 
-        candidate = self._library.find(
-            object_type=action.object_type,
-            size=action.size,
-        )
+        candidates = [
+            obj
+            for obj in self._library.objects
+            if obj.object_type == action.object_type
+        ]
 
 
-        if candidate is not None:
+        if candidates:
 
-            return candidate
+            if self._ranker is None:
+
+                from capture_recovery.reconstruction.candidate_ranker import (
+                    CandidateRanker,
+                )
+
+                self._ranker = CandidateRanker()
+
+
+            ranked = self._ranker.best(
+                tuple(candidates),
+
+                object_type=action.object_type,
+
+                size=action.size,
+            )
+
+
+            if ranked is not None:
+
+                return ranked
+
 
 
         return self._library.find(
             object_type=action.object_type,
+
+            size=action.size,
         )

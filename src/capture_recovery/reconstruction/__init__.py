@@ -112,6 +112,37 @@ from .reconstruction_planner import (
     ReconstructionPlan,
 )
 
+from .reconstruction_executor import (
+    ReconstructionExecutor,
+    ReconstructionResult,
+)
+
+from .candidate_ranker import (
+    CandidateRanker,
+    CandidateScore,
+)
+
+from .binary_similarity import (
+    BinarySimilarity,
+    SimilarityResult,
+)
+
+from .corruption_analyzer import (
+    CorruptionAnalyzer,
+    CorruptionAnalysis,
+    CorruptionRegion,
+)
+
+from .reconstruction_strategy import (
+    ReconstructionStrategy,
+    ReconstructionDecision,
+)
+
+from .recovery_orchestrator import (
+    RecoveryOrchestrator,
+    RecoveryResult,
+)
+
 __all__ = [
     "ProjectReconstructor",
     "ReconstructionRules",
@@ -146,4 +177,17 @@ __all__ = [
     "CorpusIndexResult",
     "ReconstructionPlanner",
     "ReconstructionPlan",
+    "ReconstructionExecutor",
+    "CandidateRanker",
+    "CandidateScore",
+    "BinarySimilarity",
+    "SimilarityResult",
+    "CorruptionAnalyzer",
+    "CorruptionAnalysis",
+    "CorruptionRegion",
+    "ReconstructionStrategy",
+    "ReconstructionDecision",
+    "ReconstructionResult",
+    "RecoveryOrchestrator",
+    "RecoveryResult",
 ]
