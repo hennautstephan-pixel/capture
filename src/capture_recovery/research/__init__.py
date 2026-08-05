@@ -152,6 +152,42 @@ from .corpus_classifier import (
     ClassificationResult,
 )
 
+from .reference_project_analyzer import (
+    ReferenceProjectAnalyzer,
+    ReferenceProjectModel,
+    ReferenceBlock,
+)
+
+from .reference_object_extractor import (
+    ReferenceObjectExtractor,
+    ReferenceObject,
+)
+
+from .reference_library_builder import (
+    ReferenceLibraryBuilder,
+    ReferenceLibraryResult,
+)
+
+from .reference_corpus_builder import (
+    ReferenceCorpusBuilder,
+    ReferenceCorpus,
+    ReferenceCorpusBuildResult,
+)
+
+from .corpus_pipeline import (
+    CorpusPipeline,
+    CorpusPipelineResult,
+)
+
+from .corpus_store import (
+    CorpusStore,
+)
+
+from .object_signature_index import (
+    ObjectSignatureIndex,
+    SignatureLookupResult,
+)
+
 
 __all__ = [
     "CorpusAnalyzer",
@@ -250,4 +286,26 @@ __all__ = [
 
     "CorpusClassifier",
     "ClassificationResult",
+
+    "ReferenceProjectAnalyzer",
+    "ReferenceProjectModel",
+    "ReferenceBlock",
+
+    "ReferenceObjectExtractor",
+    "ReferenceObject",
+
+    "ReferenceLibraryBuilder",
+    "ReferenceLibraryResult",
+
+    "ReferenceCorpusBuilder",
+    "ReferenceCorpus",
+    "ReferenceCorpusBuildResult",
+
+    "CorpusPipeline",
+    "CorpusPipelineResult",
+
+    "CorpusStore",
+
+    "ObjectSignatureIndex",
+    "SignatureLookupResult",
 ]
