@@ -1,11 +1,28 @@
 """
 Command line interfaces for Capture Recovery.
 
-This package intentionally keeps imports lazy.
-CLI modules must not be imported automatically
-when executing:
+The executable modules are intentionally not imported here
+to avoid eager loading when using:
 
-    python -m capture_recovery.cli.<command>
+    python -m capture_recovery.cli.recover
 """
 
-__all__ = []
+from .corpus_loader import (
+    CorpusLoader,
+    CorpusLoadResult,
+)
+
+from .diff_builder import (
+    DiffBuilder,
+    StreamDiff,
+    ByteDifference,
+)
+
+
+__all__ = [
+    "CorpusLoader",
+    "CorpusLoadResult",
+    "DiffBuilder",
+    "StreamDiff",
+    "ByteDifference",
+]
