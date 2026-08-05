@@ -266,3 +266,8 @@ def main(
 
         report_path=args.report_path,
     )
+
+if __name__ == "__main__":
+    raise SystemExit(
+        main()
+    )
