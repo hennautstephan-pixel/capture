@@ -4,6 +4,9 @@ from capture_recovery.pipeline import (
 
 
 class FakeSemanticPipeline:
+    """
+    Fake semantic pipeline.
+    """
 
     def run(
         self,
@@ -11,19 +14,42 @@ class FakeSemanticPipeline:
     ):
 
         return {
-
             "objects": [
-
                 {
-
                     "type": "fixture",
-
                     "name": "Fixture A",
-
                 }
-
             ]
+        }
 
+
+
+class FakeProject:
+
+    pass
+
+
+
+class FakeProjectPipeline:
+    """
+    Fake project recovery pipeline.
+
+    Verifies that FullRecoveryPipeline
+    delegates project creation correctly.
+    """
+
+    def recover(
+        self,
+        objects,
+    ):
+
+        return {
+            "project": FakeProject(),
+
+            "validation": {
+                "valid": True,
+                "errors": [],
+            },
         }
 
 
@@ -44,7 +70,11 @@ def test_full_recovery_pipeline(
     pipeline = FullRecoveryPipeline(
         semantic_pipeline=(
             FakeSemanticPipeline()
-        )
+        ),
+
+        project_pipeline=(
+            FakeProjectPipeline()
+        ),
     )
 
 
@@ -66,3 +96,9 @@ def test_full_recovery_pipeline(
     assert result["semantic"]["objects"][0]["type"] == (
         "fixture"
     )
+
+
+    assert result["project"] is not None
+
+
+    assert result["result"].project.valid is True

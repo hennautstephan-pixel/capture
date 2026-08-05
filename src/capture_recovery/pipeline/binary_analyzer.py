@@ -8,13 +8,25 @@ existing detector system.
 from __future__ import annotations
 
 from capture_recovery.models.detection import Detection
+
+from capture_recovery.detectors import (
+    AsciiDetector,
+    FloatDetector,
+    IntegerDetector,
+    SignatureDetector,
+)
+
 from .types import BinarySummaryDict
 
 
 class BinaryAnalyzer:
     """
     Analyze raw binary Capture data.
+
+    Uses default binary detectors when no
+    detector list is provided.
     """
+
 
     def __init__(
         self,
@@ -23,8 +35,30 @@ class BinaryAnalyzer:
 
         self.detectors: list = (
             detectors
-            or []
+            if detectors is not None
+            else self._default_detectors()
         )
+
+
+    @staticmethod
+    def _default_detectors() -> list:
+        """
+        Build default detectors.
+
+        The order is intentional:
+        signatures and text have higher semantic
+        value than generic numeric detections.
+        """
+
+        return [
+            SignatureDetector(),
+
+            AsciiDetector(),
+
+            IntegerDetector(),
+
+            FloatDetector(),
+        ]
 
 
     def analyze(
@@ -47,8 +81,16 @@ class BinaryAnalyzer:
             )
 
             detections.extend(
-                results
+                results,
             )
+
+
+        detections.sort(
+            key=lambda item: (
+                item.offset,
+                item.length,
+            )
+        )
 
 
         return detections
@@ -71,16 +113,15 @@ class BinaryAnalyzer:
 
 
         return {
-
             "size": len(data),
 
             "count": len(
-                detections
+                detections,
             ),
 
             "detections": detections,
 
             # compatibility API
             "index": detections,
-
         }
+
