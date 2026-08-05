@@ -43,6 +43,10 @@ from capture_recovery.gui.object_analysis_panel import (
     ObjectAnalysisPanel,
 )
 
+from capture_recovery.gui.recovery_panel import (
+    RecoveryPanel,
+)
+
 
 
 class MainWindow(QMainWindow):
@@ -128,6 +132,10 @@ class MainWindow(QMainWindow):
             ObjectAnalysisPanel()
         )
 
+        self.recovery_panel = (
+            RecoveryPanel()
+        )
+
 
         self.tabs = QTabWidget()
 
@@ -173,6 +181,11 @@ class MainWindow(QMainWindow):
         self.tabs.addTab(
             self.object_panel,
             "Objets",
+        )
+
+        self.tabs.addTab(
+            self.recovery_panel,
+            "Récupération",
         )
 
 

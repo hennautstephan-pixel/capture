@@ -1,57 +1,123 @@
+"""
+Recovery worker.
+
+Runs file recovery in a background Qt thread
+to keep the GUI responsive.
+"""
+
+from __future__ import annotations
+
+
+from pathlib import Path
+
+
 from PySide6.QtCore import (
     QObject,
     Signal,
     Slot,
 )
 
-from capture_recovery import recover
+
+from capture_recovery.recovery.file_recovery_engine import (
+    FileRecoveryEngine,
+)
+
 
 
 class RecoveryWorker(QObject):
+    """
+    Background recovery worker.
 
-    progress = Signal(str)
+    The worker executes FileRecoveryEngine
+    outside the GUI thread.
+    """
 
-    finished = Signal(dict)
 
-    error = Signal(str)
+    # ---------------------------------------------------------
+    # Signals
+    # ---------------------------------------------------------
 
+    finished = Signal(
+        object,
+    )
+
+
+    error = Signal(
+        str,
+    )
+
+
+    progress = Signal(
+        str,
+    )
+
+
+    # ---------------------------------------------------------
+    # Init
+    # ---------------------------------------------------------
 
     def __init__(
         self,
-        path,
-    ):
+        engine: FileRecoveryEngine,
+        source: Path,
+        reference: Path,
+        output: Path,
+        object_type: str = "fixture",
+    ) -> None:
+
         super().__init__()
 
-        self.path = path
+        self.engine = engine
 
+        self.source = source
+
+        self.reference = reference
+
+        self.output = output
+
+        self.object_type = object_type
+
+
+
+    # ---------------------------------------------------------
+    # Execution
+    # ---------------------------------------------------------
 
     @Slot()
-    def run(self):
+    def run(
+        self,
+    ) -> None:
+        """
+        Execute recovery.
+        """
 
         try:
 
             self.progress.emit(
-                "Analyse du fichier..."
+                "Lecture des fichiers..."
             )
 
 
-            result = recover(
-                self.path,
+            result = self.engine.recover_file(
+                self.source,
+                self.reference,
+                self.output,
+                object_type=self.object_type,
             )
 
 
             self.progress.emit(
-                "Reconstruction terminée"
+                "Validation terminée."
             )
 
 
             self.finished.emit(
-                result
+                result,
             )
 
 
-        except Exception as e:
+        except Exception as exc:
 
             self.error.emit(
-                str(e)
+                str(exc),
             )
